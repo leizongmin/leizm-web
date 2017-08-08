@@ -1,0 +1,52 @@
+{
+  "name": "@leizm/connect",
+  "version": "0.0.1",
+  "description": "精简的 Web 中间件框架",
+  "main": "dist/lib/index.js",
+  "typings": "dist/lib/index.d.ts",
+  "files": [
+    "dist/lib"
+  ],
+  "scripts": {
+    "test": "nyc --reporter=lcov mocha",
+    "test-cov": "nyc --reporter=lcov mocha && nyc report"
+  },
+  "nyc": {
+    "extension": [
+      ".ts"
+    ],
+    "exclude": [
+      "**/*.d.ts"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/leizongmin/leizm-connect.git"
+  },
+  "keywords": [
+    "connect"
+  ],
+  "author": "Zongmin Lei <leizongmin@gmail.com>",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/leizongmin/leizm-connect/issues"
+  },
+  "homepage": "https://github.com/leizongmin/leizm-connect#readme",
+  "dependencies": {
+    "@types/finalhandler": "0.0.32",
+    "@types/node": "^8.0.19",
+    "@types/path-to-regexp": "^1.7.0",
+    "finalhandler": "^1.0.4",
+    "path-to-regexp": "^1.7.0"
+  },
+  "devDependencies": {
+    "@types/chai": "^4.0.2",
+    "@types/mocha": "^2.2.41",
+    "chai": "^4.1.1",
+    "mocha": "^3.5.0",
+    "nyc": "^11.1.0",
+    "ts-node": "^3.3.0",
+    "tslint": "^5.5.0",
+    "typescript": "^2.4.2"
+  }
+}

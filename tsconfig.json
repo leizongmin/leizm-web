@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "target": "es6",
+    "rootDir": "src",
+    "outDir": "dist",
+    "moduleResolution": "node",
+    "module": "commonjs",
+    "alwaysStrict": true,
+    "sourceMap": true,
+    "noImplicitAny": true,
+    "noImplicitReturns": true,
+    "noImplicitThis": true
+  }
+}
