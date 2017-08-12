@@ -16,8 +16,8 @@ app.use('/', app.fromClassicalHandle(function (req, res, next) {
   console.log(req.headers);
   next();
 }));
-app.use('*', function (ctx) {
-  ctx.response.send(ctx.request.headers);
+app.use('/hello/:a/:b', function (ctx) {
+  ctx.response.send(ctx.request.params);
 });
 console.log(app);
 app.listen({ port: 3000 }, () => console.log('listening...'));

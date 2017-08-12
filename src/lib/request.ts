@@ -27,8 +27,12 @@ export class Request {
     return this.req.headers;
   }
 
-  public get params(): Record<string, any> {
+  public get params(): Record<string, string> {
     return (this.req as any).prams || {};
+  }
+
+  public set params(value: Record<string, string>) {
+    (this.req as any).prams = value;
   }
 
   public hasParams() {
@@ -39,6 +43,10 @@ export class Request {
     return (this.req as any).body || {};
   }
 
+  public set body(value: Record<string, any>) {
+    (this.req as any).body = value;
+  }
+
   public hasBody() {
     return !!(this.req as any).body;
   }
@@ -47,12 +55,20 @@ export class Request {
     return (this.req as any).files || {};
   }
 
+  public set files(value: Record<string, any>) {
+    (this.req as any).files = value;
+  }
+
   public hasFiles() {
     return !!(this.req as any).files;
   }
 
-  public get cookies(): Record<string, any> {
+  public get cookies(): Record<string, string> {
     return (this.req as any).cookies || {};
+  }
+
+  public set cookies(value: Record<string, string>) {
+    (this.req as any).cookies = value;
   }
 
   public hasCookies() {
@@ -61,6 +77,10 @@ export class Request {
 
   public get session(): Record<string, any> {
     return (this.req as any).session || {};
+  }
+
+  public set session(value: Record<string, any>) {
+    (this.req as any).session = value;
   }
 
   public hasSession() {

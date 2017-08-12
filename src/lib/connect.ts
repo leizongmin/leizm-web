@@ -52,6 +52,11 @@ export class Connect {
       const handle = err ? getNextErrorHandle() : getNextHandle();
       if (!handle) return done(err);
       if (!this.testRoute(ctx.request.pathname, handle.route)) return next(err);
+      if (handle.route instanceof RegExp) {
+        ctx.request.params = this.getRouteParams(ctx.request.pathname, handle.route as pathToRegExp.PathRegExp);
+      } else {
+        ctx.request.params = {};
+      }
       let p;
       try {
         p = handle.handle(ctx, err);
@@ -87,6 +92,18 @@ export class Connect {
     }
     route.lastIndex = 0;
     return route.test(pathname);
+  }
+
+  protected getRouteParams(pathname: string, route: pathToRegExp.PathRegExp) {
+    const params: Record<string, string> = {};
+    route.lastIndex = 0;
+    const values = route.exec(pathname);
+    if (values) {
+      route.keys.forEach((k, i) => {
+        params[k.name] = values[i + 1];
+      });
+    }
+    return params;
   }
 
 }
