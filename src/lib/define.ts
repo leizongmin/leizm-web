@@ -1,3 +1,4 @@
+import { ServerRequest, ServerResponse } from 'http';
 import { Context } from './context';
 
 export type ErrorReason = null | string | Error | Record<any, any>;
@@ -18,4 +19,9 @@ export interface ListenOptions {
   backlog?: number;
   path?: string;
   exclusive?: boolean;
+}
+
+export interface ClassicalMiddlewareHandle {
+  (req: ServerRequest, res: ServerResponse, next?: NextFunction): void;
+  (err: ErrorReason, req: ServerRequest, res: ServerResponse, next?: NextFunction): void;
 }

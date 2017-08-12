@@ -2,12 +2,23 @@ import { Server, ServerRequest, ServerResponse } from 'http';
 import * as pathToRegExp from 'path-to-regexp';
 import * as finalhandler from 'finalhandler';
 import { Context } from './context';
-import { Middleware, MiddlewareHandle, ErrorReason, NextFunction, ListenOptions } from './define';
+import { Middleware, MiddlewareHandle, ErrorReason, NextFunction, ListenOptions, ClassicalMiddlewareHandle } from './define';
 
 export class Connect {
 
   protected readonly stack: Middleware[] = [];
   public readonly server: Server = new Server();
+
+  public fromClassicalHandle(fn: ClassicalMiddlewareHandle): MiddlewareHandle {
+    if (fn.length >= 4) {
+      return function (ctx: Context, err?: ErrorReason) {
+        fn(err, ctx.request.req, ctx.response.res, ctx.next.bind(ctx));
+      };
+    }
+    return function (ctx: Context) {
+      fn(ctx.request.req, ctx.response.res, ctx.next.bind(ctx));
+    };
+  }
 
   public use(route: string | RegExp, ...handles: MiddlewareHandle[]) {
     for (const handle of handles) {
