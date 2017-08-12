@@ -4,15 +4,16 @@ import * as parseCookies from 'cookie-parser';
 
 export class Request {
 
-  public path: string;
-  public queryString: string;
-  public query: Record<string, any>;
+  public readonly path: string;
+  public readonly queryString: string;
+  public readonly query: Record<string, any>;
 
-  public params: Record<string, any>;
-  public body: Record<string, any>;
-  public files: Record<string, any>;
-  public cookies: Record<string, any>;
-  public session: Record<string, any>;
+  constructor(public readonly req: ServerRequest) {
+    const urlInfo = parseUrl(req.url, true);
+    this.query = urlInfo.query;
+    this.path = urlInfo.pathname;
+    this.queryString = urlInfo.search.slice(1);
+  }
 
   public get method() {
     return this.req.method;
@@ -26,11 +27,44 @@ export class Request {
     return this.req.headers;
   }
 
-  constructor(public readonly req: ServerRequest) {
-    const urlInfo = parseUrl(req.url, true);
-    this.query = urlInfo.query;
-    this.path = urlInfo.pathname;
-    this.queryString = urlInfo.search.slice(1);
+  public get params(): Record<string, any> {
+    return (this.req as any).prams || {};
+  }
+
+  public hasParams() {
+    return !!(this.req as any).prams;
+  }
+
+  public get body(): Record<string, any> {
+    return (this.req as any).body || {};
+  }
+
+  public hasBody() {
+    return !!(this.req as any).body;
+  }
+
+  public get files(): Record<string, any> {
+    return (this.req as any).files || {};
+  }
+
+  public hasFiles() {
+    return !!(this.req as any).files;
+  }
+
+  public get cookies(): Record<string, any> {
+    return (this.req as any).cookies || {};
+  }
+
+  public hasCookies() {
+    return !!(this.req as any).cookies;
+  }
+
+  public get session(): Record<string, any> {
+    return (this.req as any).session || {};
+  }
+
+  public hasSession() {
+    return !!(this.req as any).session;
   }
 
 }
