@@ -4,15 +4,15 @@ import * as parseCookies from 'cookie-parser';
 
 export class Request {
 
-  public readonly path: string;
-  public readonly queryString: string;
+  public readonly pathname: string;
+  public readonly search: string;
   public readonly query: Record<string, any>;
 
   constructor(public readonly req: ServerRequest) {
     const urlInfo = parseUrl(req.url, true);
     this.query = urlInfo.query;
-    this.path = urlInfo.pathname;
-    this.queryString = urlInfo.search.slice(1);
+    this.pathname = urlInfo.pathname;
+    this.search = urlInfo.search;
   }
 
   public get method() {

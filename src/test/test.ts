@@ -7,7 +7,7 @@ function sleep(ms = 1000) {
 }
 
 const app = new Connect();
-app.use('/', async function (ctx) {
+app.use('/sleep', async function (ctx) {
   console.log(ctx.request.query, ctx.request.hasBody(), ctx.request.body);
   await sleep(1000);
   ctx.next();
@@ -16,7 +16,7 @@ app.use('/', app.fromClassicalHandle(function (req, res, next) {
   console.log(req.headers);
   next();
 }));
-app.use('/', function (ctx) {
+app.use('*', function (ctx) {
   ctx.response.send(ctx.request.headers);
 });
 console.log(app);

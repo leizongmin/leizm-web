@@ -25,8 +25,8 @@ export class Connect {
   }
 
   public use(route: string | RegExp, ...handles: MiddlewareHandle[]) {
+    const info = this.parseRoute(route);
     for (const handle of handles) {
-      const info = pathToRegExp(route, { sensitive: true, strict: true, end: true });
       this.stack.push({ route: info, handle, handleError: handle.length > 1 });
     }
   }
@@ -51,6 +51,7 @@ export class Connect {
     const next: NextFunction = (err) => {
       const handle = err ? getNextErrorHandle() : getNextHandle();
       if (!handle) return done(err);
+      if (!this.testRoute(ctx.request.pathname, handle.route)) return next(err);
       let p;
       try {
         p = handle.handle(ctx, err);
@@ -72,6 +73,20 @@ export class Connect {
 
   protected isPromise(p: any) {
     return typeof p.then === 'function' && p.catch === 'function';
+  }
+
+  protected parseRoute(route: string | RegExp): string | RegExp {
+    if (route instanceof RegExp) return route;
+    if (route.includes(':') || route.includes('*')) return pathToRegExp(route, { sensitive: true, strict: true, end: true });
+    return route;
+  }
+
+  protected testRoute(pathname: string, route: string | RegExp) {
+    if (typeof route === 'string') {
+      return pathname === route || pathname.indexOf(route === '/' ? route : route + '/') === 0;
+    }
+    route.lastIndex = 0;
+    return route.test(pathname);
   }
 
 }
