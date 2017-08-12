@@ -9,13 +9,16 @@ function sleep(ms = 1000) {
 const app = new Connect();
 app.use('/', async function (ctx) {
   console.log(ctx.request.query, ctx.request.hasBody(), ctx.request.body);
-  await sleep(2000);
+  await sleep(1000);
   ctx.next();
 });
-app.use('/', app.fromClassicalHandle(function (req: any, res: any, next: any) {
+app.use('/', app.fromClassicalHandle(function (req, res, next) {
   console.log(req.headers);
-  res.end('ok');
+  next();
 }));
+app.use('/', function (ctx) {
+  ctx.response.send(ctx.request.headers);
+});
 console.log(app);
 app.listen({ port: 3000 }, () => console.log('listening...'));
 

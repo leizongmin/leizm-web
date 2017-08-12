@@ -21,7 +21,5 @@ export interface ListenOptions {
   exclusive?: boolean;
 }
 
-export interface ClassicalMiddlewareHandle {
-  (req: ServerRequest, res: ServerResponse, next?: NextFunction): void;
-  (err: ErrorReason, req: ServerRequest, res: ServerResponse, next?: NextFunction): void;
-}
+export type ClassicalMiddlewareHandle = (req: ServerRequest, res: ServerResponse, next?: NextFunction) => void;
+export type ClassicalMiddlewareErrorHandle = (err: ErrorReason, req: ServerRequest, res: ServerResponse, next?: NextFunction) => void;

@@ -4,7 +4,7 @@ export class Response {
 
   constructor(public readonly res: ServerResponse) {}
 
-  public set status(value: number) {
+  public status(value: number) {
     this.res.statusCode = value;
   }
 
@@ -27,7 +27,15 @@ export class Response {
   }
 
   public sendJSON(data: any) {
+    this.res.setHeader('Content-Type', 'application/json');
+    this.res.end(JSON.stringify(data));
+  }
 
+  public send(data: any) {
+    if (Buffer.isBuffer(data) || typeof data === 'string') {
+      return this.res.end(data);
+    }
+    this.sendJSON(data);
   }
 
 }
