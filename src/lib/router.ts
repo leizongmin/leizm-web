@@ -1,15 +1,9 @@
-import { Server, ServerRequest, ServerResponse } from 'http';
-import * as finalhandler from 'finalhandler';
 import { BaseConnect } from './base';
 import { Context } from './context';
-import { ListenOptions, ErrorReason, MiddlewareHandle } from './define';
+import { MiddlewareHandle } from './define';
 import { wrapMiddlewareHandleWithMethod } from './utils';
 
 export class Router extends BaseConnect {
-
-  public handleRequest(req: ServerRequest, res: ServerResponse, done: (err?: ErrorReason) => void) {
-    this.handleRequestByRequestResponse(req, res, done || finalhandler(req, res));
-  }
 
   public toMiddleware() {
     const router = this;

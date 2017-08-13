@@ -1,9 +1,6 @@
-import { Server, ServerRequest, ServerResponse } from 'http';
+import { ServerRequest, ServerResponse } from 'http';
 import { Context } from './context';
-import {
-  Middleware, MiddlewareHandle, ErrorReason, NextFunction, ListenOptions,
-  ClassicalMiddlewareHandle, ClassicalMiddlewareErrorHandle, PathRegExp,
-} from './define';
+import { Middleware, MiddlewareHandle, ErrorReason, NextFunction, PathRegExp } from './define';
 import {
   isPromise, testRoute, parseRoute, getRouteParams, isMiddlewareErrorHandle,
 } from './utils';
