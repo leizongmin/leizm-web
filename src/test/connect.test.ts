@@ -341,7 +341,7 @@ describe('Connect', function () {
     class MyConnect extends Connect {
       protected contextConstructor: ContextConstructor = MyContext;
       public use(route: string | RegExp, ...handles: MiddlewareHandle[]) {
-        this.useMiddleware(route, ...handles);
+        this.useMiddleware(true, route, ...handles);
       }
     }
     const app = new MyConnect();

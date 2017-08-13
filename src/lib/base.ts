@@ -1,25 +1,37 @@
 import { ServerRequest, ServerResponse } from 'http';
 import { Context } from './context';
 import {
-  Middleware, MiddlewareHandle, ErrorReason, NextFunction, PathRegExp, ContextConstructor,
+  Middleware, MiddlewareHandle, ErrorReason, NextFunction, PathRegExp, ContextConstructor, RegExpOptions,
 } from './define';
 import {
-  testRoute, parseRoute, getRouteParams, isMiddlewareErrorHandle, execMiddlewareHandle,
+  testRoutePath, parseRoutePath, getRouteParams, isMiddlewareErrorHandle, execMiddlewareHandle,
 } from './utils';
 
 export class BaseConnect {
 
   protected readonly stack: Middleware[] = [];
   protected contextConstructor: ContextConstructor = Context;
+  protected readonly routeOptions: RegExpOptions = {
+    sensitive: true,
+    strict: true,
+    end: true,
+    delimiter: '/',
+  };
 
   protected createContext(req: ServerRequest, res: ServerResponse) {
     return new this.contextConstructor(req, res);
   }
 
-  protected useMiddleware(route: string | RegExp, ...handles: MiddlewareHandle[]) {
-    const info = parseRoute(route);
+  protected useMiddleware(isPrefix: boolean, route: string | RegExp, ...handles: MiddlewareHandle[]) {
     for (const handle of handles) {
-      this.stack.push({ route: info, handle, handleError: isMiddlewareErrorHandle(handle) });
+      this.stack.push({
+        route: parseRoutePath(route, {
+          ...this.routeOptions,
+          end: !isPrefix,
+        }),
+        handle,
+        handleError: isMiddlewareErrorHandle(handle),
+      });
     }
   }
 
@@ -45,7 +57,7 @@ export class BaseConnect {
         ctx.popNextHandle();
         return done(err || null);
       }
-      if (!testRoute(ctx.request.path, handle.route)) return next(err);
+      if (!testRoutePath(ctx.request.path, handle.route)) return next(err);
       if (handle.route instanceof RegExp) {
         ctx.request.params = getRouteParams(ctx.request.path, handle.route as PathRegExp);
       } else {

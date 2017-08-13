@@ -22,7 +22,7 @@ export class Connect extends BaseConnect {
   }
 
   public use(route: string | RegExp, ...handles: Array<MiddlewareHandle | Router>) {
-    this.useMiddleware(route, ...handles.map(item => item instanceof Router ? item.toMiddleware() : item));
+    this.useMiddleware(true, route, ...handles.map(item => item instanceof Router ? item.toMiddleware() : item));
   }
 
 }

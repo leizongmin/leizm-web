@@ -1,6 +1,7 @@
 import * as pathToRegExp from 'path-to-regexp';
 import {
   MiddlewareHandle, ClassicalMiddlewareHandle, ClassicalMiddlewareErrorHandle, ErrorReason, NextFunction,
+  RegExpOptions,
 } from './define';
 import { Context } from './context';
 
@@ -8,16 +9,12 @@ export function isPromise(p: Promise<void>): boolean {
   return p && typeof p.then === 'function' && typeof p.catch === 'function';
 }
 
-export function parseRoute(route: string | RegExp): string | RegExp {
+export function parseRoutePath(route: string | RegExp, options: RegExpOptions): RegExp {
   if (route instanceof RegExp) return route;
-  if (route.includes(':') || route.includes('*')) return pathToRegExp(route, { sensitive: true, strict: true, end: true });
-  return route;
+  return pathToRegExp(route, options);
 }
 
-export function testRoute(pathname: string, route: string | RegExp): boolean {
-  if (typeof route === 'string') {
-    return pathname === route || pathname.indexOf(route === '/' ? route : route + '/') === 0;
-  }
+export function testRoutePath(pathname: string, route: RegExp): boolean {
   route.lastIndex = 0;
   return route.test(pathname);
 }
