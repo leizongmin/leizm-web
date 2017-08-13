@@ -1,11 +1,13 @@
 import { Server, ServerRequest, ServerResponse } from 'http';
-import * as pathToRegExp from 'path-to-regexp';
 import * as finalhandler from 'finalhandler';
 import { Context } from './context';
 import {
   Middleware, MiddlewareHandle, ErrorReason, NextFunction, ListenOptions,
-  ClassicalMiddlewareHandle, ClassicalMiddlewareErrorHandle,
+  ClassicalMiddlewareHandle, ClassicalMiddlewareErrorHandle, PathRegExp,
 } from './define';
+import {
+  isPromise, testRoute, parseRoute, getRouteParams,
+} from './utils';
 
 export class Connect {
 
@@ -25,7 +27,7 @@ export class Connect {
   }
 
   public use(route: string | RegExp, ...handles: MiddlewareHandle[]) {
-    const info = this.parseRoute(route);
+    const info = parseRoute(route);
     for (const handle of handles) {
       this.stack.push({ route: info, handle, handleError: handle.length > 1 });
     }
@@ -51,9 +53,9 @@ export class Connect {
     const next: NextFunction = (err) => {
       const handle = err ? getNextErrorHandle() : getNextHandle();
       if (!handle) return done(err);
-      if (!this.testRoute(ctx.request.pathname, handle.route)) return next(err);
+      if (!testRoute(ctx.request.pathname, handle.route)) return next(err);
       if (handle.route instanceof RegExp) {
-        ctx.request.params = this.getRouteParams(ctx.request.pathname, handle.route as pathToRegExp.PathRegExp);
+        ctx.request.params = getRouteParams(ctx.request.pathname, handle.route as PathRegExp);
       } else {
         ctx.request.params = {};
       }
@@ -63,7 +65,7 @@ export class Connect {
       } catch (err) {
         return next(err);
       }
-      if (p && this.isPromise(p)) {
+      if (p && isPromise(p)) {
         p.then(() => next()).catch(next);
       }
     };
@@ -76,35 +78,4 @@ export class Connect {
     this.server.listen(options, listeningListener);
   }
 
-  protected isPromise(p: any) {
-    return typeof p.then === 'function' && p.catch === 'function';
-  }
-
-  protected parseRoute(route: string | RegExp): string | RegExp {
-    if (route instanceof RegExp) return route;
-    if (route.includes(':') || route.includes('*')) return pathToRegExp(route, { sensitive: true, strict: true, end: true });
-    return route;
-  }
-
-  protected testRoute(pathname: string, route: string | RegExp) {
-    if (typeof route === 'string') {
-      return pathname === route || pathname.indexOf(route === '/' ? route : route + '/') === 0;
-    }
-    route.lastIndex = 0;
-    return route.test(pathname);
-  }
-
-  protected getRouteParams(pathname: string, route: pathToRegExp.PathRegExp) {
-    const params: Record<string, string> = {};
-    route.lastIndex = 0;
-    const values = route.exec(pathname);
-    if (values) {
-      route.keys.forEach((k, i) => {
-        params[k.name] = values[i + 1];
-      });
-    }
-    return params;
-  }
-
 }
-

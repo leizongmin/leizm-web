@@ -1,6 +1,8 @@
 import { ServerRequest, ServerResponse } from 'http';
 import { Context } from './context';
 
+export { PathRegExp } from 'path-to-regexp';
+
 export type ErrorReason = null | string | Error | Record<any, any>;
 
 export type MiddlewareHandle = (ctx: Context, err?: ErrorReason) => Promise<void> | void;
