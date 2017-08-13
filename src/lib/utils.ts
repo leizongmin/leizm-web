@@ -1,4 +1,8 @@
 import * as pathToRegExp from 'path-to-regexp';
+import {
+  MiddlewareHandle, ClassicalMiddlewareHandle, ClassicalMiddlewareErrorHandle, ErrorReason,
+} from './define';
+import { Context } from './context';
 
 export function isPromise(p: any): boolean {
   return typeof p.then === 'function' && p.catch === 'function';
@@ -28,4 +32,16 @@ export function getRouteParams(pathname: string, route: pathToRegExp.PathRegExp)
     });
   }
   return params;
+}
+
+export function fromClassicalHandle(fn: ClassicalMiddlewareHandle): MiddlewareHandle {
+  return function (ctx: Context) {
+    fn(ctx.request.req, ctx.response.res, ctx.next.bind(ctx));
+  };
+}
+
+export function fromClassicalErrorHandle(fn: ClassicalMiddlewareErrorHandle): MiddlewareHandle {
+  return function (ctx: Context, err?: ErrorReason) {
+    fn(err, ctx.request.req, ctx.response.res, ctx.next.bind(ctx));
+  };
 }

@@ -14,18 +14,6 @@ export class Connect {
   protected readonly stack: Middleware[] = [];
   public readonly server: Server = new Server();
 
-  public fromClassicalHandle(fn: ClassicalMiddlewareHandle): MiddlewareHandle {
-    return function (ctx: Context) {
-      fn(ctx.request.req, ctx.response.res, ctx.next.bind(ctx));
-    };
-  }
-
-  public fromClassicalErrorHandle(fn: ClassicalMiddlewareErrorHandle): MiddlewareHandle {
-    return function (ctx: Context, err?: ErrorReason) {
-      fn(err, ctx.request.req, ctx.response.res, ctx.next.bind(ctx));
-    };
-  }
-
   public use(route: string | RegExp, ...handles: MiddlewareHandle[]) {
     const info = parseRoute(route);
     for (const handle of handles) {
