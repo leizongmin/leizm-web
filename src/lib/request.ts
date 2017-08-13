@@ -1,15 +1,13 @@
 import { ServerRequest } from 'http';
-import { EventEmitter } from 'events';
 import * as parseUrl from 'parseurl';
 
-export class Request extends EventEmitter {
+export class Request {
 
   public readonly path: string;
   public readonly search: string;
   public readonly query: Record<string, any>;
 
   constructor(public readonly req: ServerRequest) {
-    super();
     const info = parseUrl(req);
     this.query = info.query;
     this.path = info.pathname;

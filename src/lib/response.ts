@@ -1,11 +1,8 @@
 import { ServerResponse } from 'http';
-import { EventEmitter } from 'events';
 
-export class Response extends EventEmitter {
+export class Response {
 
-  constructor(public readonly res: ServerResponse) {
-    super();
-  }
+  constructor(public readonly res: ServerResponse) {}
 
   public setStatus(value: number) {
     this.res.statusCode = value;

@@ -17,7 +17,7 @@ export class Connect extends BaseConnect {
     this.server.listen(options, listeningListener);
   }
 
-  public handleRequest(req: ServerRequest, res: ServerResponse, done: (err?: ErrorReason) => void) {
+  public handleRequest(req: ServerRequest, res: ServerResponse, done?: (err?: ErrorReason) => void) {
     this.handleRequestByRequestResponse(req, res, done || finalhandler(req, res));
   }
 
