@@ -181,6 +181,31 @@ describe('Connect', function () {
       .expect('this is b', done);
   });
 
+  it('use 支持多个中间件', function (done) {
+    const app = new Connect();
+    const status: any = {};
+    app.use('/', function (ctx) {
+      status.a = true;
+      ctx.next();
+    }, function (ctx) {
+      status.b = true;
+      ctx.response.end('ok');
+    }, function (ctx) {
+      status.c = true;
+      throw new Error('不应该执行到此处');
+    });
+    request(app.server)
+      .get('/')
+      .expect(200)
+      .expect('ok', function () {
+        expect(status).to.deep.equal({
+          a: true,
+          b: true,
+        });
+        done();
+      });
+  });
+
   it('所有中间件按照顺序执行，不符合执行条件会被跳过', function (done) {
     const app = new Connect();
     const status: any = {};
