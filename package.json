@@ -9,7 +9,9 @@
   ],
   "scripts": {
     "test": "mocha",
-    "test-cov": "nyc --reporter=lcov mocha && nyc report"
+    "test-cov": "nyc --reporter=lcov mocha && nyc report",
+    "clean": "rm -rf dist",
+    "compile": "npm run clean && tsc"
   },
   "nyc": {
     "extension": [
