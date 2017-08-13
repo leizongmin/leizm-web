@@ -58,11 +58,7 @@ export class BaseConnect {
         return done(err || null);
       }
       if (!testRoutePath(ctx.request.path, handle.route)) return next(err);
-      if (handle.route instanceof RegExp) {
-        ctx.request.params = getRouteParams(ctx.request.path, handle.route as PathRegExp);
-      } else {
-        ctx.request.params = {};
-      }
+      ctx.request.params = getRouteParams(ctx.request.path, handle.route as PathRegExp);
       execMiddlewareHandle(handle.handle, ctx, err, next);
     };
     ctx.pushNextHandle(next);

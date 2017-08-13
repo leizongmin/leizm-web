@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { Connect, Router, Context } from '../lib';
+import { Connect, Router, Context, ErrorReason } from '../lib';
 import * as request from 'supertest';
 
 const METHODS = [ 'get', 'head', 'post', 'put', 'delete', 'connect', 'options', 'trace', 'patch' ];
@@ -48,6 +48,25 @@ describe('Router', function () {
       });
   });
 
+  it('可拦截出错信息，并响应200', function (done) {
+    const app = new Connect();
+    const router = new Router();
+    router.get('/xx', function (ctx) {
+      throw new Error('test error');
+    }, function (ctx, err) {
+      expect(err).to.instanceof(Error);
+      expect(err).property('message').to.equal('test error');
+      ctx.response.end('ok');
+    }, function (ctx, err) {
+      throw new Error('不可能执行到此处');
+    });
+    app.use('/', router);
+    request(app.server)
+      .get('/xx')
+      .expect(200)
+      .expect('ok', done);
+  });
+
   it('all 响应所有请求', async function () {
     const app = new Connect();
     const router = new Router();
@@ -75,11 +94,16 @@ describe('Router', function () {
         ctx.response.end(msg);
       };
     }
-    for (const method of METHODS) {
-      (router as any)[method]('/xyz', generateHandle(`this is not ${ method }`));
+    function generateErrorHandle(msg: string) {
+      return function (ctx: Context, err?: ErrorReason) {
+        ctx.response.end(msg);
+      };
     }
     for (const method of METHODS) {
-      (router as any)[method]('/abc', generateHandle(`this is ${ method }`));
+      (router as any)[method]('/xyz', generateErrorHandle('不可能执行到此处'), generateHandle(`this is not ${ method }`));
+    }
+    for (const method of METHODS) {
+      (router as any)[method]('/abc', generateErrorHandle('不可能执行到此处'), generateHandle(`this is ${ method }`));
     }
     app.use('/', router);
     for (const method of METHODS) {
