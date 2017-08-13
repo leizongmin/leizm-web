@@ -35,7 +35,7 @@ export class BaseConnect {
       const handle = err ? getNextErrorHandle() : getNextHandle();
       if (!handle) {
         ctx.popNextHandle();
-        return done(err);
+        return done(err || null);
       }
       if (!testRoute(ctx.request.path, handle.route)) return next(err);
       if (handle.route instanceof RegExp) {
