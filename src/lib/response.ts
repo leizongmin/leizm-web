@@ -4,8 +4,8 @@ export class Response {
 
   constructor(public readonly res: ServerResponse) {}
 
-  public setStatus(value: number) {
-    this.res.statusCode = value;
+  public setStatus(statusCode: number) {
+    this.res.statusCode = statusCode;
   }
 
   public setHeader(name: string, value: string | string[] | number) {
@@ -16,6 +16,10 @@ export class Response {
     for (const name in headers) {
       this.setHeader(name, headers[name]);
     }
+  }
+
+  public writeHead(statusCode: number, headers: Record<string, string | string[] | number>) {
+    this.res.writeHead(statusCode, headers);
   }
 
   public write(data: string | Buffer | Uint8Array, encoding?: string, callback?: () => void): boolean {

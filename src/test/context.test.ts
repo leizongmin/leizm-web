@@ -93,3 +93,36 @@ describe('Request', function () {
   });
 
 });
+
+describe('Response', function () {
+
+  it('正确响应 setStatus, setHeader, setHeaders, writeHead, write, end', function (done) {
+    const app = new Connect();
+    app.use('/', function (ctx) {
+      {
+        ctx.response.setStatus(100);
+        expect(ctx.response.res.statusCode).to.equal(100);
+      }
+      ctx.response.setHeader('aaa', 'hello aaa');
+      ctx.response.setHeaders({
+        bbb: 'hello bbb',
+        ccc: 'hello ccc',
+      });
+      ctx.response.writeHead(500, {
+        bbb: 'xxx',
+        ddd: 'xxxx',
+      });
+      ctx.response.write('123');
+      ctx.response.end('456');
+    });
+    request(app.server)
+      .get('/hello')
+      .expect(500)
+      .expect('aaa', 'hello aaa')
+      .expect('bbb', 'xxx')
+      .expect('ccc', 'hello ccc')
+      .expect('ddd', 'xxxx')
+      .expect('123456', done);
+  });
+
+});
