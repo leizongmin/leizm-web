@@ -67,7 +67,7 @@ describe('Router', function () {
     }
   });
 
-  it('注册各种请求方法', async function () {
+  it('注册各种请求方法并正确处理请求', async function () {
     const app = new Connect();
     const router = new Router();
     function generateHandle(msg: string) {

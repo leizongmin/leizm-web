@@ -1,4 +1,5 @@
 import { ServerRequest } from 'http';
+import { parse as parseQueryString} from 'querystring';
 import * as parseUrl from 'parseurl';
 
 export class Request {
@@ -9,7 +10,7 @@ export class Request {
 
   constructor(public readonly req: ServerRequest) {
     const info = parseUrl(req);
-    this.query = info.query;
+    this.query = parseQueryString(info.query);
     this.path = info.pathname;
     this.search = info.search;
   }
