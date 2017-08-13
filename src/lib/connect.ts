@@ -12,7 +12,12 @@ import {
 export class Connect {
 
   protected readonly stack: Middleware[] = [];
-  public readonly server: Server = new Server();
+  protected _server: Server;
+
+  public get server() {
+    if (!this._server) this._server = new Server(this.handleRequest.bind(this));
+    return this._server;
+  }
 
   public use(route: string | RegExp, ...handles: MiddlewareHandle[]) {
     const info = parseRoute(route);
@@ -62,7 +67,6 @@ export class Connect {
   }
 
   public listen(options: ListenOptions, listeningListener?: () => void) {
-    this.server.on('request', this.handleRequest.bind(this));
     this.server.listen(options, listeningListener);
   }
 
