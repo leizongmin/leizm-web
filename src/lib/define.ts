@@ -29,3 +29,7 @@ export type ClassicalMiddlewareErrorHandle = (err: ErrorReason, req: ServerReque
 export interface ContextConstructor {
   new(req: ServerRequest, res: ServerResponse): Context;
 }
+
+export interface Headers {
+  [name: string]: string | string[] | number;
+}

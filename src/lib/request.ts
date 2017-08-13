@@ -1,6 +1,7 @@
 import { ServerRequest } from 'http';
 import { parse as parseQueryString} from 'querystring';
 import * as parseUrl from 'parseurl';
+import { Headers } from './define';
 
 export class Request {
 
@@ -28,7 +29,7 @@ export class Request {
   }
 
   public get headers() {
-    return this.req.headers;
+    return this.req.headers as Headers;
   }
 
   public getHeader(name: string) {
