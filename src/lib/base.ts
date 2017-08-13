@@ -2,7 +2,7 @@ import { ServerRequest, ServerResponse } from 'http';
 import { Context } from './context';
 import { Middleware, MiddlewareHandle, ErrorReason, NextFunction, PathRegExp } from './define';
 import {
-  isPromise, testRoute, parseRoute, getRouteParams, isMiddlewareErrorHandle,
+  testRoute, parseRoute, getRouteParams, isMiddlewareErrorHandle, execMiddlewareHandle,
 } from './utils';
 
 export class BaseConnect {
@@ -33,6 +33,7 @@ export class BaseConnect {
     };
     const next: NextFunction = (err) => {
       const handle = err ? getNextErrorHandle() : getNextHandle();
+      err = err || null;
       if (!handle) {
         ctx.popNextHandle();
         return done(err || null);
@@ -43,15 +44,7 @@ export class BaseConnect {
       } else {
         ctx.request.params = {};
       }
-      let p;
-      try {
-        p = handle.handle(ctx, err);
-      } catch (err) {
-        return next(err);
-      }
-      if (p && isPromise(p)) {
-        p.then(() => next()).catch(next);
-      }
+      execMiddlewareHandle(handle.handle, ctx, err, next);
     };
     ctx.pushNextHandle(next);
     ctx.next();

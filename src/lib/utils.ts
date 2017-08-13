@@ -1,11 +1,11 @@
 import * as pathToRegExp from 'path-to-regexp';
 import {
-  MiddlewareHandle, ClassicalMiddlewareHandle, ClassicalMiddlewareErrorHandle, ErrorReason,
+  MiddlewareHandle, ClassicalMiddlewareHandle, ClassicalMiddlewareErrorHandle, ErrorReason, NextFunction,
 } from './define';
 import { Context } from './context';
 
-export function isPromise(p: any): boolean {
-  return typeof p.then === 'function' && p.catch === 'function';
+export function isPromise(p: Promise<void>): boolean {
+  return p && typeof p.then === 'function' && typeof p.catch === 'function';
 }
 
 export function parseRoute(route: string | RegExp): string | RegExp {
@@ -26,7 +26,7 @@ export function getRouteParams(pathname: string, route: pathToRegExp.PathRegExp)
   const params: Record<string, string> = {};
   route.lastIndex = 0;
   const values = route.exec(pathname);
-  if (values) {
+  if (values && route.keys) {
     route.keys.forEach((k, i) => {
       params[k.name] = values[i + 1];
     });
@@ -63,4 +63,18 @@ export function wrapMiddlewareHandleWithMethod(method: string, handle: Middlewar
   return function (ctx: Context) {
     handleRequest(ctx);
   };
+}
+
+export function execMiddlewareHandle(handle: MiddlewareHandle, ctx: Context, err: ErrorReason, callback: NextFunction) {
+  process.nextTick(function () {
+    let p: Promise<void> | void;
+    try {
+      p = handle(ctx, err);
+    } catch (err) {
+      return callback(err);
+    }
+    if (p && isPromise(p)) {
+      p.catch(callback);
+    }
+  });
 }

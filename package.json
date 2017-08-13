@@ -8,7 +8,7 @@
     "dist/lib"
   ],
   "scripts": {
-    "test": "nyc --reporter=lcov mocha",
+    "test": "mocha",
     "test-cov": "nyc --reporter=lcov mocha && nyc report"
   },
   "nyc": {
