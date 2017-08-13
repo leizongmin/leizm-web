@@ -128,6 +128,9 @@ describe('Connect', function () {
     app.use('/', function (ctx) {
       throw new Error('oh error');
     });
+    app.use('/', function (ctx) {
+      throw new Error('不可能执行到此处');
+    });
     app.use('/', function (ctx, err) {
       expect(err).to.instanceof(Error);
       expect(err).property('message').to.equal('oh error');
