@@ -1,7 +1,8 @@
 import { expect } from 'chai';
 import { Server } from 'http';
-import { Connect } from '../lib';
+import { Connect, fromClassicalHandle, fromClassicalErrorHandle } from '../lib';
 import * as request from 'supertest';
+import * as bodyParser from 'body-parser';
 
 function sleep(ms: number): Promise<number> {
   return new Promise((resolve, reject) => {
@@ -180,12 +181,15 @@ describe('Connect', function () {
       .expect('this is b', done);
   });
 
-  it('支持多个混合中间件', function (done) {
+  it('所有中间件按照顺序执行，不符合执行条件会被跳过', function (done) {
     const app = new Connect();
     const status: any = {};
     app.use('/', function (ctx) {
       status.x = true;
       ctx.next();
+    });
+    app.use('/', function (ctx, err) {
+      throw new Error('不可能执行到此处');
     });
     app.use('/a', function (ctx) {
       status.a = true;
@@ -202,6 +206,9 @@ describe('Connect', function () {
     app.use('/b/b', function (ctx) {
       status.bb = true;
       ctx.next();
+    });
+    app.use('/b/b', function (ctx, err) {
+      throw new Error('不可能执行到此处');
     });
     app.use('/c', function (ctx) {
       status.c = true;
@@ -223,6 +230,73 @@ describe('Connect', function () {
         });
         done();
       });
+  });
+
+  it('支持 ctx.request.params 参数', function (done) {
+    const app = new Connect();
+    app.use('/prefix/:x/:y/:z', function (ctx) {
+      expect(ctx.request.params).to.deep.equal({
+        x: 'hello',
+        y: 'world',
+        z: 'ok',
+      });
+      ctx.next();
+    });
+    app.use('/prefix/:a/:b/:c', function (ctx) {
+      expect(ctx.request.params).to.deep.equal({
+        a: 'hello',
+        b: 'world',
+        c: 'ok',
+      });
+      ctx.response.setHeader('content-type', 'application/json');
+      ctx.response.end(JSON.stringify(ctx.request.params));
+    });
+    request(app.server)
+      .get('/prefix/hello/world/ok')
+      .expect(200)
+      .expect({
+        a: 'hello',
+        b: 'world',
+        c: 'ok',
+      }, done);
+  });
+
+  it('支持使用 connect/express 中间件', function (done) {
+    const app = new Connect();
+    app.use('/', fromClassicalHandle(bodyParser.json()));
+    app.use('/', function (ctx) {
+      ctx.response.setHeader('content-type', 'application/json');
+      ctx.response.end(JSON.stringify(ctx.request.body));
+    });
+    request(app.server)
+      .post('/')
+      .send({
+        a: 111,
+        b: 222,
+        c: 333,
+      })
+      .expect(200)
+      .expect({
+        a: 111,
+        b: 222,
+        c: 333,
+      }, done);
+  });
+
+  it('支持使用 connect/express 错误处理中间件', function (done) {
+    const app = new Connect();
+    app.use('/', function (ctx) {
+      throw new Error('test error');
+    });
+    app.use('/', fromClassicalErrorHandle(function (err, req, res, next) {
+      expect(err).to.instanceof(Error);
+      expect(err).property('message').to.equal('test error');
+      res.end('no error');
+    }));
+    request(app.server)
+      .get('/')
+      .expect(200)
+      .expect('no error', done);
   });
 
 });
