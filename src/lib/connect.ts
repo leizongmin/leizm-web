@@ -1,7 +1,8 @@
 import { Server, ServerRequest, ServerResponse } from 'http';
 import * as finalhandler from 'finalhandler';
 import { BaseConnect } from './base';
-import { ListenOptions, ErrorReason } from './define';
+import { ListenOptions, ErrorReason, MiddlewareHandle } from './define';
+import { Router } from './router';
 
 export class Connect extends BaseConnect {
 
@@ -18,6 +19,10 @@ export class Connect extends BaseConnect {
 
   public handleRequest(req: ServerRequest, res: ServerResponse, done: (err?: ErrorReason) => void) {
     this.handleRequestByRequestResponse(req, res, done || finalhandler(req, res));
+  }
+
+  public use(route: string | RegExp, ...handles: Array<MiddlewareHandle | Router>) {
+    this.useMiddleware(route, ...handles.map(item => item instanceof Router ? item.toMiddleware() : item));
   }
 
 }

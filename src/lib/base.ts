@@ -9,7 +9,7 @@ export class BaseConnect {
 
   protected readonly stack: Middleware[] = [];
 
-  public use(route: string | RegExp, ...handles: MiddlewareHandle[]) {
+  protected useMiddleware(route: string | RegExp, ...handles: MiddlewareHandle[]) {
     const info = parseRoute(route);
     for (const handle of handles) {
       this.stack.push({ route: info, handle, handleError: isMiddlewareErrorHandle(handle) });

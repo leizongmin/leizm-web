@@ -7,7 +7,10 @@ function sleep(ms = 1000) {
 }
 
 const app = new Connect();
-app.use('/sleep', async function (ctx) {
+app.use('/sleep', function (ctx) {
+  console.log(ctx.request.method, ctx.request.url);
+  ctx.next();
+}, async function (ctx) {
   console.log(ctx.request.query, ctx.request.hasBody(), ctx.request.body);
   await sleep(1000);
   ctx.next();
@@ -18,11 +21,15 @@ app.use('/', fromClassicalHandle(function (req, res, next) {
 }));
 
 const router = new Router();
+router.use('/', function (ctx) {
+  console.log('router', ctx.request.method, ctx.request.url);
+  ctx.next();
+});
 router.get('/hello/:a/:b', function (ctx) {
   ctx.response.setHeader('content-type', 'application/json');
   ctx.response.end(JSON.stringify(ctx.request.params));
 });
-app.use('/', router.toMiddleware());
+app.use('/', router);
 
 console.log(app);
 app.listen({ port: 3000 }, () => console.log('listening...'));
