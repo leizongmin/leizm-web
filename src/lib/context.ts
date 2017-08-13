@@ -7,7 +7,7 @@ export class Context {
 
   public readonly request: Request;
   public readonly response: Response;
-  protected _nextHandle: NextFunction;
+  protected readonly nextHandleStack: NextFunction[] = [];
 
   constructor(req: ServerRequest, res: ServerResponse) {
     this.request = new Request(req);
@@ -15,11 +15,18 @@ export class Context {
   }
 
   public next(err?: ErrorReason) {
-    this._nextHandle(err);
+    const next = this.nextHandleStack[this.nextHandleStack.length - 1];
+    if (next) {
+      next(err);
+    }
   }
 
-  public setNextHandle(next: NextFunction) {
-    this._nextHandle = next;
+  public pushNextHandle(next: NextFunction) {
+    this.nextHandleStack.push(next);
+  }
+
+  public popNextHandle(): NextFunction | void {
+    return this.nextHandleStack.pop();
   }
 
 }

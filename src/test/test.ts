@@ -1,4 +1,4 @@
-import { Connect, fromClassicalHandle } from '../lib';
+import { Connect, fromClassicalHandle, Router } from '../lib';
 
 function sleep(ms = 1000) {
   return new Promise((resolve, reject) => {
@@ -16,8 +16,12 @@ app.use('/', fromClassicalHandle(function (req, res, next) {
   console.log(req.headers);
   next();
 }));
-app.use('/hello/:a/:b', function (ctx) {
+
+const router = new Router();
+router.get('/hello/:a/:b', function (ctx) {
   ctx.response.send(ctx.request.params);
 });
+app.use('/', router.toMiddleware());
+
 console.log(app);
 app.listen({ port: 3000 }, () => console.log('listening...'));

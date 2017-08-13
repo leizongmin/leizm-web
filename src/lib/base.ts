@@ -5,7 +5,7 @@ import {
   ClassicalMiddlewareHandle, ClassicalMiddlewareErrorHandle, PathRegExp,
 } from './define';
 import {
-  isPromise, testRoute, parseRoute, getRouteParams,
+  isPromise, testRoute, parseRoute, getRouteParams, isMiddlewareErrorHandle,
 } from './utils';
 
 export class BaseConnect {
@@ -15,7 +15,7 @@ export class BaseConnect {
   public use(route: string | RegExp, ...handles: MiddlewareHandle[]) {
     const info = parseRoute(route);
     for (const handle of handles) {
-      this.stack.push({ route: info, handle, handleError: handle.length > 1 });
+      this.stack.push({ route: info, handle, handleError: isMiddlewareErrorHandle(handle) });
     }
   }
 
@@ -36,7 +36,10 @@ export class BaseConnect {
     };
     const next: NextFunction = (err) => {
       const handle = err ? getNextErrorHandle() : getNextHandle();
-      if (!handle) return done(err);
+      if (!handle) {
+        ctx.popNextHandle();
+        return done(err);
+      }
       if (!testRoute(ctx.request.pathname, handle.route)) return next(err);
       if (handle.route instanceof RegExp) {
         ctx.request.params = getRouteParams(ctx.request.pathname, handle.route as PathRegExp);
@@ -53,7 +56,7 @@ export class BaseConnect {
         p.then(() => next()).catch(next);
       }
     };
-    ctx.setNextHandle(next);
+    ctx.pushNextHandle(next);
     ctx.next();
   }
 

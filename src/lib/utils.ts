@@ -45,3 +45,22 @@ export function fromClassicalErrorHandle(fn: ClassicalMiddlewareErrorHandle): Mi
     fn(err, ctx.request.req, ctx.response.res, ctx.next.bind(ctx));
   };
 }
+
+export function isMiddlewareErrorHandle(handle: MiddlewareHandle): boolean {
+  return handle.length > 1;
+}
+
+export function wrapMiddlewareHandleWithMethod(method: string, handle: MiddlewareHandle): MiddlewareHandle {
+  function handleRequest(ctx: Context, err?: ErrorReason) {
+    if (ctx.request.method !== method) return ctx.next(err);
+    handle(ctx, err);
+  }
+  if (isMiddlewareErrorHandle(handle)) {
+    return function (ctx: Context, err?: ErrorReason) {
+      handleRequest(ctx, err);
+    };
+  }
+  return function (ctx: Context) {
+    handleRequest(ctx);
+  };
+}
