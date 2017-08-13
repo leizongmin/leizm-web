@@ -25,3 +25,7 @@ export interface ListenOptions {
 
 export type ClassicalMiddlewareHandle = (req: ServerRequest, res: ServerResponse, next?: NextFunction) => void;
 export type ClassicalMiddlewareErrorHandle = (err: ErrorReason, req: ServerRequest, res: ServerResponse, next?: NextFunction) => void;
+
+export interface ContextConstructor {
+  new(req: ServerRequest, res: ServerResponse): Context;
+}

@@ -1,6 +1,8 @@
 import { ServerRequest, ServerResponse } from 'http';
 import { Context } from './context';
-import { Middleware, MiddlewareHandle, ErrorReason, NextFunction, PathRegExp } from './define';
+import {
+  Middleware, MiddlewareHandle, ErrorReason, NextFunction, PathRegExp, ContextConstructor,
+} from './define';
 import {
   testRoute, parseRoute, getRouteParams, isMiddlewareErrorHandle, execMiddlewareHandle,
 } from './utils';
@@ -8,6 +10,15 @@ import {
 export class BaseConnect {
 
   protected readonly stack: Middleware[] = [];
+  protected contextConstructor: ContextConstructor = Context;
+
+  protected setContextConstructor(c: ContextConstructor) {
+    this.contextConstructor = c;
+  }
+
+  protected createContext(req: ServerRequest, res: ServerResponse) {
+    return new this.contextConstructor(req, res);
+  }
 
   protected useMiddleware(route: string | RegExp, ...handles: MiddlewareHandle[]) {
     const info = parseRoute(route);
@@ -51,7 +62,7 @@ export class BaseConnect {
   }
 
   protected handleRequestByRequestResponse(req: ServerRequest, res: ServerResponse, done: (err?: ErrorReason) => void) {
-    this.handleRequestByContext(new Context(req, res), done);
+    this.handleRequestByContext(this.createContext(req, res), done);
   }
 
 }
