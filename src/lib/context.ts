@@ -7,16 +7,19 @@ export class Context {
 
   public readonly request: Request;
   public readonly response: Response;
-  protected readonly _nextHandle: NextFunction;
+  protected _nextHandle: NextFunction;
 
-  constructor(req: ServerRequest, res: ServerResponse, next: NextFunction) {
+  constructor(req: ServerRequest, res: ServerResponse) {
     this.request = new Request(req);
     this.response = new Response(res);
-    this._nextHandle = next;
   }
 
   public next(err?: ErrorReason) {
     this._nextHandle(err);
+  }
+
+  public setNextHandle(next: NextFunction) {
+    this._nextHandle = next;
   }
 
 }
