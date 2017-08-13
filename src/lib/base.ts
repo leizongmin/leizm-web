@@ -12,10 +12,6 @@ export class BaseConnect {
   protected readonly stack: Middleware[] = [];
   protected contextConstructor: ContextConstructor = Context;
 
-  protected setContextConstructor(c: ContextConstructor) {
-    this.contextConstructor = c;
-  }
-
   protected createContext(req: ServerRequest, res: ServerResponse) {
     return new this.contextConstructor(req, res);
   }
