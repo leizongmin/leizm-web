@@ -27,7 +27,7 @@ export class BaseConnect {
       if (!handle) return;
       if (handle.handleError) return getNextHandle();
       return handle;
-    }
+    };
     const getNextErrorHandle: GetMiddlewareHandle = () => {
       const handle = this.stack[index++];
       if (!handle) return;
