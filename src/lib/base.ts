@@ -40,9 +40,9 @@ export class BaseConnect {
         ctx.popNextHandle();
         return done(err);
       }
-      if (!testRoute(ctx.request.pathname, handle.route)) return next(err);
+      if (!testRoute(ctx.request.path, handle.route)) return next(err);
       if (handle.route instanceof RegExp) {
-        ctx.request.params = getRouteParams(ctx.request.pathname, handle.route as PathRegExp);
+        ctx.request.params = getRouteParams(ctx.request.path, handle.route as PathRegExp);
       } else {
         ctx.request.params = {};
       }

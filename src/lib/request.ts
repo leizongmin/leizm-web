@@ -1,18 +1,19 @@
 import { ServerRequest } from 'http';
-import { parse  as parseUrl } from 'url';
-import * as parseCookies from 'cookie-parser';
+import { EventEmitter } from 'events';
+import * as parseUrl from 'parseurl';
 
-export class Request {
+export class Request extends EventEmitter {
 
-  public readonly pathname: string;
+  public readonly path: string;
   public readonly search: string;
   public readonly query: Record<string, any>;
 
   constructor(public readonly req: ServerRequest) {
-    const urlInfo = parseUrl(req.url, true);
-    this.query = urlInfo.query;
-    this.pathname = urlInfo.pathname;
-    this.search = urlInfo.search;
+    super();
+    const info = parseUrl(req);
+    this.query = info.query;
+    this.path = info.pathname;
+    this.search = info.search;
   }
 
   public get method() {
@@ -23,8 +24,16 @@ export class Request {
     return this.req.url;
   }
 
+  public get httpVersion() {
+    return this.req.httpVersion;
+  }
+
   public get headers() {
     return this.req.headers;
+  }
+
+  public getHeader(name: string) {
+    return this.req.headers[name.toLowerCase()];
   }
 
   public get params(): Record<string, string> {

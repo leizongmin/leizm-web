@@ -1,10 +1,13 @@
 import { ServerResponse } from 'http';
+import { EventEmitter } from 'events';
 
-export class Response {
+export class Response extends EventEmitter {
 
-  constructor(public readonly res: ServerResponse) {}
+  constructor(public readonly res: ServerResponse) {
+    super();
+  }
 
-  public status(value: number) {
+  public setStatus(value: number) {
     this.res.statusCode = value;
   }
 
@@ -18,24 +21,12 @@ export class Response {
     }
   }
 
-  public setCookie(name: string, value: string) {
-
+  public write(data: string | Buffer | Uint8Array, encoding?: string, callback?: () => void): boolean {
+    return this.res.write.apply(this.res, arguments);
   }
 
-  public sendFile(filename: string) {
-
-  }
-
-  public sendJSON(data: any) {
-    this.res.setHeader('Content-Type', 'application/json');
-    this.res.end(JSON.stringify(data));
-  }
-
-  public send(data: any) {
-    if (Buffer.isBuffer(data) || typeof data === 'string') {
-      return this.res.end(data);
-    }
-    this.sendJSON(data);
+  public end(data: string | Buffer | Uint8Array, encoding?: string, callback?: () => void): boolean {
+    return this.res.end.apply(this.res, arguments);
   }
 
 }

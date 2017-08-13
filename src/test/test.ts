@@ -19,7 +19,8 @@ app.use('/', fromClassicalHandle(function (req, res, next) {
 
 const router = new Router();
 router.get('/hello/:a/:b', function (ctx) {
-  ctx.response.send(ctx.request.params);
+  ctx.response.setHeader('content-type', 'application/json');
+  ctx.response.end(JSON.stringify(ctx.request.params));
 });
 app.use('/', router.toMiddleware());
 
