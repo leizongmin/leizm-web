@@ -1,5 +1,7 @@
 import { ServerRequest, ServerResponse } from 'http';
 import { Context } from './context';
+import { Request } from './request';
+import { Response } from './response';
 
 export { PathRegExp, RegExpOptions } from 'path-to-regexp';
 
@@ -27,7 +29,15 @@ export type ClassicalMiddlewareHandle = (req: ServerRequest, res: ServerResponse
 export type ClassicalMiddlewareErrorHandle = (err: ErrorReason, req: ServerRequest, res: ServerResponse, next?: NextFunction) => void;
 
 export interface ContextConstructor {
-  new(req: ServerRequest, res: ServerResponse): Context;
+  new(): Context;
+}
+
+export interface RequestConstructor {
+  new(req: ServerRequest): Request;
+}
+
+export interface ResponseConstructor {
+  new(res: ServerResponse): Response;
 }
 
 export interface Headers {

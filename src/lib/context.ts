@@ -1,17 +1,36 @@
 import { ServerRequest, ServerResponse } from 'http';
 import { Request } from './request';
 import { Response } from './response';
-import { NextFunction, ErrorReason } from './define';
+import { NextFunction, ErrorReason, RequestConstructor, ResponseConstructor } from './define';
 
 export class Context {
 
-  public readonly request: Request;
-  public readonly response: Response;
+  protected _request: Request;
+  protected _response: Response;
   protected readonly nextHandleStack: NextFunction[] = [];
+  protected requestConstructor: RequestConstructor = Request;
+  protected responseConstructor: ResponseConstructor = Response;
 
-  constructor(req: ServerRequest, res: ServerResponse) {
-    this.request = new Request(req);
-    this.response = new Response(res);
+  protected createRequest(req: ServerRequest) {
+    return new this.requestConstructor(req);
+  }
+
+  protected createResponse(res: ServerResponse) {
+    return new this.responseConstructor(res);
+  }
+
+  public init(req: ServerRequest, res: ServerResponse) {
+    this._request = this.createRequest(req);
+    this._response = this.createResponse(res);
+    return this;
+  }
+
+  public get request() {
+    return this._request;
+  }
+
+  public get response() {
+    return this._response;
   }
 
   public next(err?: ErrorReason) {

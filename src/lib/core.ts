@@ -19,7 +19,7 @@ export class Core {
   };
 
   protected createContext(req: ServerRequest, res: ServerResponse) {
-    return new this.contextConstructor(req, res);
+    return new this.contextConstructor().init(req, res);
   }
 
   public toMiddleware() {

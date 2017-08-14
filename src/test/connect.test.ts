@@ -1,8 +1,6 @@
 import { expect } from 'chai';
 import { Server } from 'http';
-import {
-  Connect, Context, ContextConstructor, fromClassicalHandle, fromClassicalErrorHandle,
- } from '../lib';
+import { Connect, fromClassicalHandle, fromClassicalErrorHandle } from '../lib';
 import * as request from 'supertest';
 import * as bodyParser from 'body-parser';
 
@@ -343,31 +341,6 @@ describe('Connect', function () {
       .get('/')
       .expect(200)
       .expect('no error', done);
-  });
-
-  it('支持扩展 Connect 和 Context 上的方法', function (done) {
-    class MyContext extends Context {
-      public sendJSON(data: any) {
-        this.response.setHeader('content-type', 'application/json');
-        this.response.end(JSON.stringify(data));
-      }
-    }
-    type ErrorReason = null | string | Error | Record<any, any>;
-    type MiddlewareHandle = (ctx: MyContext, err?: ErrorReason) => Promise<void> | void;
-    class MyConnect extends Connect {
-      protected contextConstructor: ContextConstructor = MyContext;
-      public use(route: string | RegExp, ...handles: MiddlewareHandle[]) {
-        this.useMiddleware(true, route, ...handles);
-      }
-    }
-    const app = new MyConnect();
-    app.use('/', function (ctx) {
-      ctx.sendJSON({ hello: 'world' });
-    });
-    request(app.server)
-      .get('/')
-      .expect(200)
-      .expect({ hello: 'world' }, done);
   });
 
 });

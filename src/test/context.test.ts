@@ -108,6 +108,12 @@ describe('Response', function () {
         bbb: 'hello bbb',
         ccc: 'hello ccc',
       });
+      {
+        ctx.response.setHeader('xxx', 123);
+        expect(ctx.response.getHeader('XXX')).to.equal(123);
+        ctx.response.removeHeader('xxx');
+        expect(ctx.response.getHeader('xxx')).to.equal(undefined);
+      }
       ctx.response.writeHead(500, {
         bbb: 'xxx',
         ddd: 'xxxx',
