@@ -7,7 +7,7 @@ import {
   testRoutePath, parseRoutePath, getRouteParams, isMiddlewareErrorHandle, execMiddlewareHandle,
 } from './utils';
 
-export class BaseConnect {
+export class Core {
 
   protected readonly stack: Middleware[] = [];
   protected contextConstructor: ContextConstructor = Context;

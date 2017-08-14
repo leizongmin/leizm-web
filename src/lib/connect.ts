@@ -1,9 +1,9 @@
 import { Server, ServerRequest, ServerResponse } from 'http';
 import * as finalhandler from 'finalhandler';
-import { BaseConnect } from './base';
+import { Core } from './core';
 import { ListenOptions, ErrorReason, MiddlewareHandle } from './define';
 
-export class Connect extends BaseConnect {
+export class Connect extends Core {
 
   protected _server: Server;
 
@@ -20,8 +20,8 @@ export class Connect extends BaseConnect {
     this.handleRequestByRequestResponse(req, res, done || finalhandler(req, res));
   }
 
-  public use(route: string | RegExp, ...handles: Array<MiddlewareHandle | BaseConnect>) {
-    this.useMiddleware(true, route, ...handles.map(item => item instanceof BaseConnect ? item.toMiddleware() : item));
+  public use(route: string | RegExp, ...handles: Array<MiddlewareHandle | Core>) {
+    this.useMiddleware(true, route, ...handles.map(item => item instanceof Core ? item.toMiddleware() : item));
   }
 
 }

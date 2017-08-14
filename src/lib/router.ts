@@ -1,11 +1,11 @@
-import { BaseConnect } from './base';
+import { Core } from './core';
 import { MiddlewareHandle } from './define';
 import { wrapMiddlewareHandleWithMethod } from './utils';
 
-export class Router extends BaseConnect {
+export class Router extends Core {
 
-  public use(route: string | RegExp, ...handles: Array<MiddlewareHandle | BaseConnect>) {
-    this.useMiddleware(true, route, ...handles.map(item => item instanceof BaseConnect ? item.toMiddleware() : item));
+  public use(route: string | RegExp, ...handles: Array<MiddlewareHandle | Core>) {
+    this.useMiddleware(true, route, ...handles.map(item => item instanceof Core ? item.toMiddleware() : item));
   }
 
   public all(route: string | RegExp, ...handles: MiddlewareHandle[]) {

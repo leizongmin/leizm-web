@@ -1,6 +1,6 @@
 export * from './define';
 export * from './utils';
-export * from './base';
+export * from './core';
 export * from './connect';
 export * from './router';
 export * from './context';
