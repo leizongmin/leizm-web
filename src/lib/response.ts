@@ -22,6 +22,10 @@ export class Response {
     }
   }
 
+  public removeHeader(name: string) {
+    this.res.removeHeader(name);
+  }
+
   public writeHead(statusCode: number, headers: Record<string, string | string[] | number>) {
     this.res.writeHead(statusCode, headers);
   }
