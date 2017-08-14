@@ -1,21 +1,11 @@
 import { BaseConnect } from './base';
-import { Context } from './context';
 import { MiddlewareHandle } from './define';
 import { wrapMiddlewareHandleWithMethod } from './utils';
 
 export class Router extends BaseConnect {
 
-  public toMiddleware() {
-    const router = this;
-    return function (ctx: Context) {
-      router.handleRequestByContext(ctx, function (err) {
-        ctx.next(err);
-      });
-    };
-  }
-
-  public use(route: string | RegExp, ...handles: Array<MiddlewareHandle | Router>) {
-    this.useMiddleware(true, route, ...handles.map(item => item instanceof Router ? item.toMiddleware() : item));
+  public use(route: string | RegExp, ...handles: Array<MiddlewareHandle | BaseConnect>) {
+    this.useMiddleware(true, route, ...handles.map(item => item instanceof BaseConnect ? item.toMiddleware() : item));
   }
 
   public all(route: string | RegExp, ...handles: MiddlewareHandle[]) {

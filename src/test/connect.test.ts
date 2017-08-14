@@ -211,6 +211,22 @@ describe('Connect', function () {
       });
   });
 
+  it('use 支持嵌套使用另一个 Connect 实例', function (done) {
+    const app = new Connect();
+    const app2 = new Connect();
+    app2.use('/aaa', function (ctx) {
+      ctx.response.end('aaa');
+    });
+    app.use('/', app2);
+    app.use('/aaa', function (ctx) {
+      throw new Error('不可能执行到此处');
+    });
+    request(app.server)
+      .get('/aaa')
+      .expect(200)
+      .expect('aaa', done);
+  });
+
   it('所有中间件按照顺序执行，不符合执行条件会被跳过', function (done) {
     const app = new Connect();
     const status: any = {};

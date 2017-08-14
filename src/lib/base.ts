@@ -22,6 +22,15 @@ export class BaseConnect {
     return new this.contextConstructor(req, res);
   }
 
+  public toMiddleware() {
+    const router = this;
+    return function (ctx: Context) {
+      router.handleRequestByContext(ctx, function (err) {
+        ctx.next(err);
+      });
+    };
+  }
+
   protected useMiddleware(isPrefix: boolean, route: string | RegExp, ...handles: MiddlewareHandle[]) {
     for (const handle of handles) {
       this.stack.push({
