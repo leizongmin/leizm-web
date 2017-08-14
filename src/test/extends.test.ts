@@ -2,12 +2,9 @@ import { expect } from 'chai';
 import * as request from 'supertest';
 import * as bodyParser from 'body-parser';
 import {
-  Core, Connect, Router, Context, Request, Response,
-  ContextConstructor, RequestConstructor, ResponseConstructor,
-  fromClassicalHandle, ErrorReason,
+  Connect, Router, Context, Request, Response,
+  ContextConstructor, RequestConstructor, ResponseConstructor, fromClassicalHandle,
 } from '../lib';
-
-type MiddlewareHandle = (ctx: MyContext, err?: ErrorReason) => Promise<void> | void;
 
 class MyRequest extends Request {
   public getBody() {
@@ -34,16 +31,10 @@ class MyContext extends Context {
 
 class MyConnect extends Connect {
   protected contextConstructor: ContextConstructor = MyContext;
-  public use(route: string | RegExp, ...handles: Array<MiddlewareHandle | Core>) {
-    this.useMiddleware(true, route, ...(handles.map(item => item instanceof Core ? item.toMiddleware() : item)));
-  }
 }
 
 class MyRouter extends Router {
   protected contextConstructor: ContextConstructor = MyContext;
-  public use(route: string | RegExp, ...handles: Array<MiddlewareHandle | Core>) {
-    this.useMiddleware(true, route, ...(handles.map(item => item instanceof Core ? item.toMiddleware() : item)));
-  }
 }
 
 describe('可扩展性', function () {
@@ -51,7 +42,7 @@ describe('可扩展性', function () {
   it('支持扩展 Connect', function (done) {
     const app = new MyConnect();
     app.use('/', fromClassicalHandle(bodyParser.json()));
-    app.use('/', function (ctx) {
+    app.use('/', function (ctx: MyContext) {
       expect(ctx.getHello('aa')).to.equal('hello aa');
       expect(ctx.request.getBody()).to.deep.equal({ a: 111, b: 222 });
       ctx.response.sendJSON({ hello: 'world' });
