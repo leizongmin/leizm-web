@@ -8,6 +8,10 @@ export class Response {
     this.res.statusCode = statusCode;
   }
 
+  public getHeader(name: string): string | string[] | number {
+    return this.res.getHeader(name);
+  }
+
   public setHeader(name: string, value: string | string[] | number) {
     this.res.setHeader(name, value);
   }
