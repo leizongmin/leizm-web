@@ -1,7 +1,7 @@
 import { Server, ServerRequest, ServerResponse } from 'http';
 import * as finalhandler from 'finalhandler';
 import { Core } from './core';
-import { ListenOptions, ErrorReason, MiddlewareHandle } from './define';
+import { ListenOptions, ErrorReason } from './define';
 
 export class Connect extends Core {
 
@@ -18,10 +18,6 @@ export class Connect extends Core {
 
   public handleRequest(req: ServerRequest, res: ServerResponse, done?: (err?: ErrorReason) => void) {
     this.handleRequestByRequestResponse(req, res, done || finalhandler(req, res));
-  }
-
-  public use(route: string | RegExp, ...handles: Array<MiddlewareHandle | Core>) {
-    this.useMiddleware(true, route, ...handles.map(item => item instanceof Core ? item.toMiddleware() : item));
   }
 
 }

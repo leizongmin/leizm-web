@@ -4,10 +4,6 @@ import { wrapMiddlewareHandleWithMethod } from './utils';
 
 export class Router extends Core {
 
-  public use(route: string | RegExp, ...handles: Array<MiddlewareHandle | Core>) {
-    this.useMiddleware(true, route, ...handles.map(item => item instanceof Core ? item.toMiddleware() : item));
-  }
-
   public all(route: string | RegExp, ...handles: MiddlewareHandle[]) {
     this.useMiddleware(true, route, ...handles);
   }

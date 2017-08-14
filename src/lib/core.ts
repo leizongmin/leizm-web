@@ -31,6 +31,10 @@ export class Core {
     };
   }
 
+  public use(route: string | RegExp, ...handles: Array<MiddlewareHandle | Core>) {
+    this.useMiddleware(true, route, ...handles.map(item => item instanceof Core ? item.toMiddleware() : item));
+  }
+
   protected useMiddleware(isPrefix: boolean, route: string | RegExp, ...handles: MiddlewareHandle[]) {
     for (const handle of handles) {
       this.stack.push({
