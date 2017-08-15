@@ -13,7 +13,7 @@
     "coveralls": "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js",
     "clean": "rm -rf dist",
     "compile": "npm run clean && tsc",
-    "prepublish": "npm run compile"
+    "prepublish": "npm run test && npm run compile"
   },
   "nyc": {
     "extension": [
