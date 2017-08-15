@@ -31,7 +31,7 @@
     "connect"
   ],
   "author": "Zongmin Lei <leizongmin@gmail.com>",
-  "license": "GPL-3.0",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/leizongmin/leizm-connect/issues"
   },
