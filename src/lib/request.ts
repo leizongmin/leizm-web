@@ -1,19 +1,24 @@
 import { ServerRequest } from 'http';
-import { parse as parseQueryString} from 'querystring';
+import { parse as parseQueryString } from 'querystring';
 import * as parseUrl from 'parseurl';
 import { Headers } from './define';
 
 export class Request {
 
-  public readonly path: string;
-  public readonly search: string;
-  public readonly query: Record<string, any>;
+  public pathPrefix: string = '';
+  protected parsedUrlInfo: {
+    path: string;
+    search: string;
+    query: Record<string, any>,
+  };
 
   constructor(public readonly req: ServerRequest) {
     const info = parseUrl(req);
-    this.query = parseQueryString(info.query);
-    this.path = info.pathname;
-    this.search = info.search;
+    this.parsedUrlInfo = {
+      query: parseQueryString(info.query),
+      path: info.pathname,
+      search: info.search,
+    };
   }
 
   public get method() {
@@ -21,7 +26,19 @@ export class Request {
   }
 
   public get url() {
-    return this.req.url;
+    return this.req.url.slice(this.pathPrefix.length);
+  }
+
+  public get path() {
+    return this.parsedUrlInfo.path.slice(this.pathPrefix.length);
+  }
+
+  public get search() {
+    return this.parsedUrlInfo.search;
+  }
+
+  public get query() {
+    return this.parsedUrlInfo.query;
   }
 
   public get httpVersion() {
