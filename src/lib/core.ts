@@ -9,20 +9,36 @@ import {
 
 export class Core {
 
+  /** 中间件堆栈 */
   protected readonly stack: Middleware[] = [];
+  /** Context对象构造函数 */
   protected contextConstructor: ContextConstructor = Context;
+  /** 解析路由选项 */
   protected readonly routeOptions: RegExpOptions = {
     sensitive: true,
     strict: true,
     end: true,
     delimiter: '/',
   };
+  /** 父中间件的路由规则 */
   protected parentRoutePath: RegExp = null;
 
+  /**
+   * 创建Context对象
+   *
+   * @param req 原始ServerRequest对象
+   * @param res 原始ServerResponse对象
+   */
   protected createContext(req: ServerRequest, res: ServerResponse) {
     return new this.contextConstructor().init(req, res);
   }
 
+  /**
+   * 解析路由规则
+   *
+   * @param isPrefix 是否为前缀模式
+   * @param route 路由规则
+   */
   protected parseRoutePath(isPrefix: boolean, route: string | RegExp) {
     return parseRoutePath(route, {
       ...this.routeOptions,
@@ -30,6 +46,9 @@ export class Core {
     });
   }
 
+  /**
+   * 生成中间件
+   */
   public toMiddleware() {
     const router = this;
     return function (ctx: Context) {
@@ -39,6 +58,12 @@ export class Core {
     };
   }
 
+  /**
+   * 注册中间件
+   *
+   * @param route 路由规则
+   * @param handles 中间件对象或处理函数
+   */
   public use(route: string | RegExp, ...handles: Array<MiddlewareHandle | Core>) {
     this.useMiddleware(true, route, ...handles.map(item => {
       if (item instanceof Core) {
@@ -49,6 +74,13 @@ export class Core {
     }));
   }
 
+  /**
+   * 注册中间件
+   *
+   * @param isPrefix 是否为前缀模式
+   * @param route 路由规则
+   * @param handles 中间件对象或处理函数
+   */
   protected useMiddleware(isPrefix: boolean, route: string | RegExp, ...handles: MiddlewareHandle[]) {
     for (const handle of handles) {
       this.stack.push({
@@ -59,6 +91,12 @@ export class Core {
     }
   }
 
+  /**
+   * 通过Context对象处理请求
+   *
+   * @param ctx Context对象
+   * @param done 未处理请求回调函数
+   */
   protected handleRequestByContext(ctx: Context, done: (err?: ErrorReason) => void) {
     let index = 0;
     const prePathPrefix = ctx.request.pathPrefix;
@@ -100,6 +138,12 @@ export class Core {
     ctx.next();
   }
 
+  /**
+   * 通过原始ServerRequest和ServerResponse对象处理请求
+   * @param req 原始ServerRequest对象
+   * @param res 原始ServerResponse对象
+   * @param done 未处理请求回调函数
+   */
   protected handleRequestByRequestResponse(req: ServerRequest, res: ServerResponse, done: (err?: ErrorReason) => void) {
     this.handleRequestByContext(this.createContext(req, res), done);
   }
