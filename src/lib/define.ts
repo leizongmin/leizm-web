@@ -43,3 +43,7 @@ export interface ResponseConstructor {
 export interface Headers {
   [name: string]: string | string[] | number;
 }
+
+export interface ServerRequestEx extends ServerRequest {
+  originalUrl?: string;
+}

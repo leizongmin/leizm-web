@@ -1,11 +1,11 @@
 import { ServerRequest } from 'http';
 import { parse as parseQueryString } from 'querystring';
 import * as parseUrl from 'parseurl';
-import { Headers } from './define';
+import { Headers, ServerRequestEx } from './define';
 
 export class Request {
 
-  public pathPrefix: string = '';
+  protected _pathPrefix: string = '';
   protected parsedUrlInfo: {
     path: string;
     search: string;
@@ -13,6 +13,8 @@ export class Request {
   };
 
   constructor(public readonly req: ServerRequest) {
+    const req2 = req as ServerRequestEx;
+    req2.originalUrl = req2.originalUrl || req.url;
     const info = parseUrl(req);
     this.parsedUrlInfo = {
       query: parseQueryString(info.query),
@@ -21,16 +23,25 @@ export class Request {
     };
   }
 
+  public set pathPrefix(str: string) {
+    this._pathPrefix = str.slice(-1) === '/' ? str.slice(0, -1) : str;
+  }
+
+  public reset(url: string, params: Record<string, string>) {
+    this.pathPrefix = url;
+    this.params = params;
+  }
+
   public get method() {
     return this.req.method;
   }
 
   public get url() {
-    return this.req.url.slice(this.pathPrefix.length);
+    return this.req.url.slice(this._pathPrefix.length);
   }
 
   public get path() {
-    return this.parsedUrlInfo.path.slice(this.pathPrefix.length);
+    return this.parsedUrlInfo.path.slice(this._pathPrefix.length);
   }
 
   public get search() {
