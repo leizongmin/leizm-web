@@ -17,9 +17,17 @@ export class Core {
     end: true,
     delimiter: '/',
   };
+  protected parentRoutePath: RegExp = null;
 
   protected createContext(req: ServerRequest, res: ServerResponse) {
     return new this.contextConstructor().init(req, res);
+  }
+
+  protected parseRoutePath(isPrefix: boolean, route: string | RegExp) {
+    return parseRoutePath(route, {
+      ...this.routeOptions,
+      end: !isPrefix,
+    });
   }
 
   public toMiddleware() {
@@ -32,16 +40,19 @@ export class Core {
   }
 
   public use(route: string | RegExp, ...handles: Array<MiddlewareHandle | Core>) {
-    this.useMiddleware(true, route, ...handles.map(item => item instanceof Core ? item.toMiddleware() : item));
+    this.useMiddleware(true, route, ...handles.map(item => {
+      if (item instanceof Core) {
+        item.parentRoutePath = this.parseRoutePath(true, route);
+        return item.toMiddleware();
+      }
+      return item;
+    }));
   }
 
   protected useMiddleware(isPrefix: boolean, route: string | RegExp, ...handles: MiddlewareHandle[]) {
     for (const handle of handles) {
       this.stack.push({
-        route: parseRoutePath(route, {
-          ...this.routeOptions,
-          end: !isPrefix,
-        }),
+        route: this.parseRoutePath(isPrefix, route),
         handle,
         handleError: isMiddlewareErrorHandle(handle),
       });
@@ -50,19 +61,23 @@ export class Core {
 
   protected handleRequestByContext(ctx: Context, done: (err?: ErrorReason) => void) {
     let index = 0;
+
     type GetMiddlewareHandle = () => (void | Middleware);
+
     const getNextHandle: GetMiddlewareHandle = () => {
       const handle = this.stack[index++];
       if (!handle) return;
       if (handle.handleError) return getNextHandle();
       return handle;
     };
+
     const getNextErrorHandle: GetMiddlewareHandle = () => {
       const handle = this.stack[index++];
       if (!handle) return;
       if (!handle.handleError) return getNextErrorHandle();
       return handle;
     };
+
     const next: NextFunction = (err) => {
       const handle = err ? getNextErrorHandle() : getNextHandle();
       err = err || null;
@@ -70,10 +85,13 @@ export class Core {
         ctx.popNextHandle();
         return done(err || null);
       }
-      if (!testRoutePath(ctx.request.path, handle.route)) return next(err);
+      if (!testRoutePath(ctx.request.path, handle.route)) {
+        return next(err);
+      }
       ctx.request.params = getRouteParams(ctx.request.path, handle.route as PathRegExp);
       execMiddlewareHandle(handle.handle, ctx, err, next);
     };
+
     ctx.pushNextHandle(next);
     ctx.next();
   }
