@@ -10,8 +10,10 @@
   "scripts": {
     "test": "mocha",
     "test-cov": "nyc --reporter=lcov mocha && nyc report",
+    "coveralls": "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js",
     "clean": "rm -rf dist",
-    "compile": "npm run clean && tsc"
+    "compile": "npm run clean && tsc",
+    "prepublish": "npm run compile"
   },
   "nyc": {
     "extension": [
@@ -50,6 +52,7 @@
     "@types/supertest": "^2.0.2",
     "body-parser": "^1.17.2",
     "chai": "^4.1.1",
+    "coveralls": "^2.13.1",
     "mocha": "^3.5.0",
     "nyc": "^11.1.0",
     "supertest": "^3.0.0",
