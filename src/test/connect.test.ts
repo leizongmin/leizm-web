@@ -50,6 +50,19 @@ describe('Connect', function () {
       .expect('ok', done);
   });
 
+  it('可以 attach http.Server', function (done) {
+    const app = new Connect();
+    app.use('/', function (ctx) {
+      ctx.response.end('ok');
+    });
+    const server = new Server();
+    app.attach(server);
+    request(server)
+      .get('/')
+      .expect(200)
+      .expect('ok', done);
+  });
+
   it('支持 async function', function (done) {
     const app = new Connect();
     app.use('/', async function (ctx) {

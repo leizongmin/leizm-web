@@ -16,6 +16,10 @@ export class Connect extends Core {
     this.server.listen(options, listeningListener);
   }
 
+  public attach(server: Server) {
+    server.on('request', this.handleRequest.bind(this));
+  }
+
   public handleRequest(req: ServerRequest, res: ServerResponse, done?: (err?: ErrorReason) => void) {
     this.handleRequestByRequestResponse(req, res, done || finalhandler(req, res));
   }
