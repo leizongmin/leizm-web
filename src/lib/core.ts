@@ -4,7 +4,7 @@ import {
   Middleware, MiddlewareHandle, ErrorReason, NextFunction, PathRegExp, ContextConstructor, RegExpOptions,
 } from './define';
 import {
-  testRoutePath, parseRoutePath, getRouteParams, isMiddlewareErrorHandle, execMiddlewareHandle,
+  testRoutePath, parseRoutePath, getRouteParams, isMiddlewareErrorHandle, execMiddlewareHandle, getRouteMatchPath,
 } from './utils';
 
 export class Core {
@@ -61,6 +61,9 @@ export class Core {
 
   protected handleRequestByContext(ctx: Context, done: (err?: ErrorReason) => void) {
     let index = 0;
+    const prePathPrefix = ctx.request.pathPrefix;
+    const pathPrefix = getRouteMatchPath(ctx.request.path, this.parentRoutePath as PathRegExp);
+    ctx.request.reset(pathPrefix, {});
 
     type GetMiddlewareHandle = () => (void | Middleware);
 
@@ -83,6 +86,7 @@ export class Core {
       err = err || null;
       if (!handle) {
         ctx.popNextHandle();
+        ctx.request.reset(prePathPrefix, {});
         return done(err || null);
       }
       if (!testRoutePath(ctx.request.path, handle.route)) {

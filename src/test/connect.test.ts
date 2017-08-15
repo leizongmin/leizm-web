@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import { Server } from 'http';
-import { Connect, fromClassicalHandle, fromClassicalErrorHandle } from '../lib';
+import { Connect, Router, fromClassicalHandle, fromClassicalErrorHandle } from '../lib';
 import * as request from 'supertest';
 import * as bodyParser from 'body-parser';
 
@@ -341,6 +341,42 @@ describe('Connect', function () {
       .get('/')
       .expect(200)
       .expect('no error', done);
+  });
+
+  it('use Connect 和 Router 实例时，request.pathPrefix & request.url & request.path 的值正确', function (done) {
+    const app = new Connect();
+    const router = new Router();
+    app.use('/abc', function (ctx) {
+      expect(ctx.request.pathPrefix).to.equal('/');
+      expect(ctx.request.path).to.equal('/abc/123/xx');
+      expect(ctx.request.url).to.equal('/abc/123/xx?hello=world');
+      ctx.next();
+    });
+    router.use('/123', function (ctx) {
+      expect(ctx.request.pathPrefix).to.equal('/abc');
+      expect(ctx.request.path).to.equal('/123/xx');
+      expect(ctx.request.url).to.equal('/123/xx?hello=world');
+      ctx.next();
+    });
+    router.get('/123/:code', function (ctx) {
+      expect(ctx.request.pathPrefix).to.equal('/abc');
+      expect(ctx.request.path).to.equal('/123/xx');
+      expect(ctx.request.url).to.equal('/123/xx?hello=world');
+      expect(ctx.request.params).to.deep.equal({ code: 'xx' });
+      expect(ctx.request.query).to.deep.equal({ hello: 'world' });
+      ctx.next();
+    });
+    app.use('/abc', router);
+    app.use('/', function (ctx) {
+      expect(ctx.request.pathPrefix).to.equal('/');
+      expect(ctx.request.path).to.equal('/abc/123/xx');
+      expect(ctx.request.url).to.equal('/abc/123/xx?hello=world');
+      ctx.response.end('it works');
+    });
+    request(app.server)
+      .get('/abc/123/xx?hello=world')
+      // .expect(200)
+      .expect('it works', done);
   });
 
 });

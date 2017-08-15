@@ -27,6 +27,10 @@ export class Request {
     this._pathPrefix = str.slice(-1) === '/' ? str.slice(0, -1) : str;
   }
 
+  public get pathPrefix() {
+    return this._pathPrefix ? this._pathPrefix : '/';
+  }
+
   public reset(url: string, params: Record<string, string>) {
     this.pathPrefix = url;
     this.params = params;

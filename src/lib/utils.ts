@@ -1,7 +1,7 @@
 import * as pathToRegExp from 'path-to-regexp';
 import {
   MiddlewareHandle, ClassicalMiddlewareHandle, ClassicalMiddlewareErrorHandle, ErrorReason, NextFunction,
-  RegExpOptions,
+  RegExpOptions, PathRegExp,
 } from './define';
 import { Context } from './context';
 
@@ -19,7 +19,7 @@ export function testRoutePath(pathname: string, route: RegExp): boolean {
   return route.test(pathname);
 }
 
-export function getRouteParams(pathname: string, route: pathToRegExp.PathRegExp): Record<string, string> {
+export function getRouteParams(pathname: string, route: PathRegExp): Record<string, string> {
   const params: Record<string, string> = {};
   route.lastIndex = 0;
   const values = route.exec(pathname);
@@ -29,6 +29,13 @@ export function getRouteParams(pathname: string, route: pathToRegExp.PathRegExp)
     });
   }
   return params;
+}
+
+export function getRouteMatchPath(pathname: string, route: PathRegExp | null): string {
+  if (!route) return '/';
+  route.lastIndex = 0;
+  const values = route.exec(pathname);
+  return values && values[0] || '/';
 }
 
 export function fromClassicalHandle(fn: ClassicalMiddlewareHandle): MiddlewareHandle {
