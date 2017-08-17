@@ -23,6 +23,7 @@ export class Request {
       path: info.pathname,
       search: info.search,
     };
+    (req as any).query = this.query;
   }
 
   /** 设置当前中间件的URL前缀 */
