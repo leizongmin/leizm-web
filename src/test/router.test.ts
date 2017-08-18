@@ -115,4 +115,35 @@ describe('Router', function () {
     }
   });
 
+  it('注册各种请求方法并正确处理出错的请求 (async function)', async function () {
+    const app = new Connect();
+    const router = new Router();
+    function generateHandle(msg: string) {
+      return function (ctx: Context) {
+        ctx.response.end(msg);
+      };
+    }
+    function generateErrorHandle(msg: string) {
+      return function (ctx: Context, err?: ErrorReason) {
+        expect(err).to.instanceof(Error);
+        expect(err).property('message').to.equal(msg);
+        ctx.response.end(msg);
+      };
+    }
+    for (const method of METHODS) {
+      (router as any)[method]('/xyz', generateErrorHandle('不可能执行到此处'), generateHandle(method));
+    }
+    for (const method of METHODS) {
+      (router as any)[method]('/abc', generateErrorHandle('不可能执行到此处'), generateHandle(method));
+    }
+    app.use('/', router);
+    for (const method of METHODS) {
+      if (method === 'connect') continue;
+      await (request(app.server) as any)
+        [method]('/abc')
+        .expect(200)
+        .expect(method === 'head' ? undefined : method);
+    }
+  });
+
 });

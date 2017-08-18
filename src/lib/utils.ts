@@ -1,6 +1,6 @@
 import * as pathToRegExp from 'path-to-regexp';
 import {
-  MiddlewareHandle, ClassicalMiddlewareHandle, ClassicalMiddlewareErrorHandle, ErrorReason, NextFunction,
+  MiddlewareHandle, ClassicalMiddlewareHandle, ClassicalMiddlewareErrorHandle, ErrorReason,
   RegExpOptions, PathRegExp,
 } from './define';
 import { Context } from './context';
@@ -107,7 +107,7 @@ export function isMiddlewareErrorHandle(handle: MiddlewareHandle): boolean {
 export function wrapMiddlewareHandleWithMethod(method: string, handle: MiddlewareHandle): MiddlewareHandle {
   function handleRequest(ctx: Context, err?: ErrorReason) {
     if (ctx.request.method !== method) return ctx.next(err);
-    handle(ctx, err);
+    execMiddlewareHandle(handle, ctx, err, (err2) => ctx.next(err2));
   }
   if (isMiddlewareErrorHandle(handle)) {
     return function (ctx: Context, err?: ErrorReason) {
@@ -127,16 +127,16 @@ export function wrapMiddlewareHandleWithMethod(method: string, handle: Middlewar
  * @param err 出错信息
  * @param callback 回调函数
  */
-export function execMiddlewareHandle(handle: MiddlewareHandle, ctx: Context, err: ErrorReason, callback: NextFunction) {
+export function execMiddlewareHandle(handle: MiddlewareHandle, ctx: Context, err: ErrorReason, onError: (err: ErrorReason) => void) {
   process.nextTick(function () {
     let p: Promise<void> | void;
     try {
       p = handle(ctx, err);
     } catch (err) {
-      return callback(err);
+      return onError(err);
     }
     if (p && isPromise(p)) {
-      p.catch(callback);
+      p.catch(onError);
     }
   });
 }
