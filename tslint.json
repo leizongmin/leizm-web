@@ -1,13 +1,5 @@
 {
   "extends": [
     "tslint-config-lei"
-  ],
-  "rules": {
-    "curly": false,
-    "space-before-function-paren": false,
-    "no-console": [ false ],
-    "max-classes-per-file": [
-      false
-    ]
-  }
+  ]
 }

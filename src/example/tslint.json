@@ -1,0 +1,10 @@
+{
+  "extends": [
+    "tslint-config-lei"
+  ],
+  "rules": {
+    "no-console": [
+      false
+    ]
+  }
+}
