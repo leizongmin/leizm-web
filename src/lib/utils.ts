@@ -111,7 +111,9 @@ export function fromClassicalErrorHandle<C extends Context>(
  *
  * @param handle 处理函数
  */
-export function isMiddlewareErrorHandle<C>(handle: MiddlewareHandle<C>): boolean {
+export function isMiddlewareErrorHandle<C>(
+  handle: MiddlewareHandle<C>
+): boolean {
   return handle.length > 1;
 }
 
