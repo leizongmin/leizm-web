@@ -85,10 +85,10 @@ export function getRouteMatchPath(
  *
  * @param fn 处理函数
  */
-export function fromClassicalHandle(
+export function fromClassicalHandle<C extends Context>(
   fn: ClassicalMiddlewareHandle
-): MiddlewareHandle {
-  return function(ctx: Context) {
+): MiddlewareHandle<C> {
+  return function(ctx: C) {
     fn(ctx.request.req, ctx.response.res, ctx.next.bind(ctx));
   };
 }
@@ -98,9 +98,9 @@ export function fromClassicalHandle(
  *
  * @param fn 处理函数
  */
-export function fromClassicalErrorHandle(
+export function fromClassicalErrorHandle<C extends Context>(
   fn: ClassicalMiddlewareErrorHandle
-): MiddlewareHandle {
+): MiddlewareHandle<C> {
   return function(ctx: Context, err?: ErrorReason) {
     fn(err, ctx.request.req, ctx.response.res, ctx.next.bind(ctx));
   };
@@ -111,7 +111,7 @@ export function fromClassicalErrorHandle(
  *
  * @param handle 处理函数
  */
-export function isMiddlewareErrorHandle(handle: MiddlewareHandle): boolean {
+export function isMiddlewareErrorHandle<C>(handle: MiddlewareHandle<C>): boolean {
   return handle.length > 1;
 }
 
@@ -121,20 +121,20 @@ export function isMiddlewareErrorHandle(handle: MiddlewareHandle): boolean {
  * @param method 请求方法
  * @param handle 处理函数
  */
-export function wrapMiddlewareHandleWithMethod(
+export function wrapMiddlewareHandleWithMethod<C extends Context>(
   method: string,
-  handle: MiddlewareHandle
-): MiddlewareHandle {
-  function handleRequest(ctx: Context, err?: ErrorReason) {
+  handle: MiddlewareHandle<C>
+): MiddlewareHandle<C> {
+  function handleRequest(ctx: C, err?: ErrorReason) {
     if (ctx.request.method !== method) return ctx.next(err);
     execMiddlewareHandle(handle, ctx, err, err2 => ctx.next(err2));
   }
   if (isMiddlewareErrorHandle(handle)) {
-    return function(ctx: Context, err?: ErrorReason) {
+    return function(ctx: C, err?: ErrorReason) {
       handleRequest(ctx, err);
     };
   }
-  return function(ctx: Context) {
+  return function(ctx: C) {
     handleRequest(ctx);
   };
 }
@@ -147,9 +147,9 @@ export function wrapMiddlewareHandleWithMethod(
  * @param err 出错信息
  * @param callback 回调函数
  */
-export function execMiddlewareHandle(
-  handle: MiddlewareHandle,
-  ctx: Context,
+export function execMiddlewareHandle<C>(
+  handle: MiddlewareHandle<C>,
+  ctx: C,
   err: ErrorReason,
   onError: (err: ErrorReason) => void
 ) {
