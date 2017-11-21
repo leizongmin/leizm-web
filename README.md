@@ -70,6 +70,8 @@ app.listen({ port: 3000 }, () => {
 });
 ```
 
+扩展 Request 与 Response 对象的方法：https://github.com/leizongmin/leizm-connect/blob/master/src/test/extends.test.ts
+
 ## 授权协议
 
 ```
