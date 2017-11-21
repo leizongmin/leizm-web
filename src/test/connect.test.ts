@@ -12,8 +12,18 @@ function sleep(ms: number): Promise<number> {
 
 describe('Connect', function () {
 
+  const appInstances: Connect[] = [];
+  after(function () {
+    for (const app of appInstances) {
+      if (app.server) {
+        app.server.close();
+      }
+    }
+  });
+
   it('封装了 http.Server', function (done) {
     const app = new Connect();
+    appInstances.push(app);
     app.use('/', function (ctx) {
       ctx.response.end('ok');
     });
@@ -26,6 +36,7 @@ describe('Connect', function () {
 
   it('调用 listen 监听端口成功', function (done) {
     const app = new Connect();
+    appInstances.push(app);
     app.use('/', function (ctx) {
       ctx.response.end('ok');
     });
@@ -38,6 +49,7 @@ describe('Connect', function () {
 
   it('支持在 http.createServer 内使用', function (done) {
     const app = new Connect();
+    appInstances.push(app);
     app.use('/', function (ctx) {
       ctx.response.end('ok');
     });
@@ -52,6 +64,7 @@ describe('Connect', function () {
 
   it('可以 attach http.Server', function (done) {
     const app = new Connect();
+    appInstances.push(app);
     app.use('/', function (ctx) {
       ctx.response.end('ok');
     });
@@ -65,6 +78,7 @@ describe('Connect', function () {
 
   it('支持 async function', function (done) {
     const app = new Connect();
+    appInstances.push(app);
     app.use('/', async function (ctx) {
       await sleep(300);
       ctx.response.end('ok');
@@ -81,6 +95,7 @@ describe('Connect', function () {
 
   it('如果没有中间件响应结果，调用 done 回调函数', function (done) {
     const app = new Connect();
+    appInstances.push(app);
     const server = new Server(function (req, res) {
       app.handleRequest(req, res, function (err) {
         expect(err).to.equal(null);
@@ -95,6 +110,7 @@ describe('Connect', function () {
 
   it('如果没有中间件响应 Error 结果，调用 done 回调函数时传递 Error 信息', function (done) {
     const app = new Connect();
+    appInstances.push(app);
     app.use('/', function (ctx) {
       ctx.next('test error');
     });
@@ -112,6 +128,7 @@ describe('Connect', function () {
 
   it('如果没有中间件响应结果，且不传递 done 回调函数时，返回 404', function (done) {
     const app = new Connect();
+    appInstances.push(app);
     const server = new Server(function (req, res) {
       app.handleRequest(req, res);
     });
@@ -122,6 +139,7 @@ describe('Connect', function () {
 
   it('如果没有中间件响应 Error 结果，且不传递 done 回调函数时，返回 500', function (done) {
     const app = new Connect();
+    appInstances.push(app);
     app.use('/', function (ctx) {
       ctx.next('test error');
     });
@@ -136,6 +154,7 @@ describe('Connect', function () {
 
   it('支持捕捉中间件抛出的异常，并传递给出错处理中间件', function (done) {
     const app = new Connect();
+    appInstances.push(app);
     app.use('/', function (ctx) {
       throw new Error('oh error');
     });
@@ -155,6 +174,7 @@ describe('Connect', function () {
 
   it('支持捕捉 async function 中间件抛出的异常，并传递给出错处理中间件', function (done) {
     const app = new Connect();
+    appInstances.push(app);
     app.use('/', async function (ctx) {
       throw new Error('oh error');
     });
@@ -171,6 +191,7 @@ describe('Connect', function () {
 
   it('支持 URL 字符串前缀', function (done) {
     const app = new Connect();
+    appInstances.push(app);
     app.use('/a', function (ctx) {
       ctx.response.end('this is a');
     });
@@ -185,6 +206,7 @@ describe('Connect', function () {
 
   it('支持 URL 正则前缀', function (done) {
     const app = new Connect();
+    appInstances.push(app);
     app.use(/a/, function (ctx) {
       ctx.response.end('this is a');
     });
@@ -199,6 +221,7 @@ describe('Connect', function () {
 
   it('use 支持多个中间件', function (done) {
     const app = new Connect();
+    appInstances.push(app);
     const status: any = {};
     app.use('/', function (ctx) {
       status.a = true;
@@ -225,6 +248,8 @@ describe('Connect', function () {
   it('use 支持嵌套使用另一个 Connect 实例', function (done) {
     const app = new Connect();
     const app2 = new Connect();
+    appInstances.push(app);
+    appInstances.push(app2);
     app2.use('/aaa', function (ctx) {
       ctx.response.end('aaa');
     });
@@ -240,6 +265,7 @@ describe('Connect', function () {
 
   it('所有中间件按照顺序执行，不符合执行条件会被跳过', function (done) {
     const app = new Connect();
+    appInstances.push(app);
     const status: any = {};
     app.use('/', function (ctx) {
       status.x = true;
@@ -291,6 +317,7 @@ describe('Connect', function () {
 
   it('支持 ctx.request.params 参数', function (done) {
     const app = new Connect();
+    appInstances.push(app);
     app.use('/prefix/:x/:y/:z', function (ctx) {
       expect(ctx.request.params).to.deep.equal({
         x: 'hello',
@@ -320,6 +347,7 @@ describe('Connect', function () {
 
   it('支持使用 connect/express 中间件', function (done) {
     const app = new Connect();
+    appInstances.push(app);
     app.use('/', fromClassicalHandle(bodyParser.json()));
     app.use('/', function (ctx) {
       ctx.response.setHeader('content-type', 'application/json');
@@ -342,6 +370,7 @@ describe('Connect', function () {
 
   it('支持使用 connect/express 错误处理中间件', function (done) {
     const app = new Connect();
+    appInstances.push(app);
     app.use('/', function (ctx) {
       throw new Error('test error');
     });
@@ -358,6 +387,7 @@ describe('Connect', function () {
 
   it('use Connect 和 Router 实例时，request.pathPrefix & request.url & request.path 的值正确', function (done) {
     const app = new Connect();
+    appInstances.push(app);
     const router = new Router();
     app.use('/abc', function (ctx) {
       expect(ctx.request.pathPrefix).to.equal('/');
