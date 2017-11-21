@@ -17,11 +17,9 @@ function sleep(ms: number): Promise<number> {
 
 describe("Connect", function() {
   const appInstances: Connect[] = [];
-  after(function() {
+  after(async function() {
     for (const app of appInstances) {
-      if (app.server) {
-        app.server.close();
-      }
+      await app.close();
     }
   });
 

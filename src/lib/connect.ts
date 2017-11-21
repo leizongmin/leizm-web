@@ -38,6 +38,19 @@ export class Connect<
   }
 
   /**
+   * 关闭服务器
+   */
+  public async close() {
+    return new Promise((resolve, reject) => {
+      if (this._server) {
+        this._server.close(() => resolve());
+      } else {
+        resolve();
+      }
+    });
+  }
+
+  /**
    * 处理请求
    *
    * @param req ServerRequest对象
