@@ -4,6 +4,11 @@ export class Response {
   constructor(public readonly res: ServerResponse) {}
 
   /**
+   * 初始化完成
+   */
+  public inited() {}
+
+  /**
    * 设置响应状态码
    *
    * @param statusCode 响应状态码

@@ -16,16 +16,24 @@ import {
 ////////////////////////////////////////////////////////////////////////
 // 扩展的 Request 对象
 class MyRequest extends Request {
+  public isInited = false;
   public getBody() {
     return this.body;
+  }
+  public inited() {
+    this.isInited = true;
   }
 }
 
 // 扩展的 Response 对象
 class MyResponse extends Response {
+  public isInited = false;
   public sendJSON(data: any) {
     this.setHeader("content-type", "application/json");
     this.end(JSON.stringify(data));
+  }
+  public inited() {
+    this.isInited = true;
   }
 }
 
@@ -33,8 +41,12 @@ class MyResponse extends Response {
 class MyContext extends Context<MyRequest, MyResponse> {
   protected requestConstructor: RequestConstructor = MyRequest;
   protected responseConstructor: ResponseConstructor = MyResponse;
+  public isInited = false;
   public getHello(msg: string) {
     return `hello ${msg}`;
+  }
+  public inited() {
+    this.isInited = true;
   }
 }
 
@@ -56,6 +68,9 @@ describe("可扩展性", function() {
     app.use("/", function(ctx) {
       expect(ctx.getHello("aa")).to.equal("hello aa");
       expect(ctx.request.getBody()).to.deep.equal({ a: 111, b: 222 });
+      expect(ctx.isInited).to.equal(true);
+      expect(ctx.request.isInited).to.equal(true);
+      expect(ctx.response.isInited).to.equal(true);
       ctx.response.sendJSON({ hello: "world" });
     });
     request(app.server)
@@ -72,6 +87,9 @@ describe("可扩展性", function() {
     router.post("/", function(ctx) {
       expect(ctx.getHello("aa")).to.equal("hello aa");
       expect(ctx.request.getBody()).to.deep.equal({ a: 111, b: 222 });
+      expect(ctx.isInited).to.equal(true);
+      expect(ctx.request.isInited).to.equal(true);
+      expect(ctx.response.isInited).to.equal(true);
       ctx.response.sendJSON({ hello: "world" });
     });
     app.use("/", router);

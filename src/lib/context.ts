@@ -49,9 +49,17 @@ export class Context<
    */
   public init(req: ServerRequest, res: ServerResponse) {
     this._request = this.createRequest(req);
+    this._request.inited();
     this._response = this.createResponse(res);
+    this._response.inited();
+    this.inited();
     return this;
   }
+
+  /**
+   * 初始化完成
+   */
+  public inited() {}
 
   /**
    * 获取Request对象

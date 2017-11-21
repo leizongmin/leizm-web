@@ -25,6 +25,11 @@ export class Request {
     (req as any).query = this.query;
   }
 
+  /**
+   * 初始化完成
+   */
+  public inited() {}
+
   /** 设置当前中间件的URL前缀 */
   public set pathPrefix(str: string) {
     this._pathPrefix = str.slice(-1) === "/" ? str.slice(0, -1) : str;
