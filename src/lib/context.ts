@@ -8,11 +8,14 @@ import {
   ResponseConstructor
 } from "./define";
 
-export class Context {
+export class Context<
+  Req extends Request = Request,
+  Res extends Response = Response
+> {
   /** 原始ServerRequest对象 */
-  protected _request: Request;
+  protected _request: Req;
   /** 原始ServerResponse对象 */
-  protected _response: Response;
+  protected _response: Res;
   /** 用于存储next函数的堆栈 */
   protected readonly nextHandleStack: NextFunction[] = [];
   /** Request对象的构造函数 */
@@ -26,7 +29,7 @@ export class Context {
    * @param req 原始ServerRequest对象
    */
   protected createRequest(req: ServerRequest) {
-    return new this.requestConstructor(req);
+    return new this.requestConstructor(req) as Req;
   }
 
   /**
@@ -35,7 +38,7 @@ export class Context {
    * @param res 原始ServerResponse对象
    */
   protected createResponse(res: ServerResponse) {
-    return new this.responseConstructor(res);
+    return new this.responseConstructor(res) as Res;
   }
 
   /**

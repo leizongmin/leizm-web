@@ -1,15 +1,20 @@
 import { Core } from "./core";
 import { MiddlewareHandle } from "./define";
 import { wrapMiddlewareHandleWithMethod } from "./utils";
+import { Context } from "./context";
+import { Request } from "./request";
+import { Response } from "./response";
 
-export class Router extends Core {
+export class Router<
+  C extends Context = Context<Request, Response>
+> extends Core<C> {
   /**
    * 处理所有请求方法的请求
    *
    * @param route 路由规则
    * @param handles 处理函数
    */
-  public all(route: string | RegExp, ...handles: MiddlewareHandle[]) {
+  public all(route: string | RegExp, ...handles: MiddlewareHandle<C>[]) {
     this.useMiddleware(true, route, ...handles);
   }
 
@@ -19,7 +24,7 @@ export class Router extends Core {
    * @param route 路由规则
    * @param handles 处理函数
    */
-  public get(route: string | RegExp, ...handles: MiddlewareHandle[]) {
+  public get(route: string | RegExp, ...handles: MiddlewareHandle<C>[]) {
     this.useMiddleware(
       false,
       route,
@@ -33,7 +38,7 @@ export class Router extends Core {
    * @param route 路由规则
    * @param handles 处理函数
    */
-  public head(route: string | RegExp, ...handles: MiddlewareHandle[]) {
+  public head(route: string | RegExp, ...handles: MiddlewareHandle<C>[]) {
     this.useMiddleware(
       false,
       route,
@@ -47,7 +52,7 @@ export class Router extends Core {
    * @param route 路由规则
    * @param handles 处理函数
    */
-  public post(route: string | RegExp, ...handles: MiddlewareHandle[]) {
+  public post(route: string | RegExp, ...handles: MiddlewareHandle<C>[]) {
     this.useMiddleware(
       false,
       route,
@@ -61,7 +66,7 @@ export class Router extends Core {
    * @param route 路由规则
    * @param handles 处理函数
    */
-  public put(route: string | RegExp, ...handles: MiddlewareHandle[]) {
+  public put(route: string | RegExp, ...handles: MiddlewareHandle<C>[]) {
     this.useMiddleware(
       false,
       route,
@@ -75,7 +80,7 @@ export class Router extends Core {
    * @param route 路由规则
    * @param handles 处理函数
    */
-  public delete(route: string | RegExp, ...handles: MiddlewareHandle[]) {
+  public delete(route: string | RegExp, ...handles: MiddlewareHandle<C>[]) {
     this.useMiddleware(
       false,
       route,
@@ -89,7 +94,7 @@ export class Router extends Core {
    * @param route 路由规则
    * @param handles 处理函数
    */
-  public connect(route: string | RegExp, ...handles: MiddlewareHandle[]) {
+  public connect(route: string | RegExp, ...handles: MiddlewareHandle<C>[]) {
     this.useMiddleware(
       false,
       route,
@@ -103,7 +108,7 @@ export class Router extends Core {
    * @param route 路由规则
    * @param handles 处理函数
    */
-  public options(route: string | RegExp, ...handles: MiddlewareHandle[]) {
+  public options(route: string | RegExp, ...handles: MiddlewareHandle<C>[]) {
     this.useMiddleware(
       false,
       route,
@@ -117,7 +122,7 @@ export class Router extends Core {
    * @param route 路由规则
    * @param handles 处理函数
    */
-  public trace(route: string | RegExp, ...handles: MiddlewareHandle[]) {
+  public trace(route: string | RegExp, ...handles: MiddlewareHandle<C>[]) {
     this.useMiddleware(
       false,
       route,
@@ -131,7 +136,7 @@ export class Router extends Core {
    * @param route 路由规则
    * @param handles 处理函数
    */
-  public patch(route: string | RegExp, ...handles: MiddlewareHandle[]) {
+  public patch(route: string | RegExp, ...handles: MiddlewareHandle<C>[]) {
     this.useMiddleware(
       false,
       route,

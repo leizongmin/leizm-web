@@ -2,8 +2,13 @@ import { Server, ServerRequest, ServerResponse } from "http";
 import * as finalhandler from "finalhandler";
 import { Core } from "./core";
 import { ListenOptions, ErrorReason } from "./define";
+import { Context } from "./context";
+import { Request } from "./request";
+import { Response } from "./response";
 
-export class Connect extends Core {
+export class Connect<
+  Ctx extends Context = Context<Request, Response>
+> extends Core<Ctx> {
   /** http.Server实例 */
   protected _server: Server;
 

@@ -1,27 +1,26 @@
 import { ServerRequest, ServerResponse } from "http";
-import { Context } from "./context";
 import { Request } from "./request";
 import { Response } from "./response";
-
+import { Context } from "./context";
 export { PathRegExp, RegExpOptions } from "path-to-regexp";
 
 /** 出错原因 */
 export type ErrorReason = null | string | Error | Record<any, any>;
 
 /** 中间件处理函数 */
-export type MiddlewareHandle = (
-  ctx: Context,
+export type MiddlewareHandle<C> = (
+  ctx: C,
   err?: ErrorReason
 ) => Promise<void> | void;
 
 /** 中间件堆栈的元素 */
-export interface Middleware {
+export interface Middleware<C> {
   /** 是否为错误处理中间件 */
   handleError: boolean;
   /** 路由规则 */
   route: RegExp;
   /** 中间件处理函数 */
-  handle: MiddlewareHandle;
+  handle: MiddlewareHandle<C>;
 }
 
 /** next回调函数 */

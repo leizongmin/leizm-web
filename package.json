@@ -8,7 +8,7 @@
     "dist/lib"
   ],
   "scripts": {
-    "test": "mocha",
+    "test": "npm run lint && mocha",
     "test-cov": "nyc --reporter=lcov mocha && nyc report",
     "coveralls": "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js",
     "clean": "rm -rf dist",

@@ -26,7 +26,7 @@
 ## 安装
 
 ```bash
-$ npm install @leizm/connect --save
+npm install @leizm/connect --save
 ```
 
 ## 基本使用方法

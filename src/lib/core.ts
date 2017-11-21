@@ -17,10 +17,12 @@ import {
   execMiddlewareHandle,
   getRouteMatchPath
 } from "./utils";
+import { Request } from "./request";
+import { Response } from "./response";
 
-export class Core {
+export class Core<C extends Context = Context<Request, Response>> {
   /** 中间件堆栈 */
-  protected readonly stack: Middleware[] = [];
+  protected readonly stack: Middleware<C>[] = [];
   /** Context对象构造函数 */
   protected contextConstructor: ContextConstructor = Context;
   /** 解析路由选项 */
@@ -40,7 +42,7 @@ export class Core {
    * @param res 原始ServerResponse对象
    */
   protected createContext(req: ServerRequest, res: ServerResponse) {
-    return new this.contextConstructor().init(req, res);
+    return new this.contextConstructor().init(req, res) as C;
   }
 
   /**
@@ -61,7 +63,7 @@ export class Core {
    */
   public toMiddleware() {
     const router = this;
-    return function(ctx: Context) {
+    return function(ctx: C) {
       router.handleRequestByContext(ctx, function(err) {
         ctx.next(err);
       });
@@ -76,7 +78,7 @@ export class Core {
    */
   public use(
     route: string | RegExp,
-    ...handles: Array<MiddlewareHandle | Core>
+    ...handles: Array<MiddlewareHandle<C> | Core<C>>
   ) {
     this.useMiddleware(
       true,
@@ -101,7 +103,7 @@ export class Core {
   protected useMiddleware(
     isPrefix: boolean,
     route: string | RegExp,
-    ...handles: MiddlewareHandle[]
+    ...handles: MiddlewareHandle<C>[]
   ) {
     for (const handle of handles) {
       this.stack.push({
@@ -118,17 +120,14 @@ export class Core {
    * @param ctx Context对象
    * @param done 未处理请求回调函数
    */
-  protected handleRequestByContext(
-    ctx: Context,
-    done: (err?: ErrorReason) => void
-  ) {
+  protected handleRequestByContext(ctx: C, done: (err?: ErrorReason) => void) {
     let index = 0;
     const prePathPrefix = ctx.request.pathPrefix;
     const pathPrefix = getRouteMatchPath(ctx.request.path, this
       .parentRoutePath as PathRegExp);
     ctx.request.reset(pathPrefix, {});
 
-    type GetMiddlewareHandle = () => void | Middleware;
+    type GetMiddlewareHandle = () => void | Middleware<C>;
 
     const getNextHandle: GetMiddlewareHandle = () => {
       const handle = this.stack[index++];
