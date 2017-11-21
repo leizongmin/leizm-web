@@ -1,17 +1,16 @@
-import { ServerRequest } from 'http';
-import { parse as parseQueryString } from 'querystring';
-import * as parseUrl from 'parseurl';
-import { Headers, ServerRequestEx } from './define';
+import { ServerRequest } from "http";
+import { parse as parseQueryString } from "querystring";
+import * as parseUrl from "parseurl";
+import { Headers, ServerRequestEx } from "./define";
 
 export class Request {
-
   /** 当前中间件的URL前缀 */
-  protected _pathPrefix: string = '';
+  protected _pathPrefix: string = "";
   /** 已解析的URL信息 */
   protected parsedUrlInfo: {
     path: string;
     search: string;
-    query: Record<string, any>,
+    query: Record<string, any>;
   };
 
   constructor(public readonly req: ServerRequest) {
@@ -21,19 +20,19 @@ export class Request {
     this.parsedUrlInfo = {
       query: parseQueryString(info.query),
       path: info.pathname,
-      search: info.search,
+      search: info.search
     };
     (req as any).query = this.query;
   }
 
   /** 设置当前中间件的URL前缀 */
   public set pathPrefix(str: string) {
-    this._pathPrefix = str.slice(-1) === '/' ? str.slice(0, -1) : str;
+    this._pathPrefix = str.slice(-1) === "/" ? str.slice(0, -1) : str;
   }
 
   /** 获取当前中间件的URL前缀 */
   public get pathPrefix() {
-    return this._pathPrefix ? this._pathPrefix : '/';
+    return this._pathPrefix ? this._pathPrefix : "/";
   }
 
   /**
@@ -165,5 +164,4 @@ export class Request {
   public hasSession() {
     return !!(this.req as any).session;
   }
-
 }

@@ -1,15 +1,18 @@
-import { ServerRequest, ServerResponse } from 'http';
-import { Context } from './context';
-import { Request } from './request';
-import { Response } from './response';
+import { ServerRequest, ServerResponse } from "http";
+import { Context } from "./context";
+import { Request } from "./request";
+import { Response } from "./response";
 
-export { PathRegExp, RegExpOptions } from 'path-to-regexp';
+export { PathRegExp, RegExpOptions } from "path-to-regexp";
 
 /** 出错原因 */
 export type ErrorReason = null | string | Error | Record<any, any>;
 
 /** 中间件处理函数 */
-export type MiddlewareHandle = (ctx: Context, err?: ErrorReason) => Promise<void> | void;
+export type MiddlewareHandle = (
+  ctx: Context,
+  err?: ErrorReason
+) => Promise<void> | void;
 
 /** 中间件堆栈的元素 */
 export interface Middleware {
@@ -37,23 +40,32 @@ export interface ListenOptions {
 }
 
 /** 经典connect中间件 */
-export type ClassicalMiddlewareHandle = (req: ServerRequest, res: ServerResponse, next?: NextFunction) => void;
+export type ClassicalMiddlewareHandle = (
+  req: ServerRequest,
+  res: ServerResponse,
+  next?: NextFunction
+) => void;
 /** 经典connect错误处理中间件 */
-export type ClassicalMiddlewareErrorHandle = (err: ErrorReason, req: ServerRequest, res: ServerResponse, next?: NextFunction) => void;
+export type ClassicalMiddlewareErrorHandle = (
+  err: ErrorReason,
+  req: ServerRequest,
+  res: ServerResponse,
+  next?: NextFunction
+) => void;
 
 /** Context对象构造器 */
 export interface ContextConstructor {
-  new(): Context;
+  new (): Context;
 }
 
 /** Request对象构造器 */
 export interface RequestConstructor {
-  new(req: ServerRequest): Request;
+  new (req: ServerRequest): Request;
 }
 
 /** Response对象构造器 */
 export interface ResponseConstructor {
-  new(res: ServerResponse): Response;
+  new (res: ServerResponse): Response;
 }
 
 /** 请求头 */

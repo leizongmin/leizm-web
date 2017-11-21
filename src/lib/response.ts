@@ -1,7 +1,6 @@
-import { ServerResponse } from 'http';
+import { ServerResponse } from "http";
 
 export class Response {
-
   constructor(public readonly res: ServerResponse) {}
 
   /**
@@ -58,7 +57,10 @@ export class Response {
    * @param statusCode 响应状态码
    * @param headers 响应头
    */
-  public writeHead(statusCode: number, headers: Record<string, string | string[] | number>) {
+  public writeHead(
+    statusCode: number,
+    headers: Record<string, string | string[] | number>
+  ) {
     this.res.writeHead(statusCode, headers);
   }
 
@@ -69,7 +71,11 @@ export class Response {
    * @param encoding 字符编码
    * @param callback 回调函数
    */
-  public write(data: string | Buffer | Uint8Array, encoding?: string, callback?: () => void): boolean {
+  public write(
+    data: string | Buffer | Uint8Array,
+    encoding?: string,
+    callback?: () => void
+  ): boolean {
     return this.res.write.apply(this.res, arguments);
   }
 
@@ -80,8 +86,11 @@ export class Response {
    * @param encoding 字符编码
    * @param callback 回调函数
    */
-  public end(data: string | Buffer | Uint8Array, encoding?: string, callback?: () => void): boolean {
+  public end(
+    data: string | Buffer | Uint8Array,
+    encoding?: string,
+    callback?: () => void
+  ): boolean {
     return this.res.end.apply(this.res, arguments);
   }
-
 }

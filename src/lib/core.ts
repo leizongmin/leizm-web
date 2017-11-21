@@ -1,14 +1,24 @@
-import { ServerRequest, ServerResponse } from 'http';
-import { Context } from './context';
+import { ServerRequest, ServerResponse } from "http";
+import { Context } from "./context";
 import {
-  Middleware, MiddlewareHandle, ErrorReason, NextFunction, PathRegExp, ContextConstructor, RegExpOptions,
-} from './define';
+  Middleware,
+  MiddlewareHandle,
+  ErrorReason,
+  NextFunction,
+  PathRegExp,
+  ContextConstructor,
+  RegExpOptions
+} from "./define";
 import {
-  testRoutePath, parseRoutePath, getRouteParams, isMiddlewareErrorHandle, execMiddlewareHandle, getRouteMatchPath,
-} from './utils';
+  testRoutePath,
+  parseRoutePath,
+  getRouteParams,
+  isMiddlewareErrorHandle,
+  execMiddlewareHandle,
+  getRouteMatchPath
+} from "./utils";
 
 export class Core {
-
   /** 中间件堆栈 */
   protected readonly stack: Middleware[] = [];
   /** Context对象构造函数 */
@@ -18,7 +28,7 @@ export class Core {
     sensitive: true,
     strict: true,
     end: true,
-    delimiter: '/',
+    delimiter: "/"
   };
   /** 父中间件的路由规则 */
   protected parentRoutePath: RegExp = null;
@@ -42,7 +52,7 @@ export class Core {
   protected parseRoutePath(isPrefix: boolean, route: string | RegExp) {
     return parseRoutePath(route, {
       ...this.routeOptions,
-      end: !isPrefix,
+      end: !isPrefix
     });
   }
 
@@ -51,8 +61,8 @@ export class Core {
    */
   public toMiddleware() {
     const router = this;
-    return function (ctx: Context) {
-      router.handleRequestByContext(ctx, function (err) {
+    return function(ctx: Context) {
+      router.handleRequestByContext(ctx, function(err) {
         ctx.next(err);
       });
     };
@@ -64,14 +74,21 @@ export class Core {
    * @param route 路由规则
    * @param handles 中间件对象或处理函数
    */
-  public use(route: string | RegExp, ...handles: Array<MiddlewareHandle | Core>) {
-    this.useMiddleware(true, route, ...handles.map(item => {
-      if (item instanceof Core) {
-        item.parentRoutePath = this.parseRoutePath(true, route);
-        return item.toMiddleware();
-      }
-      return item;
-    }));
+  public use(
+    route: string | RegExp,
+    ...handles: Array<MiddlewareHandle | Core>
+  ) {
+    this.useMiddleware(
+      true,
+      route,
+      ...handles.map(item => {
+        if (item instanceof Core) {
+          item.parentRoutePath = this.parseRoutePath(true, route);
+          return item.toMiddleware();
+        }
+        return item;
+      })
+    );
   }
 
   /**
@@ -81,12 +98,16 @@ export class Core {
    * @param route 路由规则
    * @param handles 中间件对象或处理函数
    */
-  protected useMiddleware(isPrefix: boolean, route: string | RegExp, ...handles: MiddlewareHandle[]) {
+  protected useMiddleware(
+    isPrefix: boolean,
+    route: string | RegExp,
+    ...handles: MiddlewareHandle[]
+  ) {
     for (const handle of handles) {
       this.stack.push({
         route: this.parseRoutePath(isPrefix, route),
         handle,
-        handleError: isMiddlewareErrorHandle(handle),
+        handleError: isMiddlewareErrorHandle(handle)
       });
     }
   }
@@ -97,13 +118,17 @@ export class Core {
    * @param ctx Context对象
    * @param done 未处理请求回调函数
    */
-  protected handleRequestByContext(ctx: Context, done: (err?: ErrorReason) => void) {
+  protected handleRequestByContext(
+    ctx: Context,
+    done: (err?: ErrorReason) => void
+  ) {
     let index = 0;
     const prePathPrefix = ctx.request.pathPrefix;
-    const pathPrefix = getRouteMatchPath(ctx.request.path, this.parentRoutePath as PathRegExp);
+    const pathPrefix = getRouteMatchPath(ctx.request.path, this
+      .parentRoutePath as PathRegExp);
     ctx.request.reset(pathPrefix, {});
 
-    type GetMiddlewareHandle = () => (void | Middleware);
+    type GetMiddlewareHandle = () => void | Middleware;
 
     const getNextHandle: GetMiddlewareHandle = () => {
       const handle = this.stack[index++];
@@ -119,7 +144,7 @@ export class Core {
       return handle;
     };
 
-    const next: NextFunction = (err) => {
+    const next: NextFunction = err => {
       const handle = err ? getNextErrorHandle() : getNextHandle();
       err = err || null;
       if (!handle) {
@@ -130,7 +155,10 @@ export class Core {
       if (!testRoutePath(ctx.request.path, handle.route)) {
         return next(err);
       }
-      ctx.request.params = getRouteParams(ctx.request.path, handle.route as PathRegExp);
+      ctx.request.params = getRouteParams(
+        ctx.request.path,
+        handle.route as PathRegExp
+      );
       execMiddlewareHandle(handle.handle, ctx, err, next);
     };
 
@@ -144,8 +172,11 @@ export class Core {
    * @param res 原始ServerResponse对象
    * @param done 未处理请求回调函数
    */
-  protected handleRequestByRequestResponse(req: ServerRequest, res: ServerResponse, done: (err?: ErrorReason) => void) {
+  protected handleRequestByRequestResponse(
+    req: ServerRequest,
+    res: ServerResponse,
+    done: (err?: ErrorReason) => void
+  ) {
     this.handleRequestByContext(this.createContext(req, res), done);
   }
-
 }

@@ -13,7 +13,8 @@
     "coveralls": "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js",
     "clean": "rm -rf dist",
     "compile": "npm run clean && tsc",
-    "prepublish": "npm run test && npm run compile"
+    "prepublish": "npm run test && npm run compile",
+    "lint": "prettier --write src/**/*.ts"
   },
   "nyc": {
     "extension": [
@@ -55,10 +56,9 @@
     "coveralls": "^3.0.0",
     "mocha": "^4.0.1",
     "nyc": "^11.3.0",
+    "prettier": "^1.8.2",
     "supertest": "^3.0.0",
     "ts-node": "^3.3.0",
-    "tslint": "^5.8.0",
-    "tslint-config-lei": "^1.1.1",
     "typescript": "^2.6.1"
   }
 }

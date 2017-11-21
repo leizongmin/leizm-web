@@ -1,61 +1,66 @@
-import { expect } from 'chai';
-import { Connect } from '../lib';
-import * as request from 'supertest';
+import { expect } from "chai";
+import { Connect } from "../lib";
+import * as request from "supertest";
 
-describe('Request', function () {
-
-  it('正确解析 query, url, path, search, httpVersion 等基本信息', function (done) {
+describe("Request", function() {
+  it("正确解析 query, url, path, search, httpVersion 等基本信息", function(
+    done
+  ) {
     const app = new Connect();
-    app.use('/', function (ctx) {
+    app.use("/", function(ctx) {
       expect(ctx.request.query).to.deep.equal({
-        a: '123',
-        b: '456',
+        a: "123",
+        b: "456"
       });
-      expect(ctx.request.url).to.equal('/hello?a=123&b=456');
-      expect(ctx.request.method).to.equal('GET');
-      expect(ctx.request.path).to.equal('/hello');
-      expect(ctx.request.search).to.equal('?a=123&b=456');
-      expect(ctx.request.httpVersion).to.be.oneOf([ '1.0', '1.1', '2.0' ]);
-      ctx.response.end('ok');
+      expect(ctx.request.url).to.equal("/hello?a=123&b=456");
+      expect(ctx.request.method).to.equal("GET");
+      expect(ctx.request.path).to.equal("/hello");
+      expect(ctx.request.search).to.equal("?a=123&b=456");
+      expect(ctx.request.httpVersion).to.be.oneOf(["1.0", "1.1", "2.0"]);
+      ctx.response.end("ok");
     });
     request(app.server)
-      .get('/hello?a=123&b=456')
+      .get("/hello?a=123&b=456")
       .expect(200)
-      .expect('ok', done);
+      .expect("ok", done);
   });
 
-  it('正确获取 params 信息', function (done) {
+  it("正确获取 params 信息", function(done) {
     const app = new Connect();
-    app.use('/:a/:b/ccc', function (ctx) {
+    app.use("/:a/:b/ccc", function(ctx) {
       expect(ctx.request.hasParams()).to.equal(true);
       expect(ctx.request.params).to.deep.equal({
-        a: 'aaa',
-        b: 'bbb',
+        a: "aaa",
+        b: "bbb"
       });
-      ctx.response.end('ok');
+      ctx.response.end("ok");
     });
     request(app.server)
-      .get('/aaa/bbb/ccc')
+      .get("/aaa/bbb/ccc")
       .expect(200)
-      .expect('ok', done);
+      .expect("ok", done);
   });
 
-  it('正确获取 headers, getHeader', function (done) {
+  it("正确获取 headers, getHeader", function(done) {
     const app = new Connect();
-    app.use('/', function (ctx) {
-      expect(ctx.request.headers).property('user-agent').includes('superagent');
-      expect(ctx.request.getHeader('USER-agent')).includes('superagent');
-      ctx.response.end('ok');
+    app.use("/", function(ctx) {
+      expect(ctx.request.headers)
+        .property("user-agent")
+        .includes("superagent");
+      expect(ctx.request.getHeader("USER-agent")).includes("superagent");
+      ctx.response.end("ok");
     });
     request(app.server)
-      .get('/hello')
+      .get("/hello")
       .expect(200)
-      .expect('ok', done);
+      .expect("ok", done);
   });
 
-  it('可以设置、获取、判断 body, files, cookies, session 等可选数据', function (done) {
+  it("可以设置、获取、判断 body, files, cookies, session 等可选数据", function(
+    done
+  ) {
     const app = new Connect();
-    app.use('/', function (ctx) {
+    app.use("/", function(ctx) {
       {
         expect(ctx.request.body).to.deep.equal({});
         expect(ctx.request.hasBody()).to.equal(false);
@@ -73,8 +78,8 @@ describe('Request', function () {
       {
         expect(ctx.request.cookies).to.deep.equal({});
         expect(ctx.request.hasCookies()).to.equal(false);
-        ctx.request.cookies = { a: '111' };
-        expect(ctx.request.cookies).to.deep.equal({ a: '111' });
+        ctx.request.cookies = { a: "111" };
+        expect(ctx.request.cookies).to.deep.equal({ a: "111" });
         expect(ctx.request.hasCookies()).to.equal(true);
       }
       {
@@ -84,51 +89,50 @@ describe('Request', function () {
         expect(ctx.request.session).to.deep.equal({ a: 111 });
         expect(ctx.request.hasSession()).to.equal(true);
       }
-      ctx.response.end('ok');
+      ctx.response.end("ok");
     });
     request(app.server)
-      .get('/hello')
+      .get("/hello")
       .expect(200)
-      .expect('ok', done);
+      .expect("ok", done);
   });
-
 });
 
-describe('Response', function () {
-
-  it('正确响应 setStatus, setHeader, setHeaders, writeHead, write, end', function (done) {
+describe("Response", function() {
+  it("正确响应 setStatus, setHeader, setHeaders, writeHead, write, end", function(
+    done
+  ) {
     const app = new Connect();
-    app.use('/', function (ctx) {
+    app.use("/", function(ctx) {
       {
         ctx.response.setStatus(100);
         expect(ctx.response.res.statusCode).to.equal(100);
       }
-      ctx.response.setHeader('aaa', 'hello aaa');
+      ctx.response.setHeader("aaa", "hello aaa");
       ctx.response.setHeaders({
-        bbb: 'hello bbb',
-        ccc: 'hello ccc',
+        bbb: "hello bbb",
+        ccc: "hello ccc"
       });
       {
-        ctx.response.setHeader('xxx', 123);
-        expect(ctx.response.getHeader('XXX')).to.equal(123);
-        ctx.response.removeHeader('xxx');
-        expect(ctx.response.getHeader('xxx')).to.equal(undefined);
+        ctx.response.setHeader("xxx", 123);
+        expect(ctx.response.getHeader("XXX")).to.equal(123);
+        ctx.response.removeHeader("xxx");
+        expect(ctx.response.getHeader("xxx")).to.equal(undefined);
       }
       ctx.response.writeHead(500, {
-        bbb: 'xxx',
-        ddd: 'xxxx',
+        bbb: "xxx",
+        ddd: "xxxx"
       });
-      ctx.response.write('123');
-      ctx.response.end('456');
+      ctx.response.write("123");
+      ctx.response.end("456");
     });
     request(app.server)
-      .get('/hello')
+      .get("/hello")
       .expect(500)
-      .expect('aaa', 'hello aaa')
-      .expect('bbb', 'xxx')
-      .expect('ccc', 'hello ccc')
-      .expect('ddd', 'xxxx')
-      .expect('123456', done);
+      .expect("aaa", "hello aaa")
+      .expect("bbb", "xxx")
+      .expect("ccc", "hello ccc")
+      .expect("ddd", "xxxx")
+      .expect("123456", done);
   });
-
 });

@@ -1,10 +1,14 @@
-import { ServerRequest, ServerResponse } from 'http';
-import { Request } from './request';
-import { Response } from './response';
-import { NextFunction, ErrorReason, RequestConstructor, ResponseConstructor } from './define';
+import { ServerRequest, ServerResponse } from "http";
+import { Request } from "./request";
+import { Response } from "./response";
+import {
+  NextFunction,
+  ErrorReason,
+  RequestConstructor,
+  ResponseConstructor
+} from "./define";
 
 export class Context {
-
   /** 原始ServerRequest对象 */
   protected _request: Request;
   /** 原始ServerResponse对象 */
@@ -87,5 +91,4 @@ export class Context {
   public popNextHandle(): NextFunction | void {
     return this.nextHandleStack.pop();
   }
-
 }

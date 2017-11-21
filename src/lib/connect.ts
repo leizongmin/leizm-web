@@ -1,10 +1,9 @@
-import { Server, ServerRequest, ServerResponse } from 'http';
-import * as finalhandler from 'finalhandler';
-import { Core } from './core';
-import { ListenOptions, ErrorReason } from './define';
+import { Server, ServerRequest, ServerResponse } from "http";
+import * as finalhandler from "finalhandler";
+import { Core } from "./core";
+import { ListenOptions, ErrorReason } from "./define";
 
 export class Connect extends Core {
-
   /** http.Server实例 */
   protected _server: Server;
 
@@ -30,7 +29,7 @@ export class Connect extends Core {
    * @param server http.Server实例
    */
   public attach(server: Server) {
-    server.on('request', this.handleRequest.bind(this));
+    server.on("request", this.handleRequest.bind(this));
   }
 
   /**
@@ -40,8 +39,15 @@ export class Connect extends Core {
    * @param res ServerResponse对象
    * @param done 未处理请求的回调函数
    */
-  public handleRequest(req: ServerRequest, res: ServerResponse, done?: (err?: ErrorReason) => void) {
-    this.handleRequestByRequestResponse(req, res, done || finalhandler(req, res));
+  public handleRequest(
+    req: ServerRequest,
+    res: ServerResponse,
+    done?: (err?: ErrorReason) => void
+  ) {
+    this.handleRequestByRequestResponse(
+      req,
+      res,
+      done || finalhandler(req, res)
+    );
   }
-
 }

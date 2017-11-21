@@ -1,9 +1,13 @@
-import * as pathToRegExp from 'path-to-regexp';
+import * as pathToRegExp from "path-to-regexp";
 import {
-  MiddlewareHandle, ClassicalMiddlewareHandle, ClassicalMiddlewareErrorHandle, ErrorReason,
-  RegExpOptions, PathRegExp,
-} from './define';
-import { Context } from './context';
+  MiddlewareHandle,
+  ClassicalMiddlewareHandle,
+  ClassicalMiddlewareErrorHandle,
+  ErrorReason,
+  RegExpOptions,
+  PathRegExp
+} from "./define";
+import { Context } from "./context";
 
 /**
  * 判断是否为Promise对象
@@ -11,7 +15,7 @@ import { Context } from './context';
  * @param p 要判断的对象
  */
 export function isPromise(p: Promise<void>): boolean {
-  return p && typeof p.then === 'function' && typeof p.catch === 'function';
+  return p && typeof p.then === "function" && typeof p.catch === "function";
 }
 
 /**
@@ -20,7 +24,10 @@ export function isPromise(p: Promise<void>): boolean {
  * @param route 路由字符串
  * @param options 选项
  */
-export function parseRoutePath(route: string | RegExp, options: RegExpOptions): RegExp {
+export function parseRoutePath(
+  route: string | RegExp,
+  options: RegExpOptions
+): RegExp {
   if (route instanceof RegExp) return route;
   return pathToRegExp(route, options);
 }
@@ -42,7 +49,10 @@ export function testRoutePath(pathname: string, route: RegExp): boolean {
  * @param pathname 当前路径
  * @param route 当前路由规则
  */
-export function getRouteParams(pathname: string, route: PathRegExp): Record<string, string> {
+export function getRouteParams(
+  pathname: string,
+  route: PathRegExp
+): Record<string, string> {
   const params: Record<string, string> = {};
   route.lastIndex = 0;
   const values = route.exec(pathname);
@@ -60,11 +70,14 @@ export function getRouteParams(pathname: string, route: PathRegExp): Record<stri
  * @param pathname 当前路径
  * @param route 当前路由规则
  */
-export function getRouteMatchPath(pathname: string, route: PathRegExp | null): string {
-  if (!route) return '/';
+export function getRouteMatchPath(
+  pathname: string,
+  route: PathRegExp | null
+): string {
+  if (!route) return "/";
   route.lastIndex = 0;
   const values = route.exec(pathname);
-  return values && values[0] || '/';
+  return (values && values[0]) || "/";
 }
 
 /**
@@ -72,8 +85,10 @@ export function getRouteMatchPath(pathname: string, route: PathRegExp | null): s
  *
  * @param fn 处理函数
  */
-export function fromClassicalHandle(fn: ClassicalMiddlewareHandle): MiddlewareHandle {
-  return function (ctx: Context) {
+export function fromClassicalHandle(
+  fn: ClassicalMiddlewareHandle
+): MiddlewareHandle {
+  return function(ctx: Context) {
     fn(ctx.request.req, ctx.response.res, ctx.next.bind(ctx));
   };
 }
@@ -83,8 +98,10 @@ export function fromClassicalHandle(fn: ClassicalMiddlewareHandle): MiddlewareHa
  *
  * @param fn 处理函数
  */
-export function fromClassicalErrorHandle(fn: ClassicalMiddlewareErrorHandle): MiddlewareHandle {
-  return function (ctx: Context, err?: ErrorReason) {
+export function fromClassicalErrorHandle(
+  fn: ClassicalMiddlewareErrorHandle
+): MiddlewareHandle {
+  return function(ctx: Context, err?: ErrorReason) {
     fn(err, ctx.request.req, ctx.response.res, ctx.next.bind(ctx));
   };
 }
@@ -104,17 +121,20 @@ export function isMiddlewareErrorHandle(handle: MiddlewareHandle): boolean {
  * @param method 请求方法
  * @param handle 处理函数
  */
-export function wrapMiddlewareHandleWithMethod(method: string, handle: MiddlewareHandle): MiddlewareHandle {
+export function wrapMiddlewareHandleWithMethod(
+  method: string,
+  handle: MiddlewareHandle
+): MiddlewareHandle {
   function handleRequest(ctx: Context, err?: ErrorReason) {
     if (ctx.request.method !== method) return ctx.next(err);
-    execMiddlewareHandle(handle, ctx, err, (err2) => ctx.next(err2));
+    execMiddlewareHandle(handle, ctx, err, err2 => ctx.next(err2));
   }
   if (isMiddlewareErrorHandle(handle)) {
-    return function (ctx: Context, err?: ErrorReason) {
+    return function(ctx: Context, err?: ErrorReason) {
       handleRequest(ctx, err);
     };
   }
-  return function (ctx: Context) {
+  return function(ctx: Context) {
     handleRequest(ctx);
   };
 }
@@ -127,8 +147,13 @@ export function wrapMiddlewareHandleWithMethod(method: string, handle: Middlewar
  * @param err 出错信息
  * @param callback 回调函数
  */
-export function execMiddlewareHandle(handle: MiddlewareHandle, ctx: Context, err: ErrorReason, onError: (err: ErrorReason) => void) {
-  process.nextTick(function () {
+export function execMiddlewareHandle(
+  handle: MiddlewareHandle,
+  ctx: Context,
+  err: ErrorReason,
+  onError: (err: ErrorReason) => void
+) {
+  process.nextTick(function() {
     let p: Promise<void> | void;
     try {
       p = handle(ctx, err);
