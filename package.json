@@ -41,7 +41,6 @@
     "@types/finalhandler": "0.0.32",
     "@types/node": "^8.0.53",
     "@types/parseurl": "^1.3.1",
-    "@types/path-to-regexp": "^1.7.0",
     "finalhandler": "^1.1.0",
     "parseurl": "^1.3.2",
     "path-to-regexp": "^1.7.0"
