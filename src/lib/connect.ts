@@ -7,8 +7,8 @@ import { Request } from "./request";
 import { Response } from "./response";
 
 export class Connect<
-  Ctx extends Context = Context<Request, Response>
-> extends Core<Ctx> {
+  C extends Context = Context<Request, Response>
+> extends Core<C> {
   /** http.Server实例 */
   protected _server: Server;
 
