@@ -114,6 +114,27 @@ describe("Response", function() {
         ccc: "hello ccc"
       });
       {
+        ctx.response.appendHeader("t111", 1);
+        ctx.response.appendHeader("t111", "hello");
+        ctx.response.appendHeader("t111", ["a", "123"]);
+        expect(ctx.response.getHeader("t111")).to.deep.equal([
+          1,
+          "hello",
+          "a",
+          "123"
+        ]);
+        ctx.response.setHeader("t222", ["a", "b"]);
+        ctx.response.appendHeader("t222", "c");
+        expect(ctx.response.getHeader("t222")).to.deep.equal(["a", "b", "c"]);
+        expect(ctx.response.getHeaders()).to.deep.equal({
+          aaa: "hello aaa",
+          bbb: "hello bbb",
+          ccc: "hello ccc",
+          t111: [1, "hello", "a", "123"],
+          t222: ["a", "b", "c"]
+        });
+      }
+      {
         ctx.response.setHeader("xxx", 123);
         expect(ctx.response.getHeader("XXX")).to.equal(123);
         ctx.response.removeHeader("xxx");

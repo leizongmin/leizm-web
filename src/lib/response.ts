@@ -27,6 +27,15 @@ export class Response {
   }
 
   /**
+   * 获取所有响应头
+   *
+   * @param name 名称
+   */
+  public getHeaders(): Record<string, string | string[] | number> {
+    return this.res.getHeaders();
+  }
+
+  /**
    * 设置响应头
    *
    * @param name 名称
@@ -34,6 +43,27 @@ export class Response {
    */
   public setHeader(name: string, value: string | string[] | number) {
     this.res.setHeader(name, value);
+  }
+
+  /**
+   * 添加响应头
+   *
+   * @param name 名称
+   * @param value 值
+   */
+  public appendHeader(name: string, value: string | string[] | number) {
+    let header = this.getHeader(name) as any[];
+    if (!header) {
+      header = [];
+    } else if (!Array.isArray(header)) {
+      header = [header];
+    }
+    if (Array.isArray(value)) {
+      header = header.concat(value);
+    } else {
+      header.push(value);
+    }
+    this.setHeader(name, header);
   }
 
   /**
