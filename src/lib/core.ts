@@ -83,6 +83,7 @@ export class Core<C extends Context = Context<Request, Response>> {
     this.useMiddleware(
       true,
       route,
+      false,
       ...handles.map(item => {
         if (item instanceof Core) {
           item.parentRoutePath = this.parseRoutePath(true, route);
@@ -98,19 +99,32 @@ export class Core<C extends Context = Context<Request, Response>> {
    *
    * @param isPrefix 是否为前缀模式
    * @param route 路由规则
+   * @param atEnd 是否排在末尾，为false表示排在atEnd=true的前面
    * @param handles 中间件对象或处理函数
    */
   protected useMiddleware(
     isPrefix: boolean,
     route: string | RegExp,
+    atEnd: boolean,
     ...handles: MiddlewareHandle<C>[]
   ) {
     for (const handle of handles) {
-      this.stack.push({
+      const item = {
         route: this.parseRoutePath(isPrefix, route),
         handle,
-        handleError: isMiddlewareErrorHandle(handle)
-      });
+        handleError: isMiddlewareErrorHandle(handle),
+        atEnd
+      };
+      if (atEnd) {
+        this.stack.push(item);
+      } else {
+        const i = this.stack.findIndex(v => v.atEnd);
+        if (i === -1) {
+          this.stack.push(item);
+        } else {
+          this.stack.splice(i, -1, item);
+        }
+      }
     }
   }
 

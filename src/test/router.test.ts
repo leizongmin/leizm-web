@@ -179,4 +179,46 @@ describe("Router", function() {
         .expect(method === "head" ? undefined : method);
     }
   });
+
+  it("use() 的中间件始终在 get()、post() 等方法前面", async function() {
+    const app = new Connect();
+    const router = new Router();
+    const numbers: number[] = [];
+    router.post("/ok", function(ctx) {
+      ctx.response.end("yes");
+    });
+    router.post("/not_ok", function(ctx) {
+      ctx.response.end("no");
+    });
+    router.use("/", function(ctx) {
+      numbers.push(123);
+      ctx.next();
+    });
+    router.use("/", function(ctx) {
+      numbers.push(456);
+      ctx.next();
+    });
+    router.get("/", function(ctx) {
+      ctx.response.end("home");
+    });
+    app.use("/", router);
+
+    await request(app.server)
+      .post("/ok")
+      .expect(200)
+      .expect("yes");
+    expect(numbers).to.deep.equal([123, 456]);
+
+    await request(app.server)
+      .post("/not_ok")
+      .expect(200)
+      .expect("no");
+    expect(numbers).to.deep.equal([123, 456, 123, 456]);
+
+    await request(app.server)
+      .get("/")
+      .expect(200)
+      .expect("home");
+    expect(numbers).to.deep.equal([123, 456, 123, 456, 123, 456]);
+  });
 });

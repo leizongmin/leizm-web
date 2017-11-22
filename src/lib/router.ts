@@ -15,7 +15,7 @@ export class Router<
    * @param handles 处理函数
    */
   public all(route: string | RegExp, ...handles: MiddlewareHandle<C>[]) {
-    this.useMiddleware(true, route, ...handles);
+    this.useMiddleware(true, route, true, ...handles);
   }
 
   /**
@@ -28,6 +28,7 @@ export class Router<
     this.useMiddleware(
       false,
       route,
+      true,
       ...handles.map(item => wrapMiddlewareHandleWithMethod("GET", item))
     );
   }
@@ -42,6 +43,7 @@ export class Router<
     this.useMiddleware(
       false,
       route,
+      true,
       ...handles.map(item => wrapMiddlewareHandleWithMethod("HEAD", item))
     );
   }
@@ -56,6 +58,7 @@ export class Router<
     this.useMiddleware(
       false,
       route,
+      true,
       ...handles.map(item => wrapMiddlewareHandleWithMethod("POST", item))
     );
   }
@@ -70,6 +73,7 @@ export class Router<
     this.useMiddleware(
       false,
       route,
+      true,
       ...handles.map(item => wrapMiddlewareHandleWithMethod("PUT", item))
     );
   }
@@ -84,6 +88,7 @@ export class Router<
     this.useMiddleware(
       false,
       route,
+      true,
       ...handles.map(item => wrapMiddlewareHandleWithMethod("DELETE", item))
     );
   }
@@ -98,6 +103,7 @@ export class Router<
     this.useMiddleware(
       false,
       route,
+      true,
       ...handles.map(item => wrapMiddlewareHandleWithMethod("CONNECT", item))
     );
   }
@@ -112,6 +118,7 @@ export class Router<
     this.useMiddleware(
       false,
       route,
+      true,
       ...handles.map(item => wrapMiddlewareHandleWithMethod("OPTIONS", item))
     );
   }
@@ -126,6 +133,7 @@ export class Router<
     this.useMiddleware(
       false,
       route,
+      true,
       ...handles.map(item => wrapMiddlewareHandleWithMethod("TRACE", item))
     );
   }
@@ -140,6 +148,7 @@ export class Router<
     this.useMiddleware(
       false,
       route,
+      true,
       ...handles.map(item => wrapMiddlewareHandleWithMethod("PATCH", item))
     );
   }

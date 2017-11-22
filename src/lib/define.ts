@@ -21,6 +21,8 @@ export interface Middleware<C> {
   route: RegExp;
   /** 中间件处理函数 */
   handle: MiddlewareHandle<C>;
+  /** 是否排在末尾 */
+  atEnd: boolean;
 }
 
 /** next回调函数 */
