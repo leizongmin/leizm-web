@@ -59,12 +59,12 @@ export interface ContextConstructor {
 
 /** Request对象构造器 */
 export interface RequestConstructor {
-  new (req: ServerRequest): Request;
+  new (req: ServerRequest, ctx: Context): Request;
 }
 
 /** Response对象构造器 */
 export interface ResponseConstructor {
-  new (res: ServerResponse): Response;
+  new (res: ServerResponse, ctx: Context): Response;
 }
 
 /** 请求头 */

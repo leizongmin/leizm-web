@@ -2,6 +2,7 @@ import { ServerRequest } from "http";
 import { parse as parseQueryString } from "querystring";
 import * as parseUrl from "parseurl";
 import { Headers, ServerRequestEx } from "./define";
+import { Context } from "./context";
 
 export class Request {
   /** 当前中间件的URL前缀 */
@@ -13,7 +14,10 @@ export class Request {
     query: Record<string, any>;
   };
 
-  constructor(public readonly req: ServerRequest) {
+  constructor(
+    public readonly req: ServerRequest,
+    public readonly ctx: Context
+  ) {
     const req2 = req as ServerRequestEx;
     req2.originalUrl = req2.originalUrl || req.url;
     const info = parseUrl(req);

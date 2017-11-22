@@ -29,7 +29,7 @@ export class Context<
    * @param req 原始ServerRequest对象
    */
   protected createRequest(req: ServerRequest) {
-    return new this.requestConstructor(req) as Q;
+    return new this.requestConstructor(req, this) as Q;
   }
 
   /**
@@ -38,7 +38,7 @@ export class Context<
    * @param res 原始ServerResponse对象
    */
   protected createResponse(res: ServerResponse) {
-    return new this.responseConstructor(res) as S;
+    return new this.responseConstructor(res, this) as S;
   }
 
   /**

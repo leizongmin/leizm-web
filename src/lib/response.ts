@@ -1,7 +1,11 @@
 import { ServerResponse } from "http";
+import { Context } from "./context";
 
 export class Response {
-  constructor(public readonly res: ServerResponse) {}
+  constructor(
+    public readonly res: ServerResponse,
+    public readonly ctx: Context
+  ) {}
 
   /**
    * 初始化完成

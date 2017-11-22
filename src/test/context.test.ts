@@ -157,3 +157,18 @@ describe("Response", function() {
       .expect("123456", done);
   });
 });
+
+describe("Context", function() {
+  it("ctx.request.ctx 和 ctx.response.ctx", function(done) {
+    const app = new Connect();
+    app.use("/", function(ctx) {
+      expect(ctx.request.ctx).to.equal(ctx);
+      expect(ctx.response.ctx).to.equal(ctx);
+      ctx.response.end("ok");
+    });
+    request(app.server)
+      .get("/hello")
+      .expect(200)
+      .expect("ok", done);
+  });
+});
