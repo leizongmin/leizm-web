@@ -57,15 +57,15 @@ export class Connect<
    * @param res ServerResponse对象
    * @param done 未处理请求的回调函数
    */
-  public handleRequest(
+  public handleRequest = (
     req: ServerRequest,
     res: ServerResponse,
     done?: (err?: ErrorReason) => void
-  ) {
+  ) => {
     this.handleRequestByRequestResponse(
       req,
       res,
       done || finalhandler(req, res)
     );
-  }
+  };
 }

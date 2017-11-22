@@ -64,6 +64,19 @@ describe("Connect", function() {
       .expect("ok", done);
   });
 
+  it("支持在 http.createServer 内使用（自动绑定 this）", function(done) {
+    const app = new Connect();
+    appInstances.push(app);
+    app.use("/", function(ctx) {
+      ctx.response.end("ok");
+    });
+    const server = new Server(app.handleRequest);
+    request(server)
+      .get("/")
+      .expect(200)
+      .expect("ok", done);
+  });
+
   it("可以 attach http.Server", function(done) {
     const app = new Connect();
     appInstances.push(app);
