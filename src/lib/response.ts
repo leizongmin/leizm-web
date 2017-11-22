@@ -36,7 +36,11 @@ export class Response {
    * @param name 名称
    */
   public getHeaders(): Record<string, string | string[] | number> {
-    return this.res.getHeaders();
+    return (
+      (this.res.getHeaders
+        ? this.res.getHeaders()
+        : (this.res as any)._headers) || {}
+    );
   }
 
   /**
