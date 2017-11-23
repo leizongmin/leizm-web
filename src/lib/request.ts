@@ -159,6 +159,21 @@ export class Request {
     return !!(this.req as any).cookies;
   }
 
+  /** 获取请求signedCookies信息 */
+  public get signedCookies(): Record<string, string> {
+    return (this.req as any).signedCookies || {};
+  }
+
+  /** 设置请求signedCookies信息 */
+  public set signedCookies(value: Record<string, string>) {
+    (this.req as any).signedCookies = value;
+  }
+
+  /** 判断是否有请求signedCookies信息 */
+  public hasSignedCookies() {
+    return !!(this.req as any).signedCookies;
+  }
+
   /** 获取请求Session信息 */
   public get session(): Record<string, any> {
     return (this.req as any).session || {};
