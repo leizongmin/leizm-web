@@ -17,8 +17,9 @@ export class Response {
    *
    * @param statusCode 响应状态码
    */
-  public setStatus(statusCode: number) {
+  public setStatus(statusCode: number): this {
     this.res.statusCode = statusCode;
+    return this;
   }
 
   /**
@@ -49,8 +50,9 @@ export class Response {
    * @param name 名称
    * @param value 值
    */
-  public setHeader(name: string, value: string | string[] | number) {
+  public setHeader(name: string, value: string | string[] | number): this {
     this.res.setHeader(name, value);
+    return this;
   }
 
   /**
@@ -59,7 +61,7 @@ export class Response {
    * @param name 名称
    * @param value 值
    */
-  public appendHeader(name: string, value: string | string[] | number) {
+  public appendHeader(name: string, value: string | string[] | number): this {
     let header = this.getHeader(name) as any[];
     if (!header) {
       header = [];
@@ -72,6 +74,7 @@ export class Response {
       header.push(value);
     }
     this.setHeader(name, header);
+    return this;
   }
 
   /**
@@ -79,10 +82,11 @@ export class Response {
    *
    * @param headers 响应头
    */
-  public setHeaders(headers: Record<string, string | string[] | number>) {
+  public setHeaders(headers: Record<string, string | string[] | number>): this {
     for (const name in headers) {
       this.setHeader(name, headers[name]);
     }
+    return this;
   }
 
   /**
@@ -90,8 +94,9 @@ export class Response {
    *
    * @param name 名称
    */
-  public removeHeader(name: string) {
+  public removeHeader(name: string): this {
     this.res.removeHeader(name);
+    return this;
   }
 
   /**
@@ -103,8 +108,9 @@ export class Response {
   public writeHead(
     statusCode: number,
     headers: Record<string, string | string[] | number>
-  ) {
+  ): this {
     this.res.writeHead(statusCode, headers);
+    return this;
   }
 
   /**

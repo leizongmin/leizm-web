@@ -108,23 +108,22 @@ describe("Response", function() {
         ctx.response.setStatus(100);
         expect(ctx.response.res.statusCode).to.equal(100);
       }
-      ctx.response.setHeader("aaa", "hello aaa");
-      ctx.response.setHeaders({
+      ctx.response.setHeader("aaa", "hello aaa").setHeaders({
         bbb: "hello bbb",
         ccc: "hello ccc"
       });
       {
-        ctx.response.appendHeader("t111", 1);
-        ctx.response.appendHeader("t111", "hello");
-        ctx.response.appendHeader("t111", ["a", "123"]);
+        ctx.response
+          .appendHeader("t111", 1)
+          .appendHeader("t111", "hello")
+          .appendHeader("t111", ["a", "123"]);
         expect(ctx.response.getHeader("t111")).to.deep.equal([
           1,
           "hello",
           "a",
           "123"
         ]);
-        ctx.response.setHeader("t222", ["a", "b"]);
-        ctx.response.appendHeader("t222", "c");
+        ctx.response.setHeader("t222", ["a", "b"]).appendHeader("t222", "c");
         expect(ctx.response.getHeader("t222")).to.deep.equal(["a", "b", "c"]);
         expect(ctx.response.getHeaders()).to.deep.equal({
           aaa: "hello aaa",
@@ -140,11 +139,12 @@ describe("Response", function() {
         ctx.response.removeHeader("xxx");
         expect(ctx.response.getHeader("xxx")).to.equal(undefined);
       }
-      ctx.response.writeHead(500, {
-        bbb: "xxx",
-        ddd: "xxxx"
-      });
-      ctx.response.write("123");
+      ctx.response
+        .writeHead(500, {
+          bbb: "xxx",
+          ddd: "xxxx"
+        })
+        .write("123");
       ctx.response.end("456");
     });
     request(app.server)
