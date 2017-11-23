@@ -107,6 +107,17 @@ export function fromClassicalErrorHandle<C extends Context>(
 }
 
 /**
+ * 转换Koa中间件
+ */
+export function fromKoaHandle<C extends Context>(
+  fn: Function
+): MiddlewareHandle<C> {
+  return function(ctx: C) {
+
+  };
+}
+
+/**
  * 判断是否为错误处理中间件
  *
  * @param handle 处理函数
