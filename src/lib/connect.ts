@@ -34,6 +34,7 @@ export class Connect<
    * @param server http.Server实例
    */
   public attach(server: Server) {
+    this._server = server;
     server.on("request", this.handleRequest.bind(this));
   }
 

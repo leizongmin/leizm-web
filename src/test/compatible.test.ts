@@ -4,6 +4,7 @@ import { Connect, fromClassicalHandle, Router } from "../lib";
 import * as request from "supertest";
 import * as connect from "connect";
 import * as bodyParser from "body-parser";
+import { http } from "uws";
 
 describe("兼容 connect 模块", function() {
   const appInstances: Connect[] = [];
@@ -95,5 +96,36 @@ describe("兼容 connect 模块", function() {
       .post("/b")
       .expect(200)
       .expect("this is b");
+  });
+});
+
+describe("使用 uws.http", function() {
+  it("connect.attach()", async function() {
+    const app = new Connect();
+    const router = new Router();
+    app.use("/", fromClassicalHandle(bodyParser.json()));
+    app.use("/", router);
+    app.use("/", function(ctx) {
+      ctx.response.setHeader("content-type", "application/json");
+      ctx.response.end(JSON.stringify(ctx.request.body));
+    });
+    const server = http.createServer(app.handleRequest);
+    server.address = function() {
+      return null;
+    };
+    await request(app.server)
+      .post("/")
+      .send({
+        a: 111,
+        b: 222,
+        c: 333
+      })
+      .expect(200)
+      .expect({
+        a: 111,
+        b: 222,
+        c: 333
+      });
+    await app.close();
   });
 });
