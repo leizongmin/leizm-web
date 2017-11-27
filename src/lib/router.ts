@@ -15,7 +15,7 @@ export class Router<
    * @param handles 处理函数
    */
   public all(route: string | RegExp, ...handles: MiddlewareHandle<C>[]) {
-    this.useMiddleware(true, route, true, ...handles);
+    this.useMiddleware(false, route, true, ...handles);
   }
 
   /**
