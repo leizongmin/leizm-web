@@ -20,6 +20,18 @@ import {
 import { Request } from "./request";
 import { Response } from "./response";
 
+export interface UserMiddlewareOptions {
+  /* 是否为前缀模式 */
+  isPrefix: boolean;
+  /* 路由规则 */
+  route: string | RegExp;
+  /**
+   * 是否排在末尾，为false表示排在atEnd=true的前面
+   * 主要是在Router中区分use()引入中间件始终在get()、post()等请求方法上
+   */
+  atEnd: boolean;
+}
+
 export class Core<C extends Context = Context<Request, Response>> {
   /** 中间件堆栈 */
   protected readonly stack: Middleware<C>[] = [];
@@ -81,9 +93,7 @@ export class Core<C extends Context = Context<Request, Response>> {
     ...handles: Array<MiddlewareHandle<C> | Core<C>>
   ) {
     this.useMiddleware(
-      true,
-      route,
-      false,
+      { isPrefix: true, route, atEnd: false },
       ...handles.map(item => {
         if (item instanceof Core) {
           item.parentRoutePath = this.parseRoutePath(true, route);
@@ -97,26 +107,21 @@ export class Core<C extends Context = Context<Request, Response>> {
   /**
    * 注册中间件
    *
-   * @param isPrefix 是否为前缀模式
-   * @param route 路由规则
-   * @param atEnd 是否排在末尾，为false表示排在atEnd=true的前面
-   *              主要是在Router中区分use()引入中间件始终在get()、post()等请求方法上
+   * @param options
    * @param handles 中间件对象或处理函数
    */
   protected useMiddleware(
-    isPrefix: boolean,
-    route: string | RegExp,
-    atEnd: boolean,
+    options: UserMiddlewareOptions,
     ...handles: MiddlewareHandle<C>[]
   ) {
     for (const handle of handles) {
       const item: Middleware<C> = {
-        route: this.parseRoutePath(isPrefix, route),
+        route: this.parseRoutePath(options.isPrefix, options.route),
         handle,
         handleError: isMiddlewareErrorHandle(handle),
-        atEnd
+        atEnd: options.atEnd
       };
-      if (atEnd) {
+      if (options.atEnd) {
         this.stack.push(item);
       } else {
         const i = this.stack.findIndex(v => v.atEnd);

@@ -15,7 +15,7 @@ export class Router<
    * @param handles 处理函数
    */
   public all(route: string | RegExp, ...handles: MiddlewareHandle<C>[]) {
-    this.useMiddleware(false, route, true, ...handles);
+    this.useMiddleware({ isPrefix: false, route, atEnd: true }, ...handles);
   }
 
   /**
@@ -26,9 +26,7 @@ export class Router<
    */
   public get(route: string | RegExp, ...handles: MiddlewareHandle<C>[]) {
     this.useMiddleware(
-      false,
-      route,
-      true,
+      { isPrefix: false, route, atEnd: true },
       ...handles.map(item => wrapMiddlewareHandleWithMethod("GET", item))
     );
   }
@@ -41,9 +39,7 @@ export class Router<
    */
   public head(route: string | RegExp, ...handles: MiddlewareHandle<C>[]) {
     this.useMiddleware(
-      false,
-      route,
-      true,
+      { isPrefix: false, route, atEnd: true },
       ...handles.map(item => wrapMiddlewareHandleWithMethod("HEAD", item))
     );
   }
@@ -56,9 +52,7 @@ export class Router<
    */
   public post(route: string | RegExp, ...handles: MiddlewareHandle<C>[]) {
     this.useMiddleware(
-      false,
-      route,
-      true,
+      { isPrefix: false, route, atEnd: true },
       ...handles.map(item => wrapMiddlewareHandleWithMethod("POST", item))
     );
   }
@@ -71,9 +65,7 @@ export class Router<
    */
   public put(route: string | RegExp, ...handles: MiddlewareHandle<C>[]) {
     this.useMiddleware(
-      false,
-      route,
-      true,
+      { isPrefix: false, route, atEnd: true },
       ...handles.map(item => wrapMiddlewareHandleWithMethod("PUT", item))
     );
   }
@@ -86,9 +78,7 @@ export class Router<
    */
   public delete(route: string | RegExp, ...handles: MiddlewareHandle<C>[]) {
     this.useMiddleware(
-      false,
-      route,
-      true,
+      { isPrefix: false, route, atEnd: true },
       ...handles.map(item => wrapMiddlewareHandleWithMethod("DELETE", item))
     );
   }
@@ -101,9 +91,7 @@ export class Router<
    */
   public connect(route: string | RegExp, ...handles: MiddlewareHandle<C>[]) {
     this.useMiddleware(
-      false,
-      route,
-      true,
+      { isPrefix: false, route, atEnd: true },
       ...handles.map(item => wrapMiddlewareHandleWithMethod("CONNECT", item))
     );
   }
@@ -116,9 +104,7 @@ export class Router<
    */
   public options(route: string | RegExp, ...handles: MiddlewareHandle<C>[]) {
     this.useMiddleware(
-      false,
-      route,
-      true,
+      { isPrefix: false, route, atEnd: true },
       ...handles.map(item => wrapMiddlewareHandleWithMethod("OPTIONS", item))
     );
   }
@@ -131,9 +117,7 @@ export class Router<
    */
   public trace(route: string | RegExp, ...handles: MiddlewareHandle<C>[]) {
     this.useMiddleware(
-      false,
-      route,
-      true,
+      { isPrefix: false, route, atEnd: true },
       ...handles.map(item => wrapMiddlewareHandleWithMethod("TRACE", item))
     );
   }
@@ -146,9 +130,7 @@ export class Router<
    */
   public patch(route: string | RegExp, ...handles: MiddlewareHandle<C>[]) {
     this.useMiddleware(
-      false,
-      route,
-      true,
+      { isPrefix: false, route, atEnd: true },
       ...handles.map(item => wrapMiddlewareHandleWithMethod("PATCH", item))
     );
   }
