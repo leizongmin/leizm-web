@@ -100,6 +100,7 @@ export class Core<C extends Context = Context<Request, Response>> {
    * @param isPrefix 是否为前缀模式
    * @param route 路由规则
    * @param atEnd 是否排在末尾，为false表示排在atEnd=true的前面
+   *              主要是在Router中区分use()引入中间件始终在get()、post()等请求方法上
    * @param handles 中间件对象或处理函数
    */
   protected useMiddleware(
@@ -109,7 +110,7 @@ export class Core<C extends Context = Context<Request, Response>> {
     ...handles: MiddlewareHandle<C>[]
   ) {
     for (const handle of handles) {
-      const item = {
+      const item: Middleware<C> = {
         route: this.parseRoutePath(isPrefix, route),
         handle,
         handleError: isMiddlewareErrorHandle(handle),
