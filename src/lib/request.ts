@@ -1,18 +1,11 @@
 import { ServerRequest } from "http";
-import { parse as parseQueryString } from "querystring";
-import * as parseUrl from "parseurl";
+import { parse as parseUrl, Url } from "url";
 import { Headers, ServerRequestEx } from "./define";
 import { Context } from "./context";
 
 export class Request {
-  /** 当前中间件的URL前缀 */
-  protected _pathPrefix: string = "";
   /** 已解析的URL信息 */
-  protected parsedUrlInfo: {
-    path: string;
-    search: string;
-    query: Record<string, any>;
-  };
+  protected parsedUrlInfo: Url;
 
   constructor(
     public readonly req: ServerRequest,
@@ -20,13 +13,8 @@ export class Request {
   ) {
     const req2 = req as ServerRequestEx;
     req2.originalUrl = req2.originalUrl || req.url;
-    const info = parseUrl(req);
-    this.parsedUrlInfo = {
-      query: parseQueryString(info.query),
-      path: info.pathname,
-      search: info.search
-    };
-    (req as any).query = this.query;
+    this.parsedUrlInfo = parseUrl(req.url, true);
+    req2.query = this.parsedUrlInfo.query;
   }
 
   /**
@@ -34,40 +22,29 @@ export class Request {
    */
   public inited() {}
 
-  /** 设置当前中间件的URL前缀 */
-  public set pathPrefix(str: string) {
-    this._pathPrefix = str.slice(-1) === "/" ? str.slice(0, -1) : str;
-  }
-
-  /** 获取当前中间件的URL前缀 */
-  public get pathPrefix() {
-    return this._pathPrefix ? this._pathPrefix : "/";
-  }
-
-  /**
-   * 重置当前中间件的URL前缀和URL参数信息
-   *
-   * @param url 前中间件的URL前缀
-   * @param params URL参数信息
-   */
-  public reset(url: string, params: Record<string, string>) {
-    this.pathPrefix = url;
-    this.params = params;
-  }
-
   /** 获取请求方法 */
   public get method() {
     return this.req.method;
   }
 
-  /** 获取相对URL */
+  /** 获取URL */
   public get url() {
-    return this.req.url.slice(this._pathPrefix.length);
+    return (this.req as ServerRequestEx).url;
   }
 
-  /** 获取相对Path（URL不包含查询字符串部分） */
+  /** 更新URL */
+  public set url(value: string) {
+    (this.req as ServerRequestEx).url = this.parsedUrlInfo.path = value;
+  }
+
+  /** 获取Path（URL不包含查询字符串部分）*/
   public get path() {
-    return this.parsedUrlInfo.path.slice(this._pathPrefix.length);
+    return this.parsedUrlInfo.pathname;
+  }
+
+  /** 设置Path（URL不包含查询字符串部分）*/
+  public set path(value: string) {
+    this.parsedUrlInfo.pathname = value;
   }
 
   /** 获取URL查询字符串部分 */
@@ -77,7 +54,7 @@ export class Request {
 
   /** 获取已解析的URL查询字符串参数 */
   public get query() {
-    return this.parsedUrlInfo.query;
+    return (this.req as ServerRequestEx).query;
   }
 
   /** 获取当前HTTP版本 */

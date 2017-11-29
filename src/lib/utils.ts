@@ -27,8 +27,10 @@ export function isPromise(p: Promise<void>): boolean {
 export function parseRoutePath(
   route: string | RegExp,
   options: RegExpOptions
-): RegExp {
-  if (route instanceof RegExp) return route;
+): PathRegExp {
+  if (route instanceof RegExp) {
+    return route as PathRegExp;
+  }
   return pathToRegExp(route, options);
 }
 
@@ -38,7 +40,10 @@ export function parseRoutePath(
  * @param pathname 当前路径
  * @param route 当前路由规则
  */
-export function testRoutePath(pathname: string, route: RegExp): boolean {
+export function testRoutePath(pathname: string, route: RegExp | null): boolean {
+  if (!route) {
+    return true;
+  }
   route.lastIndex = 0;
   return route.test(pathname);
 }
@@ -51,15 +56,17 @@ export function testRoutePath(pathname: string, route: RegExp): boolean {
  */
 export function getRouteParams(
   pathname: string,
-  route: PathRegExp
+  route: PathRegExp | null
 ): Record<string, string> {
   const params: Record<string, string> = {};
-  route.lastIndex = 0;
-  const values = route.exec(pathname);
-  if (values && route.keys) {
-    route.keys.forEach((k, i) => {
-      params[k.name] = values[i + 1];
-    });
+  if (route) {
+    route.lastIndex = 0;
+    const values = route.exec(pathname);
+    if (values && route.keys) {
+      route.keys.forEach((k, i) => {
+        params[k.name] = values[i + 1];
+      });
+    }
   }
   return params;
 }
@@ -74,10 +81,10 @@ export function getRouteMatchPath(
   pathname: string,
   route: PathRegExp | null
 ): string {
-  if (!route) return "/";
+  if (!route) return "";
   route.lastIndex = 0;
   const values = route.exec(pathname);
-  return (values && values[0]) || "/";
+  return (values && values[0]) || "";
 }
 
 /**

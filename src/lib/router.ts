@@ -15,10 +15,7 @@ export class Router<
    * @param handles 处理函数
    */
   public all(route: string | RegExp, ...handles: MiddlewareHandle<C>[]) {
-    this.add(
-      { atEnd: true, route: this.parseRoutePath(false, route) },
-      ...handles
-    );
+    this.addToEnd(this.parseRoutePath(false, route), ...handles);
   }
 
   /**
@@ -28,8 +25,8 @@ export class Router<
    * @param handles 处理函数
    */
   public get(route: string | RegExp, ...handles: MiddlewareHandle<C>[]) {
-    this.add(
-      { atEnd: true, route: this.parseRoutePath(false, route) },
+    this.addToEnd(
+      this.parseRoutePath(false, route),
       ...handles.map(item => wrapMiddlewareHandleWithMethod("GET", item))
     );
   }
@@ -41,8 +38,8 @@ export class Router<
    * @param handles 处理函数
    */
   public head(route: string | RegExp, ...handles: MiddlewareHandle<C>[]) {
-    this.add(
-      { atEnd: true, route: this.parseRoutePath(false, route) },
+    this.addToEnd(
+      this.parseRoutePath(false, route),
       ...handles.map(item => wrapMiddlewareHandleWithMethod("HEAD", item))
     );
   }
@@ -54,8 +51,8 @@ export class Router<
    * @param handles 处理函数
    */
   public post(route: string | RegExp, ...handles: MiddlewareHandle<C>[]) {
-    this.add(
-      { atEnd: true, route: this.parseRoutePath(false, route) },
+    this.addToEnd(
+      this.parseRoutePath(false, route),
       ...handles.map(item => wrapMiddlewareHandleWithMethod("POST", item))
     );
   }
@@ -67,8 +64,8 @@ export class Router<
    * @param handles 处理函数
    */
   public put(route: string | RegExp, ...handles: MiddlewareHandle<C>[]) {
-    this.add(
-      { atEnd: true, route: this.parseRoutePath(false, route) },
+    this.addToEnd(
+      this.parseRoutePath(false, route),
       ...handles.map(item => wrapMiddlewareHandleWithMethod("PUT", item))
     );
   }
@@ -80,8 +77,8 @@ export class Router<
    * @param handles 处理函数
    */
   public delete(route: string | RegExp, ...handles: MiddlewareHandle<C>[]) {
-    this.add(
-      { atEnd: true, route: this.parseRoutePath(false, route) },
+    this.addToEnd(
+      this.parseRoutePath(false, route),
       ...handles.map(item => wrapMiddlewareHandleWithMethod("DELETE", item))
     );
   }
@@ -93,8 +90,8 @@ export class Router<
    * @param handles 处理函数
    */
   public connect(route: string | RegExp, ...handles: MiddlewareHandle<C>[]) {
-    this.add(
-      { atEnd: true, route: this.parseRoutePath(false, route) },
+    this.addToEnd(
+      this.parseRoutePath(false, route),
       ...handles.map(item => wrapMiddlewareHandleWithMethod("CONNECT", item))
     );
   }
@@ -106,8 +103,8 @@ export class Router<
    * @param handles 处理函数
    */
   public options(route: string | RegExp, ...handles: MiddlewareHandle<C>[]) {
-    this.add(
-      { atEnd: true, route: this.parseRoutePath(false, route) },
+    this.addToEnd(
+      this.parseRoutePath(false, route),
       ...handles.map(item => wrapMiddlewareHandleWithMethod("OPTIONS", item))
     );
   }
@@ -119,8 +116,8 @@ export class Router<
    * @param handles 处理函数
    */
   public trace(route: string | RegExp, ...handles: MiddlewareHandle<C>[]) {
-    this.add(
-      { atEnd: true, route: this.parseRoutePath(false, route) },
+    this.addToEnd(
+      this.parseRoutePath(false, route),
       ...handles.map(item => wrapMiddlewareHandleWithMethod("TRACE", item))
     );
   }
@@ -132,8 +129,8 @@ export class Router<
    * @param handles 处理函数
    */
   public patch(route: string | RegExp, ...handles: MiddlewareHandle<C>[]) {
-    this.add(
-      { atEnd: true, route: this.parseRoutePath(false, route) },
+    this.addToEnd(
+      this.parseRoutePath(false, route),
       ...handles.map(item => wrapMiddlewareHandleWithMethod("PATCH", item))
     );
   }

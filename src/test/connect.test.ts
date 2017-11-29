@@ -428,42 +428,46 @@ describe("Connect", function() {
       .expect("no error", done);
   });
 
-  it("use Connect 和 Router 实例时，request.pathPrefix & request.url & request.path 的值正确", function(
-    done
-  ) {
+  it("use Connect 和 Router 实例时，request.url & request.path 的值正确", async function() {
     const app = new Connect();
     appInstances.push(app);
+    const status = {
+      a: false,
+      b: false,
+      c: false
+    };
     const router = new Router();
+    debugger;
     app.use("/abc", function(ctx) {
-      expect(ctx.request.pathPrefix).to.equal("/");
       expect(ctx.request.path).to.equal("/abc/123/xx");
       expect(ctx.request.url).to.equal("/abc/123/xx?hello=world");
+      status.a = true;
       ctx.next();
     });
     router.use("/123", function(ctx) {
-      expect(ctx.request.pathPrefix).to.equal("/abc");
       expect(ctx.request.path).to.equal("/123/xx");
       expect(ctx.request.url).to.equal("/123/xx?hello=world");
+      status.b = true;
       ctx.next();
     });
     router.get("/123/:code", function(ctx) {
-      expect(ctx.request.pathPrefix).to.equal("/abc");
       expect(ctx.request.path).to.equal("/123/xx");
       expect(ctx.request.url).to.equal("/123/xx?hello=world");
       expect(ctx.request.params).to.deep.equal({ code: "xx" });
       expect(ctx.request.query).to.deep.equal({ hello: "world" });
+      status.c = true;
       ctx.next();
     });
     app.use("/abc", router);
     app.use("/", function(ctx) {
-      expect(ctx.request.pathPrefix).to.equal("/");
       expect(ctx.request.path).to.equal("/abc/123/xx");
       expect(ctx.request.url).to.equal("/abc/123/xx?hello=world");
       ctx.response.end("it works");
     });
-    request(app.server)
+    await request(app.server)
       .get("/abc/123/xx?hello=world")
       // .expect(200)
-      .expect("it works", done);
+      .expect("it works");
+    expect(status).to.deep.equal({ a: true, b: true, c: true });
   });
 });

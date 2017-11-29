@@ -20,16 +20,6 @@ import {
 import { Request } from "./request";
 import { Response } from "./response";
 
-export interface AddOptions {
-  /* 路由规则 */
-  route: RegExp;
-  /**
-   * 是否排在末尾，为false表示排在atEnd=true的前面
-   * 主要是在Router中区分use()引入中间件始终在get()、post()等请求方法上
-   */
-  atEnd: boolean;
-}
-
 export class Core<C extends Context = Context<Request, Response>> {
   /** 中间件堆栈 */
   protected readonly stack: Middleware<C>[] = [];
@@ -43,7 +33,7 @@ export class Core<C extends Context = Context<Request, Response>> {
     delimiter: "/"
   };
   /** use()当前中间件时的路由规则 */
-  protected route: RegExp = null;
+  protected route: PathRegExp | null = null;
 
   /**
    * 创建Context对象
@@ -62,6 +52,9 @@ export class Core<C extends Context = Context<Request, Response>> {
    * @param route 路由规则
    */
   protected parseRoutePath(isPrefix: boolean, route: string | RegExp) {
+    if (isPrefix && (!route || route === "/")) {
+      return null;
+    }
     return parseRoutePath(route, {
       ...this.routeOptions,
       end: !isPrefix
@@ -74,7 +67,19 @@ export class Core<C extends Context = Context<Request, Response>> {
   public toMiddleware() {
     const self = this;
     return function(ctx: C) {
+      let removedPath = "";
+      if (self.route) {
+        removedPath = getRouteMatchPath(ctx.request.path, self.route);
+        if (removedPath) {
+          ctx.request.url = ctx.request.url.slice(removedPath.length);
+          ctx.request.path = ctx.request.path.slice(removedPath.length);
+        }
+      }
       self.handleRequestByContext(ctx, function(err) {
+        if (removedPath) {
+          ctx.request.url = removedPath + ctx.request.url;
+          ctx.request.path = removedPath + ctx.request.path;
+        }
         ctx.next(err);
       });
     };
@@ -92,7 +97,7 @@ export class Core<C extends Context = Context<Request, Response>> {
   ) {
     const parsedRoute = this.parseRoutePath(true, route);
     this.add(
-      { atEnd: false, route: parsedRoute },
+      parsedRoute,
       ...handles.map(item => {
         if (item instanceof Core) {
           item.route = parsedRoute;
@@ -106,27 +111,41 @@ export class Core<C extends Context = Context<Request, Response>> {
   /**
    * 注册中间件
    *
-   * @param options
+   * @param route 路由
    * @param handles 中间件对象或处理函数
    */
-  protected add(options: AddOptions, ...handles: MiddlewareHandle<C>[]) {
+  protected add(route: PathRegExp, ...handles: MiddlewareHandle<C>[]) {
     for (const handle of handles) {
       const item: Middleware<C> = {
-        route: options.route,
+        route,
         handle,
         handleError: isMiddlewareErrorHandle(handle),
-        atEnd: options.atEnd
+        atEnd: false
       };
-      if (options.atEnd) {
+      const i = this.stack.findIndex(v => v.atEnd);
+      if (i === -1) {
         this.stack.push(item);
       } else {
-        const i = this.stack.findIndex(v => v.atEnd);
-        if (i === -1) {
-          this.stack.push(item);
-        } else {
-          this.stack.splice(i, -1, item);
-        }
+        this.stack.splice(i, -1, item);
       }
+    }
+  }
+
+  /**
+   * 添加中间件到末尾
+   *
+   * @param route 路由
+   * @param handles 中间件对象或处理函数
+   */
+  protected addToEnd(route: PathRegExp, ...handles: MiddlewareHandle<C>[]) {
+    for (const handle of handles) {
+      const item: Middleware<C> = {
+        route,
+        handle,
+        handleError: isMiddlewareErrorHandle(handle),
+        atEnd: true
+      };
+      this.stack.push(item);
     }
   }
 
@@ -138,11 +157,6 @@ export class Core<C extends Context = Context<Request, Response>> {
    */
   protected handleRequestByContext(ctx: C, done: (err?: ErrorReason) => void) {
     let index = 0;
-    const prePathPrefix = ctx.request.pathPrefix;
-    const pathPrefix = getRouteMatchPath(ctx.request.path, this
-      .route as PathRegExp);
-    ctx.request.reset(pathPrefix, {});
-
     type GetMiddlewareHandle = () => void | Middleware<C>;
 
     const getNextHandle: GetMiddlewareHandle = () => {
@@ -164,7 +178,6 @@ export class Core<C extends Context = Context<Request, Response>> {
       err = err || null;
       if (!handle) {
         ctx.popNextHandle();
-        ctx.request.reset(prePathPrefix, {});
         return done(err || null);
       }
       if (!testRoutePath(ctx.request.path, handle.route)) {

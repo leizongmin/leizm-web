@@ -87,7 +87,7 @@ describe("Router", function() {
     const app = new Connect();
     const router = new Router();
     router.get("/", function(ctx) {
-      throw new Error("不应该执行到此处");
+      ctx.response.end("不应该执行到此处");
     });
     router.all("/ok", function(ctx) {
       ctx.response.end("yes");

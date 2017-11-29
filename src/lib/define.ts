@@ -77,4 +77,8 @@ export interface Headers {
 /** 扩展的ServerRequest对象 */
 export interface ServerRequestEx extends ServerRequest {
   originalUrl?: string;
+  query?: Record<string, any>;
+  body?: Record<string, any>;
+  files?: Record<string, any>;
+  params?: Record<string, any>;
 }
