@@ -437,7 +437,6 @@ describe("Connect", function() {
       c: false
     };
     const router = new Router();
-    debugger;
     app.use("/abc", function(ctx) {
       expect(ctx.request.path).to.equal("/abc/123/xx");
       expect(ctx.request.url).to.equal("/abc/123/xx?hello=world");

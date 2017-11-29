@@ -103,6 +103,7 @@ export class Core<C extends Context = Context<Request, Response>> {
           item.route = parsedRoute;
           return item.toMiddleware();
         }
+        item.route = parsedRoute;
         return item;
       })
     );

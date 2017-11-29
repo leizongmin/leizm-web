@@ -1,10 +1,25 @@
 import { expect } from "chai";
+import * as path from "path";
+import * as fs from "fs";
 import { ServerRequest, ServerResponse } from "http";
 import { Connect, fromClassicalHandle, Router } from "../lib";
 import * as request from "supertest";
 import * as connect from "connect";
 import * as bodyParser from "body-parser";
 import { http } from "uws";
+import * as serveStatic from "serve-static";
+
+export function readFile(file: string) {
+  return new Promise((resolve, reject) => {
+    fs.readFile(file, (err, ret) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(ret.toString());
+      }
+    });
+  });
+}
 
 describe("兼容 connect 模块", function() {
   const appInstances: Connect[] = [];
@@ -96,6 +111,24 @@ describe("兼容 connect 模块", function() {
       .post("/b")
       .expect(200)
       .expect("this is b");
+  });
+
+  it("兼容 serve-static 模块", async function() {
+    const ROOT_DIR = path.resolve(__dirname, "../..");
+    const app = new Connect();
+    appInstances.push(app);
+    const app2 = new Connect();
+    app.use("/public", fromClassicalHandle(serveStatic(ROOT_DIR)));
+    app.use("/a", app2);
+    app2.use("/static", fromClassicalHandle(serveStatic(ROOT_DIR)));
+    await request(app.server)
+      .get("/public/package.json")
+      .expect(200)
+      .expect(await readFile(path.resolve(ROOT_DIR, "package.json")));
+    await request(app.server)
+      .get("/a/static/package.json")
+      .expect(200)
+      .expect(await readFile(path.resolve(ROOT_DIR, "package.json")));
   });
 });
 

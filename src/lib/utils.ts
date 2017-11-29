@@ -95,9 +95,25 @@ export function getRouteMatchPath(
 export function fromClassicalHandle<C extends Context>(
   fn: ClassicalMiddlewareHandle
 ): MiddlewareHandle<C> {
-  return function(ctx: C) {
-    fn(ctx.request.req, ctx.response.res, ctx.next.bind(ctx));
+  const handle: MiddlewareHandle<C> = function(ctx: C) {
+    let removedPath = "";
+    if (handle.route) {
+      removedPath = getRouteMatchPath(ctx.request.path, handle.route);
+      if (removedPath) {
+        ctx.request.url = ctx.request.url.slice(removedPath.length);
+        ctx.request.path = ctx.request.path.slice(removedPath.length);
+      }
+    }
+    fn(ctx.request.req, ctx.response.res, (err?: ErrorReason) => {
+      if (removedPath) {
+        ctx.request.url = removedPath + ctx.request.url;
+        ctx.request.path = removedPath + ctx.request.path;
+      }
+      ctx.next(err);
+    });
   };
+  handle.classical = true;
+  return handle;
 }
 
 /**
@@ -108,9 +124,28 @@ export function fromClassicalHandle<C extends Context>(
 export function fromClassicalErrorHandle<C extends Context>(
   fn: ClassicalMiddlewareErrorHandle
 ): MiddlewareHandle<C> {
-  return function(ctx: Context, err?: ErrorReason) {
-    fn(err, ctx.request.req, ctx.response.res, ctx.next.bind(ctx));
+  const handle: MiddlewareHandle<C> = function(
+    ctx: Context,
+    err?: ErrorReason
+  ) {
+    let removedPath = "";
+    if (handle.route) {
+      removedPath = getRouteMatchPath(ctx.request.path, handle.route);
+      if (removedPath) {
+        ctx.request.url = ctx.request.url.slice(removedPath.length);
+        ctx.request.path = ctx.request.path.slice(removedPath.length);
+      }
+    }
+    fn(err, ctx.request.req, ctx.response.res, (err?: ErrorReason) => {
+      if (removedPath) {
+        ctx.request.url = removedPath + ctx.request.url;
+        ctx.request.path = removedPath + ctx.request.path;
+      }
+      ctx.next(err);
+    });
   };
+  handle.classical = true;
+  return handle;
 }
 
 /**

@@ -2,16 +2,20 @@ import { ServerRequest, ServerResponse } from "http";
 import { Request } from "./request";
 import { Response } from "./response";
 import { Context } from "./context";
+import { PathRegExp } from "path-to-regexp";
 export { PathRegExp, RegExpOptions } from "path-to-regexp";
 
 /** 出错原因 */
 export type ErrorReason = null | string | Error | Record<any, any>;
 
 /** 中间件处理函数 */
-export type MiddlewareHandle<C> = (
-  ctx: C,
-  err?: ErrorReason
-) => Promise<void> | void;
+export interface MiddlewareHandle<C> {
+  (ctx: C, err?: ErrorReason): Promise<void> | void;
+  /** 是否为connect中间件 */
+  classical?: boolean;
+  /** 当前中间件注册时的路由前缀 */
+  route?: PathRegExp;
+}
 
 /** 中间件堆栈的元素 */
 export interface Middleware<C> {
