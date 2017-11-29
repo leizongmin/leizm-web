@@ -21,10 +21,8 @@ import { Request } from "./request";
 import { Response } from "./response";
 
 export interface AddOptions {
-  /* 是否为前缀模式 */
-  isPrefix: boolean;
   /* 路由规则 */
-  route: string | RegExp;
+  route: RegExp;
   /**
    * 是否排在末尾，为false表示排在atEnd=true的前面
    * 主要是在Router中区分use()引入中间件始终在get()、post()等请求方法上
@@ -44,8 +42,8 @@ export class Core<C extends Context = Context<Request, Response>> {
     end: true,
     delimiter: "/"
   };
-  /** 父中间件的路由规则 */
-  protected parentRoutePath: RegExp = null;
+  /** use()当前中间件时的路由规则 */
+  protected route: RegExp = null;
 
   /**
    * 创建Context对象
@@ -74,9 +72,9 @@ export class Core<C extends Context = Context<Request, Response>> {
    * 生成中间件
    */
   public toMiddleware() {
-    const router = this;
+    const self = this;
     return function(ctx: C) {
-      router.handleRequestByContext(ctx, function(err) {
+      self.handleRequestByContext(ctx, function(err) {
         ctx.next(err);
       });
     };
@@ -92,11 +90,12 @@ export class Core<C extends Context = Context<Request, Response>> {
     route: string | RegExp,
     ...handles: Array<MiddlewareHandle<C> | Core<C>>
   ) {
+    const parsedRoute = this.parseRoutePath(true, route);
     this.add(
-      { isPrefix: true, route, atEnd: false },
+      { atEnd: false, route: parsedRoute },
       ...handles.map(item => {
         if (item instanceof Core) {
-          item.parentRoutePath = this.parseRoutePath(true, route);
+          item.route = parsedRoute;
           return item.toMiddleware();
         }
         return item;
@@ -113,7 +112,7 @@ export class Core<C extends Context = Context<Request, Response>> {
   protected add(options: AddOptions, ...handles: MiddlewareHandle<C>[]) {
     for (const handle of handles) {
       const item: Middleware<C> = {
-        route: this.parseRoutePath(options.isPrefix, options.route),
+        route: options.route,
         handle,
         handleError: isMiddlewareErrorHandle(handle),
         atEnd: options.atEnd
@@ -141,7 +140,7 @@ export class Core<C extends Context = Context<Request, Response>> {
     let index = 0;
     const prePathPrefix = ctx.request.pathPrefix;
     const pathPrefix = getRouteMatchPath(ctx.request.path, this
-      .parentRoutePath as PathRegExp);
+      .route as PathRegExp);
     ctx.request.reset(pathPrefix, {});
 
     type GetMiddlewareHandle = () => void | Middleware<C>;
