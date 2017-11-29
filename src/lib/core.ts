@@ -20,7 +20,7 @@ import {
 import { Request } from "./request";
 import { Response } from "./response";
 
-export interface UserMiddlewareOptions {
+export interface AddOptions {
   /* 是否为前缀模式 */
   isPrefix: boolean;
   /* 路由规则 */
@@ -92,7 +92,7 @@ export class Core<C extends Context = Context<Request, Response>> {
     route: string | RegExp,
     ...handles: Array<MiddlewareHandle<C> | Core<C>>
   ) {
-    this.useMiddleware(
+    this.add(
       { isPrefix: true, route, atEnd: false },
       ...handles.map(item => {
         if (item instanceof Core) {
@@ -110,10 +110,7 @@ export class Core<C extends Context = Context<Request, Response>> {
    * @param options
    * @param handles 中间件对象或处理函数
    */
-  protected useMiddleware(
-    options: UserMiddlewareOptions,
-    ...handles: MiddlewareHandle<C>[]
-  ) {
+  protected add(options: AddOptions, ...handles: MiddlewareHandle<C>[]) {
     for (const handle of handles) {
       const item: Middleware<C> = {
         route: this.parseRoutePath(options.isPrefix, options.route),
