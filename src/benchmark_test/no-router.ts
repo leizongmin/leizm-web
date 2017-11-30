@@ -1,0 +1,16 @@
+import { Connect } from "../lib";
+
+const app = new Connect();
+app.use("/params/:a", function(ctx) {
+  ctx.response.end(`params: ${ctx.request.params.a}`);
+});
+app.use("/url", function(ctx) {
+  ctx.response.end(`url: ${ctx.request.url}`);
+});
+app.use("/", function(ctx) {
+  ctx.response.end("default");
+});
+
+app.listen({ port: 3000 }, () => {
+  console.log("listen on http://localhost:3000");
+});

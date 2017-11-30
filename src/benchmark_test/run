@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+
+source="${BASH_SOURCE[0]}"
+dir=$(dirname $source)
+server="$1"
+url="$2"
+export PATH=$(pwd)/node_modules/.bin:$PATH
+export NODE_ENV=production
+ts-node $dir/$server &
+pid=$!
+
+sleep 10
+
+echo "testing..."
+wrk "http://127.0.0.1:3000/$url" \
+  -d 1m \
+  -c 200 \
+  -t 2 \
+  | grep 'Requests/sec' \
+  | awk -v server="$server" '{ print $2 " Requests/sec - " server }' >> $dir/results.txt
+
+kill $pid
