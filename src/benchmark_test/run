@@ -4,10 +4,10 @@ source="${BASH_SOURCE[0]}"
 dir=$(dirname $source)
 server="$1"
 url="$2"
-export PATH=$(pwd)/node_modules/.bin:$PATH
 export NODE_ENV=production
-ts-node $dir/$server &
+node --require 'ts-node/register' $dir/$server.ts &
 pid=$!
+echo "server pid: $pid"
 
 sleep 10
 
@@ -19,4 +19,6 @@ wrk "http://127.0.0.1:3000/$url" \
   | grep 'Requests/sec' \
   | awk -v server="$server" '{ print $2 " Requests/sec - " server }' >> $dir/results.txt
 
+echo "finish"
+echo "kill $pid"
 kill $pid
