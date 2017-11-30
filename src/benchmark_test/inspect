@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+source="${BASH_SOURCE[0]}"
+dir=$(dirname $source)
+server="$1"
+export NODE_ENV=production
+node --inspect --require 'ts-node/register' $dir/$server.ts
