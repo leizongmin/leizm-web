@@ -13,9 +13,9 @@ sleep 10
 
 echo "testing..."
 wrk "http://127.0.0.1:3000/$url" \
-  -d 1m \
-  -c 200 \
-  -t 2 \
+  -d 2m \
+  -c 400 \
+  -t 10 \
   | grep 'Requests/sec' \
   | awk -v server="$server" '{ print $2 " Requests/sec - " server }' >> $dir/results.txt
 

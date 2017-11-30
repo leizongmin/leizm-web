@@ -1,3 +1,0 @@
-35364.33 Requests/sec - http
-32201.86 Requests/sec - connect
-31498.66 Requests/sec - router
