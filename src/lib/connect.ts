@@ -66,7 +66,10 @@ export class Connect<
     this.handleRequestByRequestResponse(
       req,
       res,
-      done || finalhandler(req, res)
+      done ||
+        function(err?: ErrorReason) {
+          return finalhandler(req, res)(err);
+        }
     );
   };
 }
