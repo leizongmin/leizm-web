@@ -22,6 +22,8 @@
 
 # @leizm/connect
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/leizongmin/leizm-connect.svg)](https://greenkeeper.io/)
+
 现代的 Web 中间件基础框架，完美支持 TypeScript，构建可维护的大型 Web 项目。
 
 ## 安装
