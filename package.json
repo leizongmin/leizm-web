@@ -39,7 +39,7 @@
   "homepage": "https://github.com/leizongmin/leizm-connect#readme",
   "dependencies": {
     "@types/finalhandler": "0.0.32",
-    "@types/node": "^8.0.53",
+    "@types/node": "^9.6.1",
     "finalhandler": "^1.1.0",
     "path-to-regexp": "^2.1.0"
   },
