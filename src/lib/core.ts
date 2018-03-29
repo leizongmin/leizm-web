@@ -160,6 +160,20 @@ export class Core<C extends Context = Context<Request, Response>> {
   }
 
   /**
+   * 通过原始ServerRequest和ServerResponse对象处理请求
+   * @param req 原始ServerRequest对象
+   * @param res 原始ServerResponse对象
+   * @param done 未处理请求回调函数
+   */
+  protected handleRequestByRequestResponse(
+    req: ServerRequest,
+    res: ServerResponse,
+    done: (err?: ErrorReason) => void
+  ) {
+    this.handleRequestByContext(this.createContext(req, res), done);
+  }
+
+  /**
    * 通过Context对象处理请求
    *
    * @param ctx Context对象
@@ -199,19 +213,5 @@ export class Core<C extends Context = Context<Request, Response>> {
 
     ctx.pushNextHandle(next);
     ctx.next();
-  }
-
-  /**
-   * 通过原始ServerRequest和ServerResponse对象处理请求
-   * @param req 原始ServerRequest对象
-   * @param res 原始ServerResponse对象
-   * @param done 未处理请求回调函数
-   */
-  protected handleRequestByRequestResponse(
-    req: ServerRequest,
-    res: ServerResponse,
-    done: (err?: ErrorReason) => void
-  ) {
-    this.handleRequestByContext(this.createContext(req, res), done);
   }
 }
