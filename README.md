@@ -26,6 +26,13 @@
 
 现代的 Web 中间件基础框架，完美支持 TypeScript，构建可维护的大型 Web 项目。
 
+本框架参考了 connect、express 和 koa 等主流框架，具有以下特点：
+
+* 兼容 connect 中间件，可以通过内置的函数转换 connect 中间件，使用 NPM 上大量的模块资源
+* 可将本框架的实例转换为 connect 中间件，与其他项目模块紧密合作
+* 简单没有歧义的接口参数，内置 TypeScript 支持
+* 更好的性能
+
 ## 安装
 
 ```bash
@@ -35,41 +42,39 @@ npm install @leizm/connect --save
 ## 基本使用方法
 
 ```typescript
-import { Connect, Router } from '@leizm/connect';
+import { Connect, Router } from "@leizm/connect";
 
 const app = new Connect();
 const router = new Router();
 
 // 基本的中间件
-app.use('/', function (ctx) {
-  console.log('hello, world');
+app.use("/", function(ctx) {
+  console.log("hello, world");
   ctx.next();
 });
 
 // 支持 async function
-app.use('/', async function (ctx) {
-  consoole.log('async function');
+app.use("/", async function(ctx) {
+  consoole.log("async function");
   await sleep(1000);
   ctx.next();
 });
 
 // 路由中间件
-router.get('/hello/:a/:b', function (ctx) {
-  console.log('a=%s, b=%s', ctx.request.params.a, ctx.request.params.b);
-  ctx.response.writeHead(200, { 'content-type': 'text/html' });
-  ctx.response.end('it works');
+router.get("/hello/:a/:b", function(ctx) {
+  console.log("a=%s, b=%s", ctx.request.params.a, ctx.request.params.b);
+  ctx.response.html("it works");
 });
-app.use('/', router);
+app.use("/", router);
 
 // 错误处理
-app.use('/', function (ctx, err) {
-  ctx.response.writeHead(500, { 'content-type': 'application/json' });
-  ctx.response.end(`Error: ${ err }`);
+app.use("/", function(ctx, err) {
+  ctx.response.json({ message: err.message });
 });
 
 // 监听端口
 app.listen({ port: 3000 }, () => {
-  console.log('server started');
+  console.log("server started");
 });
 ```
 
