@@ -142,4 +142,22 @@ export class Response {
   ): boolean {
     return this.res.end.apply(this.res, arguments);
   }
+
+  /**
+   * 响应JSON
+   * @param data 数据
+   */
+  public json(data: any): void {
+    this.setHeader("Content-Type", "application/json");
+    this.end(JSON.stringify(data));
+  }
+
+  /**
+   * 响应HTML页面
+   * @param str 内容
+   */
+  public html(str: Buffer | string): void {
+    this.setHeader("Content-Type", "text/html");
+    this.end(str);
+  }
 }
