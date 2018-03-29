@@ -123,9 +123,7 @@ describe("Connect", function() {
       .expect("hello", done);
   });
 
-  it("如果没有中间件响应 Error 结果，调用 done 回调函数时传递 Error 信息", function(
-    done
-  ) {
+  it("如果没有中间件响应 Error 结果，调用 done 回调函数时传递 Error 信息", function(done) {
     const app = new Connect();
     appInstances.push(app);
     app.use("/", function(ctx) {
@@ -143,9 +141,7 @@ describe("Connect", function() {
       .expect("hello", done);
   });
 
-  it("如果没有中间件响应结果，且不传递 done 回调函数时，返回 404", function(
-    done
-  ) {
+  it("如果没有中间件响应结果，且不传递 done 回调函数时，返回 404", function(done) {
     const app = new Connect();
     appInstances.push(app);
     const server = new Server(function(req, res) {
@@ -156,9 +152,7 @@ describe("Connect", function() {
       .expect(404, done);
   });
 
-  it("如果没有中间件响应 Error 结果，且不传递 done 回调函数时，返回 500", function(
-    done
-  ) {
+  it("如果没有中间件响应 Error 结果，且不传递 done 回调函数时，返回 500", function(done) {
     const app = new Connect();
     appInstances.push(app);
     app.use("/", function(ctx) {
@@ -195,9 +189,7 @@ describe("Connect", function() {
       .expect("no error", done);
   });
 
-  it("支持捕捉 async function 中间件抛出的异常，并传递给出错处理中间件", function(
-    done
-  ) {
+  it("支持捕捉 async function 中间件抛出的异常，并传递给出错处理中间件", function(done) {
     const app = new Connect();
     appInstances.push(app);
     app.use("/", async function(ctx) {

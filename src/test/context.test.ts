@@ -3,9 +3,7 @@ import { Connect } from "../lib";
 import * as request from "supertest";
 
 describe("Request", function() {
-  it("正确解析 query, url, path, search, httpVersion 等基本信息", function(
-    done
-  ) {
+  it("正确解析 query, url, path, search, httpVersion 等基本信息", function(done) {
     const app = new Connect();
     app.use("/", function(ctx) {
       expect(ctx.request.query).to.deep.equal({
@@ -56,9 +54,7 @@ describe("Request", function() {
       .expect("ok", done);
   });
 
-  it("可以设置、获取、判断 body, files, cookies, session 等可选数据", function(
-    done
-  ) {
+  it("可以设置、获取、判断 body, files, cookies, session 等可选数据", function(done) {
     const app = new Connect();
     app.use("/", function(ctx) {
       {
@@ -99,9 +95,7 @@ describe("Request", function() {
 });
 
 describe("Response", function() {
-  it("正确响应 setStatus, setHeader, setHeaders, writeHead, write, end", function(
-    done
-  ) {
+  it("正确响应 setStatus, setHeader, setHeaders, writeHead, write, end", function(done) {
     const app = new Connect();
     app.use("/", function(ctx) {
       {
