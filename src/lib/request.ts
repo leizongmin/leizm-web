@@ -14,7 +14,7 @@ export class Request {
     const req2 = req as ServerRequestEx;
     req2.originalUrl = req2.originalUrl || req.url;
     this.parsedUrlInfo = parseUrl(req.url, true);
-    req2.query = this.parsedUrlInfo.query;
+    req2.query = this.parsedUrlInfo.query as any;
   }
 
   /**

@@ -2,11 +2,19 @@ import { ServerRequest, ServerResponse } from "http";
 import { Request } from "./request";
 import { Response } from "./response";
 import { Context } from "./context";
-import { PathRegExp } from "path-to-regexp";
-export { PathRegExp, RegExpOptions } from "path-to-regexp";
+import { Key as RegExpKey } from "path-to-regexp";
+export { RegExpOptions, Key as RegExpKey } from "path-to-regexp";
 
 /** 出错原因 */
 export type ErrorReason = null | string | Error | Record<any, any>;
+
+/** 编译路由字符串的结果 */
+export interface ParsedRoutePathResult {
+  /** 正则表达式 */
+  regexp: RegExp;
+  /** 变量信息 */
+  keys: RegExpKey[];
+}
 
 /** 中间件处理函数 */
 export interface MiddlewareHandle<C> {
@@ -14,7 +22,7 @@ export interface MiddlewareHandle<C> {
   /** 是否为connect中间件 */
   classical?: boolean;
   /** 当前中间件注册时的路由前缀 */
-  route?: PathRegExp;
+  route?: ParsedRoutePathResult;
 }
 
 /** 中间件堆栈的元素 */
@@ -22,7 +30,7 @@ export interface Middleware<C> {
   /** 是否为错误处理中间件 */
   handleError: boolean;
   /** 路由规则 */
-  route: RegExp;
+  route: ParsedRoutePathResult;
   /** 中间件处理函数 */
   handle: MiddlewareHandle<C>;
   /** 是否排在末尾 */

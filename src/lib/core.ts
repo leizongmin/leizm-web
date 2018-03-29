@@ -5,8 +5,8 @@ import {
   MiddlewareHandle,
   ErrorReason,
   NextFunction,
-  PathRegExp,
   ContextConstructor,
+  ParsedRoutePathResult,
   RegExpOptions
 } from "./define";
 import {
@@ -33,7 +33,7 @@ export class Core<C extends Context = Context<Request, Response>> {
     delimiter: "/"
   };
   /** use()当前中间件时的路由规则 */
-  protected route: PathRegExp | null = null;
+  protected route: ParsedRoutePathResult | null = null;
 
   /**
    * 创建Context对象
@@ -51,7 +51,10 @@ export class Core<C extends Context = Context<Request, Response>> {
    * @param isPrefix 是否为前缀模式
    * @param route 路由规则
    */
-  protected parseRoutePath(isPrefix: boolean, route: string | RegExp) {
+  protected parseRoutePath(
+    isPrefix: boolean,
+    route: string | RegExp
+  ): ParsedRoutePathResult {
     if (isPrefix && (!route || route === "/")) {
       return null;
     }
@@ -115,7 +118,10 @@ export class Core<C extends Context = Context<Request, Response>> {
    * @param route 路由
    * @param handles 中间件对象或处理函数
    */
-  protected add(route: PathRegExp, ...handles: MiddlewareHandle<C>[]) {
+  protected add(
+    route: ParsedRoutePathResult,
+    ...handles: MiddlewareHandle<C>[]
+  ) {
     for (const handle of handles) {
       const item: Middleware<C> = {
         route,
@@ -138,7 +144,10 @@ export class Core<C extends Context = Context<Request, Response>> {
    * @param route 路由
    * @param handles 中间件对象或处理函数
    */
-  protected addToEnd(route: PathRegExp, ...handles: MiddlewareHandle<C>[]) {
+  protected addToEnd(
+    route: ParsedRoutePathResult,
+    ...handles: MiddlewareHandle<C>[]
+  ) {
     for (const handle of handles) {
       const item: Middleware<C> = {
         route,
@@ -184,10 +193,7 @@ export class Core<C extends Context = Context<Request, Response>> {
       if (!testRoutePath(ctx.request.path, handle.route)) {
         return next(err);
       }
-      ctx.request.params = getRouteParams(
-        ctx.request.path,
-        handle.route as PathRegExp
-      );
+      ctx.request.params = getRouteParams(ctx.request.path, handle.route);
       execMiddlewareHandle(handle.handle, ctx, err, next);
     };
 

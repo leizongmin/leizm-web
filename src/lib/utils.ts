@@ -5,7 +5,8 @@ import {
   ClassicalMiddlewareErrorHandle,
   ErrorReason,
   RegExpOptions,
-  PathRegExp
+  RegExpKey,
+  ParsedRoutePathResult
 } from "./define";
 import { Context } from "./context";
 
@@ -27,11 +28,13 @@ export function isPromise(p: Promise<void>): boolean {
 export function parseRoutePath(
   route: string | RegExp,
   options: RegExpOptions
-): PathRegExp {
+): ParsedRoutePathResult {
   if (route instanceof RegExp) {
-    return route as PathRegExp;
+    return { regexp: route, keys: [] };
   }
-  return pathToRegExp(route, options);
+  const keys: RegExpKey[] = [];
+  const regexp = pathToRegExp(route, keys, options);
+  return { regexp, keys };
 }
 
 /**
@@ -40,12 +43,15 @@ export function parseRoutePath(
  * @param pathname 当前路径
  * @param route 当前路由规则
  */
-export function testRoutePath(pathname: string, route: RegExp | null): boolean {
+export function testRoutePath(
+  pathname: string,
+  route: ParsedRoutePathResult | null
+): boolean {
   if (!route) {
     return true;
   }
-  route.lastIndex = 0;
-  return route.test(pathname);
+  route.regexp.lastIndex = 0;
+  return route.regexp.test(pathname);
 }
 
 /**
@@ -56,12 +62,12 @@ export function testRoutePath(pathname: string, route: RegExp | null): boolean {
  */
 export function getRouteParams(
   pathname: string,
-  route: PathRegExp | null
+  route: ParsedRoutePathResult | null
 ): Record<string, string> {
   const params: Record<string, string> = {};
   if (route) {
-    route.lastIndex = 0;
-    const values = route.exec(pathname);
+    route.regexp.lastIndex = 0;
+    const values = route.regexp.exec(pathname);
     if (values && route.keys) {
       route.keys.forEach((k, i) => {
         params[k.name] = values[i + 1];
@@ -79,11 +85,11 @@ export function getRouteParams(
  */
 export function getRouteMatchPath(
   pathname: string,
-  route: PathRegExp | null
+  route: ParsedRoutePathResult | null
 ): string {
   if (!route) return "";
-  route.lastIndex = 0;
-  const values = route.exec(pathname);
+  route.regexp.lastIndex = 0;
+  const values = route.regexp.exec(pathname);
   return (values && values[0]) || "";
 }
 
