@@ -150,6 +150,23 @@ describe("Response", function() {
       .expect("ddd", "xxxx")
       .expect("123456", done);
   });
+
+  it("json() 和 html()", async function() {
+    const app = new Connect();
+    app.use("/json", function(ctx) {
+      ctx.response.json({ a: 123, b: 456 });
+    });
+    app.use("/html", function(ctx) {
+      ctx.response.html("hello, world");
+    });
+
+    await request(app.server)
+      .get("/json")
+      .expect(200, { a: 123, b: 456 });
+    await request(app.server)
+      .get("/html")
+      .expect(200, "hello, world");
+  });
 });
 
 describe("Context", function() {
