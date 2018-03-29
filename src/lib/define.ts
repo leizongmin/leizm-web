@@ -93,4 +93,7 @@ export interface ServerRequestEx extends ServerRequest {
   body?: Record<string, any>;
   files?: Record<string, any>;
   params?: Record<string, any>;
+  session?: Record<string, any>;
+  cookies?: Record<string, any>;
+  signedCookies?: Record<string, any>;
 }
