@@ -200,6 +200,9 @@ export class Core<C extends Context = Context<Request, Response>> {
     const next: NextFunction = err => {
       const handle = err ? getNextErrorHandle() : getNextHandle();
       err = err || null;
+      if (err && ctx.listenerCount("error") > 0) {
+        ctx.emit("error", err);
+      }
       if (!handle) {
         ctx.popNextHandle();
         return done(err || null);

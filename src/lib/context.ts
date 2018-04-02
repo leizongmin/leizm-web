@@ -1,4 +1,5 @@
 import { ServerRequest, ServerResponse } from "http";
+import { EventEmitter } from "events";
 import { Request } from "./request";
 import { Response } from "./response";
 import {
@@ -11,7 +12,7 @@ import {
 export class Context<
   Q extends Request = Request,
   S extends Response = Response
-> {
+> extends EventEmitter {
   /** 原始ServerRequest对象 */
   protected _request: Q;
   /** 原始ServerResponse对象 */
@@ -52,6 +53,7 @@ export class Context<
     this._request.inited();
     this._response = this.createResponse(res);
     this._response.inited();
+    res.once("finish", () => this.emit("finish"));
     this.inited();
     return this;
   }
@@ -101,5 +103,23 @@ export class Context<
    */
   public popNextHandle(): NextFunction | void {
     return this.nextHandleStack.pop();
+  }
+
+  /**
+   * 注册中间件执行出错时的事件监听
+   *
+   * @param callback 回调函数
+   */
+  public onError(callback: (err: ErrorReason) => void) {
+    this.on("error", callback);
+  }
+
+  /**
+   * 注册响应结束时的事件监听
+   *
+   * @param callback 回调函数
+   */
+  public onFinish(callback: () => void) {
+    this.on("finish", callback);
   }
 }

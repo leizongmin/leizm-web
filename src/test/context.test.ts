@@ -182,4 +182,67 @@ describe("Context", function() {
       .expect(200)
       .expect("ok", done);
   });
+
+  it("支持 ctx.onFinsh()", function(done) {
+    const app = new Connect();
+    let isFinish = false;
+    app.use("/", function(ctx) {
+      ctx.onFinish(() => (isFinish = true));
+      ctx.next();
+    });
+    app.use("/", function(ctx) {
+      ctx.response.end("ok");
+    });
+    request(app.server)
+      .get("/hello")
+      .expect(200)
+      .expect("ok", err => {
+        expect(isFinish).to.equal(true);
+        done(err);
+      });
+  });
+
+  it("支持 ctx.onError() -- throw new Error", function(done) {
+    const app = new Connect();
+    let isError = false;
+    app.use("/", function(ctx) {
+      ctx.onError(err => {
+        isError = true;
+        expect(err).to.instanceof(Error);
+        expect((err as any).message).to.equal("haha");
+      });
+      ctx.next();
+    });
+    app.use("/", async function(ctx) {
+      throw new Error("haha");
+    });
+    request(app.server)
+      .get("/hello")
+      .expect(500, err => {
+        expect(isError).to.equal(true);
+        done(err);
+      });
+  });
+
+  it("支持 ctx.onError() -- ctx.next(new Error())", function(done) {
+    const app = new Connect();
+    let isError = false;
+    app.use("/", function(ctx) {
+      ctx.onError(err => {
+        isError = true;
+        expect(err).to.instanceof(Error);
+        expect((err as any).message).to.equal("haha");
+      });
+      ctx.next();
+    });
+    app.use("/", function(ctx) {
+      ctx.next(new Error("haha"));
+    });
+    request(app.server)
+      .get("/hello")
+      .expect(500, err => {
+        expect(isError).to.equal(true);
+        done(err);
+      });
+  });
 });
