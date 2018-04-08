@@ -82,6 +82,42 @@ app.listen({ port: 3000 }, () => {
 
 扩展 Request 与 Response 对象的方法：[参考单元测试程序](https://github.com/leizongmin/leizm-connect/blob/master/src/test/extends.test.ts)
 
+模板文件 `connect.ts`（自己的项目中引用此文件中的 `Connect` 和 `Router`，而不是来自 `@leizm/connect` 的）：
+
+```typescript
+import * as base from "@leizm/connect";
+
+export type MiddlewareHandle = (
+  ctx: Context,
+  err?: base.ErrorReason
+) => Promise<void> | void;
+
+export class Connect extends base.Connect<Context> {
+  protected contextConstructor: base.ContextConstructor = Context;
+}
+
+export class Router extends base.Router<Context> {
+  protected contextConstructor: base.ContextConstructor = Context;
+}
+
+export class Context extends base.Context<Request, Response> {
+  protected requestConstructor: base.RequestConstructor = Request;
+  protected responseConstructor: base.ResponseConstructor = Response;
+}
+
+export class Request extends base.Request {}
+
+export class Response extends base.Response {
+  // 扩展方法
+  public ok(data: any) {
+    this.json({ data });
+  }
+  public error(error: message) {
+    this.json({ error });
+  }
+}
+```
+
 ## 性能
 
 [性能测试程序](https://github.com/leizongmin/leizm-connect-benchmark) 结果（性能优于主流框架 **koa** 和 **express.js**）：
