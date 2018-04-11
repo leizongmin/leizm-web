@@ -3,7 +3,6 @@ import { Connect, fromClassicalHandle } from "../lib";
 import * as request from "supertest";
 import * as cookieParser from "cookie-parser";
 import { sign as signCookie } from "cookie-signature";
-import * as cookie from "cookie";
 
 describe("Request", function() {
   it("正确解析 query, url, path, search, httpVersion 等基本信息", function(done) {
