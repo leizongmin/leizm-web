@@ -1,5 +1,12 @@
 import { ServerResponse } from "http";
 import { Context } from "./context";
+import { sign as signCookie } from "cookie-signature";
+import * as cookie from "cookie";
+
+export interface CookieOptions extends cookie.CookieSerializeOptions {
+  /** 是否签名 */
+  signed?: boolean;
+}
 
 export class Response {
   constructor(
@@ -159,5 +166,41 @@ export class Response {
   public html(str: Buffer | string): void {
     this.setHeader("Content-Type", "text/html");
     this.end(str);
+  }
+
+  /**
+   * 删除Cookie
+   * @param name 名称
+   * @param options 选项
+   */
+  public clearCookie(name: string, options: CookieOptions = {}) {
+    this.cookie(name, "", { expires: new Date(1), path: "/", ...options });
+  }
+
+  /**
+   * 设置Cookie
+   * @param name 名称
+   * @param value 值
+   * @param options 选项
+   */
+  public cookie(name: string, value: any, options: CookieOptions = {}) {
+    const opts = { ...options };
+    const secret = (this.ctx.request.req as any).secret;
+    if (opts.signed && !secret) {
+      throw new Error('cookieParser("secret") required for signed cookies');
+    }
+    let val =
+      typeof value === "object" ? "j:" + JSON.stringify(value) : String(value);
+    if (opts.signed) {
+      val = "s:" + signCookie(val, secret);
+    }
+    if ("maxAge" in opts) {
+      opts.expires = new Date(Date.now() + opts.maxAge);
+      opts.maxAge /= 1000;
+    }
+    if (opts.path == null) {
+      opts.path = "/";
+    }
+    this.appendHeader("Set-Cookie", cookie.serialize(name, String(val), opts));
   }
 }

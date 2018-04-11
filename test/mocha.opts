@@ -2,4 +2,3 @@
 --full-trace
 --bail
 --recursive
-src/test/**/*.ts
