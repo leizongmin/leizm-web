@@ -2,17 +2,9 @@ import { ServerRequest, ServerResponse } from "http";
 import { EventEmitter } from "events";
 import { Request } from "./request";
 import { Response } from "./response";
-import {
-  NextFunction,
-  ErrorReason,
-  RequestConstructor,
-  ResponseConstructor
-} from "./define";
+import { NextFunction, ErrorReason, RequestConstructor, ResponseConstructor } from "./define";
 
-export class Context<
-  Q extends Request = Request,
-  S extends Response = Response
-> extends EventEmitter {
+export class Context<Q extends Request = Request, S extends Response = Response> extends EventEmitter {
   /** 原始ServerRequest对象 */
   protected _request: Q;
   /** 原始ServerResponse对象 */

@@ -6,9 +6,7 @@ import { Context } from "./context";
 import { Request } from "./request";
 import { Response } from "./response";
 
-export class Connect<
-  C extends Context = Context<Request, Response>
-> extends Core<C> {
+export class Connect<C extends Context = Context<Request, Response>> extends Core<C> {
   /** http.Server实例 */
   protected _server: Server;
 
@@ -58,18 +56,14 @@ export class Connect<
    * @param res ServerResponse对象
    * @param done 未处理请求的回调函数
    */
-  public handleRequest = (
-    req: ServerRequest,
-    res: ServerResponse,
-    done?: (err?: ErrorReason) => void
-  ) => {
+  public handleRequest = (req: ServerRequest, res: ServerResponse, done?: (err?: ErrorReason) => void) => {
     this.handleRequestByRequestResponse(
       req,
       res,
       done ||
         function(err?: ErrorReason) {
           return finalhandler(req, res)(err);
-        }
+        },
     );
   };
 }

@@ -9,10 +9,7 @@ export interface CookieOptions extends cookie.CookieSerializeOptions {
 }
 
 export class Response {
-  constructor(
-    public readonly res: ServerResponse,
-    public readonly ctx: Context
-  ) {}
+  constructor(public readonly res: ServerResponse, public readonly ctx: Context) {}
 
   /**
    * 初始化完成
@@ -44,11 +41,7 @@ export class Response {
    * @param name 名称
    */
   public getHeaders(): Record<string, string | string[] | number> {
-    return (
-      (this.res.getHeaders
-        ? this.res.getHeaders()
-        : (this.res as any)._headers) || {}
-    );
+    return (this.res.getHeaders ? this.res.getHeaders() : (this.res as any)._headers) || {};
   }
 
   /**
@@ -112,10 +105,7 @@ export class Response {
    * @param statusCode 响应状态码
    * @param headers 响应头
    */
-  public writeHead(
-    statusCode: number,
-    headers: Record<string, string | string[] | number>
-  ): this {
+  public writeHead(statusCode: number, headers: Record<string, string | string[] | number>): this {
     this.res.writeHead(statusCode, headers);
     return this;
   }
@@ -127,11 +117,7 @@ export class Response {
    * @param encoding 字符编码
    * @param callback 回调函数
    */
-  public write(
-    data: string | Buffer | Uint8Array,
-    encoding?: string,
-    callback?: () => void
-  ): boolean {
+  public write(data: string | Buffer | Uint8Array, encoding?: string, callback?: () => void): boolean {
     return this.res.write.apply(this.res, arguments);
   }
 
@@ -142,11 +128,7 @@ export class Response {
    * @param encoding 字符编码
    * @param callback 回调函数
    */
-  public end(
-    data: string | Buffer | Uint8Array,
-    encoding?: string,
-    callback?: () => void
-  ): boolean {
+  public end(data: string | Buffer | Uint8Array, encoding?: string, callback?: () => void): boolean {
     return this.res.end.apply(this.res, arguments);
   }
 
@@ -189,8 +171,7 @@ export class Response {
     if (opts.signed && !secret) {
       throw new Error('cookieParser("secret") required for signed cookies');
     }
-    let val =
-      typeof value === "object" ? "j:" + JSON.stringify(value) : String(value);
+    let val = typeof value === "object" ? "j:" + JSON.stringify(value) : String(value);
     if (opts.signed) {
       val = "s:" + signCookie(val, secret);
     }

@@ -17,14 +17,14 @@ app.use(
     console.log(ctx.request.query, ctx.request.hasBody(), ctx.request.body);
     await sleep(1000);
     ctx.next();
-  }
+  },
 );
 app.use(
   "/",
   fromClassicalHandle(function(req, res, next) {
     console.log(req.headers);
     next();
-  })
+  }),
 );
 
 const router = new Router();

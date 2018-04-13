@@ -6,7 +6,7 @@ import {
   ErrorReason,
   RegExpOptions,
   RegExpKey,
-  ParsedRoutePathResult
+  ParsedRoutePathResult,
 } from "./define";
 import { Context } from "./context";
 
@@ -25,10 +25,7 @@ export function isPromise(p: Promise<void>): boolean {
  * @param route 路由字符串
  * @param options 选项
  */
-export function parseRoutePath(
-  route: string | RegExp,
-  options: RegExpOptions
-): ParsedRoutePathResult {
+export function parseRoutePath(route: string | RegExp, options: RegExpOptions): ParsedRoutePathResult {
   if (route instanceof RegExp) {
     return { regexp: route, keys: [] };
   }
@@ -43,10 +40,7 @@ export function parseRoutePath(
  * @param pathname 当前路径
  * @param route 当前路由规则
  */
-export function testRoutePath(
-  pathname: string,
-  route: ParsedRoutePathResult | null
-): boolean {
+export function testRoutePath(pathname: string, route: ParsedRoutePathResult | null): boolean {
   if (!route) {
     return true;
   }
@@ -60,10 +54,7 @@ export function testRoutePath(
  * @param pathname 当前路径
  * @param route 当前路由规则
  */
-export function getRouteParams(
-  pathname: string,
-  route: ParsedRoutePathResult | null
-): Record<string, string> {
+export function getRouteParams(pathname: string, route: ParsedRoutePathResult | null): Record<string, string> {
   const params: Record<string, string> = {};
   if (route) {
     route.regexp.lastIndex = 0;
@@ -83,10 +74,7 @@ export function getRouteParams(
  * @param pathname 当前路径
  * @param route 当前路由规则
  */
-export function getRouteMatchPath(
-  pathname: string,
-  route: ParsedRoutePathResult | null
-): string {
+export function getRouteMatchPath(pathname: string, route: ParsedRoutePathResult | null): string {
   if (!route) return "";
   route.regexp.lastIndex = 0;
   const values = route.regexp.exec(pathname);
@@ -98,9 +86,7 @@ export function getRouteMatchPath(
  *
  * @param fn 处理函数
  */
-export function fromClassicalHandle<C extends Context>(
-  fn: ClassicalMiddlewareHandle
-): MiddlewareHandle<C> {
+export function fromClassicalHandle<C extends Context>(fn: ClassicalMiddlewareHandle): MiddlewareHandle<C> {
   const handle: MiddlewareHandle<C> = function(ctx: C) {
     let removedPath = "";
     if (handle.route) {
@@ -127,13 +113,8 @@ export function fromClassicalHandle<C extends Context>(
  *
  * @param fn 处理函数
  */
-export function fromClassicalErrorHandle<C extends Context>(
-  fn: ClassicalMiddlewareErrorHandle
-): MiddlewareHandle<C> {
-  const handle: MiddlewareHandle<C> = function(
-    ctx: Context,
-    err?: ErrorReason
-  ) {
+export function fromClassicalErrorHandle<C extends Context>(fn: ClassicalMiddlewareErrorHandle): MiddlewareHandle<C> {
+  const handle: MiddlewareHandle<C> = function(ctx: Context, err?: ErrorReason) {
     let removedPath = "";
     if (handle.route) {
       removedPath = getRouteMatchPath(ctx.request.path, handle.route);
@@ -159,9 +140,7 @@ export function fromClassicalErrorHandle<C extends Context>(
  *
  * @param handle 处理函数
  */
-export function isMiddlewareErrorHandle<C>(
-  handle: MiddlewareHandle<C>
-): boolean {
+export function isMiddlewareErrorHandle<C>(handle: MiddlewareHandle<C>): boolean {
   return handle.length > 1;
 }
 
@@ -173,7 +152,7 @@ export function isMiddlewareErrorHandle<C>(
  */
 export function wrapMiddlewareHandleWithMethod<C extends Context>(
   method: string,
-  handle: MiddlewareHandle<C>
+  handle: MiddlewareHandle<C>,
 ): MiddlewareHandle<C> {
   function handleRequest(ctx: C, err?: ErrorReason) {
     if (ctx.request.method !== method) return ctx.next(err);
@@ -201,7 +180,7 @@ export function execMiddlewareHandle<C>(
   handle: MiddlewareHandle<C>,
   ctx: C,
   err: ErrorReason,
-  onError: (err: ErrorReason) => void
+  onError: (err: ErrorReason) => void,
 ) {
   process.nextTick(function() {
     let p: Promise<void> | void;

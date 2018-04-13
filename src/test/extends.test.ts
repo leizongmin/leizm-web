@@ -10,7 +10,7 @@ import {
   ContextConstructor,
   RequestConstructor,
   ResponseConstructor,
-  fromClassicalHandle
+  fromClassicalHandle,
 } from "../lib";
 
 ////////////////////////////////////////////////////////////////////////

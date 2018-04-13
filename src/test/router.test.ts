@@ -2,17 +2,7 @@ import { expect } from "chai";
 import { Connect, Router, Context, ErrorReason } from "../lib";
 import * as request from "supertest";
 
-const METHODS = [
-  "get",
-  "head",
-  "post",
-  "put",
-  "delete",
-  "connect",
-  "options",
-  "trace",
-  "patch"
-];
+const METHODS = ["get", "head", "post", "put", "delete", "connect", "options", "trace", "patch"];
 
 describe("Router", function() {
   it("可以在 Connect.use 中直接使用", function(done) {
@@ -51,7 +41,7 @@ describe("Router", function() {
       .expect(200)
       .expect("ok", function() {
         expect(status).to.deep.equal({
-          a: true
+          a: true,
         });
         done();
       });
@@ -74,7 +64,7 @@ describe("Router", function() {
       },
       function(ctx, err) {
         throw new Error("不可能执行到此处");
-      }
+      },
     );
     app.use("/", router);
     request(app.server)
@@ -116,18 +106,10 @@ describe("Router", function() {
       };
     }
     for (const method of METHODS) {
-      (router as any)[method](
-        "/xyz",
-        generateErrorHandle("不可能执行到此处"),
-        generateHandle(`this is not ${method}`)
-      );
+      (router as any)[method]("/xyz", generateErrorHandle("不可能执行到此处"), generateHandle(`this is not ${method}`));
     }
     for (const method of METHODS) {
-      (router as any)[method](
-        "/abc",
-        generateErrorHandle("不可能执行到此处"),
-        generateHandle(`this is ${method}`)
-      );
+      (router as any)[method]("/abc", generateErrorHandle("不可能执行到此处"), generateHandle(`this is ${method}`));
     }
     app.use("/", router);
     for (const method of METHODS) {
@@ -157,18 +139,10 @@ describe("Router", function() {
       };
     }
     for (const method of METHODS) {
-      (router as any)[method](
-        "/xyz",
-        generateErrorHandle("不可能执行到此处"),
-        generateHandle(method)
-      );
+      (router as any)[method]("/xyz", generateErrorHandle("不可能执行到此处"), generateHandle(method));
     }
     for (const method of METHODS) {
-      (router as any)[method](
-        "/abc",
-        generateErrorHandle("不可能执行到此处"),
-        generateHandle(method)
-      );
+      (router as any)[method]("/abc", generateErrorHandle("不可能执行到此处"), generateHandle(method));
     }
     app.use("/", router);
     for (const method of METHODS) {

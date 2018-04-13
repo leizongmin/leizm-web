@@ -1,11 +1,6 @@
 import { expect } from "chai";
 import { Server } from "http";
-import {
-  Connect,
-  Router,
-  fromClassicalHandle,
-  fromClassicalErrorHandle
-} from "../lib";
+import { Connect, Router, fromClassicalHandle, fromClassicalErrorHandle } from "../lib";
 import * as request from "supertest";
 import * as bodyParser from "body-parser";
 
@@ -255,7 +250,7 @@ describe("Connect", function() {
       function(ctx) {
         status.c = true;
         throw new Error("不应该执行到此处");
-      }
+      },
     );
     request(app.server)
       .get("/")
@@ -263,7 +258,7 @@ describe("Connect", function() {
       .expect("ok", function() {
         expect(status).to.deep.equal({
           a: true,
-          b: true
+          b: true,
         });
         done();
       });
@@ -333,7 +328,7 @@ describe("Connect", function() {
           x: true,
           b: true,
           bb: true,
-          d: true
+          d: true,
         });
         done();
       });
@@ -346,7 +341,7 @@ describe("Connect", function() {
       expect(ctx.request.params).to.deep.equal({
         x: "hello",
         y: "world",
-        z: "ok"
+        z: "ok",
       });
       ctx.next();
     });
@@ -354,7 +349,7 @@ describe("Connect", function() {
       expect(ctx.request.params).to.deep.equal({
         a: "hello",
         b: "world",
-        c: "ok"
+        c: "ok",
       });
       ctx.response.setHeader("content-type", "application/json");
       ctx.response.end(JSON.stringify(ctx.request.params));
@@ -366,9 +361,9 @@ describe("Connect", function() {
         {
           a: "hello",
           b: "world",
-          c: "ok"
+          c: "ok",
         },
-        done
+        done,
       );
   });
 
@@ -385,16 +380,16 @@ describe("Connect", function() {
       .send({
         a: 111,
         b: 222,
-        c: 333
+        c: 333,
       })
       .expect(200)
       .expect(
         {
           a: 111,
           b: 222,
-          c: 333
+          c: 333,
         },
-        done
+        done,
       );
   });
 
@@ -412,7 +407,7 @@ describe("Connect", function() {
           .property("message")
           .to.equal("test error");
         res.end("no error");
-      })
+      }),
     );
     request(app.server)
       .get("/")
@@ -426,7 +421,7 @@ describe("Connect", function() {
     const status = {
       a: false,
       b: false,
-      c: false
+      c: false,
     };
     const router = new Router();
     app.use("/abc", function(ctx) {

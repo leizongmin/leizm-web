@@ -7,7 +7,7 @@ import {
   NextFunction,
   ContextConstructor,
   ParsedRoutePathResult,
-  RegExpOptions
+  RegExpOptions,
 } from "./define";
 import {
   testRoutePath,
@@ -15,7 +15,7 @@ import {
   getRouteParams,
   isMiddlewareErrorHandle,
   execMiddlewareHandle,
-  getRouteMatchPath
+  getRouteMatchPath,
 } from "./utils";
 import { Request } from "./request";
 import { Response } from "./response";
@@ -30,7 +30,7 @@ export class Core<C extends Context = Context<Request, Response>> {
     sensitive: true,
     strict: true,
     end: true,
-    delimiter: "/"
+    delimiter: "/",
   };
   /** use()当前中间件时的路由规则 */
   protected route: ParsedRoutePathResult | null = null;
@@ -51,16 +51,13 @@ export class Core<C extends Context = Context<Request, Response>> {
    * @param isPrefix 是否为前缀模式
    * @param route 路由规则
    */
-  protected parseRoutePath(
-    isPrefix: boolean,
-    route: string | RegExp
-  ): ParsedRoutePathResult {
+  protected parseRoutePath(isPrefix: boolean, route: string | RegExp): ParsedRoutePathResult {
     if (isPrefix && (!route || route === "/")) {
       return null;
     }
     return parseRoutePath(route, {
       ...this.routeOptions,
-      end: !isPrefix
+      end: !isPrefix,
     });
   }
 
@@ -94,10 +91,7 @@ export class Core<C extends Context = Context<Request, Response>> {
    * @param route 路由规则
    * @param handles 中间件对象或处理函数
    */
-  public use(
-    route: string | RegExp,
-    ...handles: Array<MiddlewareHandle<C> | Core<C>>
-  ) {
+  public use(route: string | RegExp, ...handles: Array<MiddlewareHandle<C> | Core<C>>) {
     const parsedRoute = this.parseRoutePath(true, route);
     this.add(
       parsedRoute,
@@ -108,7 +102,7 @@ export class Core<C extends Context = Context<Request, Response>> {
         }
         item.route = parsedRoute;
         return item;
-      })
+      }),
     );
   }
 
@@ -118,16 +112,13 @@ export class Core<C extends Context = Context<Request, Response>> {
    * @param route 路由
    * @param handles 中间件对象或处理函数
    */
-  protected add(
-    route: ParsedRoutePathResult,
-    ...handles: MiddlewareHandle<C>[]
-  ) {
+  protected add(route: ParsedRoutePathResult, ...handles: MiddlewareHandle<C>[]) {
     for (const handle of handles) {
       const item: Middleware<C> = {
         route,
         handle,
         handleError: isMiddlewareErrorHandle(handle),
-        atEnd: false
+        atEnd: false,
       };
       const i = this.stack.findIndex(v => v.atEnd);
       if (i === -1) {
@@ -144,16 +135,13 @@ export class Core<C extends Context = Context<Request, Response>> {
    * @param route 路由
    * @param handles 中间件对象或处理函数
    */
-  protected addToEnd(
-    route: ParsedRoutePathResult,
-    ...handles: MiddlewareHandle<C>[]
-  ) {
+  protected addToEnd(route: ParsedRoutePathResult, ...handles: MiddlewareHandle<C>[]) {
     for (const handle of handles) {
       const item: Middleware<C> = {
         route,
         handle,
         handleError: isMiddlewareErrorHandle(handle),
-        atEnd: true
+        atEnd: true,
       };
       this.stack.push(item);
     }
@@ -165,11 +153,7 @@ export class Core<C extends Context = Context<Request, Response>> {
    * @param res 原始ServerResponse对象
    * @param done 未处理请求回调函数
    */
-  protected handleRequestByRequestResponse(
-    req: ServerRequest,
-    res: ServerResponse,
-    done: (err?: ErrorReason) => void
-  ) {
+  protected handleRequestByRequestResponse(req: ServerRequest, res: ServerResponse, done: (err?: ErrorReason) => void) {
     this.handleRequestByContext(this.createContext(req, res), done);
   }
 

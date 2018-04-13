@@ -49,13 +49,13 @@ describe("兼容 connect 模块", function() {
       .send({
         a: 111,
         b: 222,
-        c: 333
+        c: 333,
       })
       .expect(200)
       .expect({
         a: 111,
         b: 222,
-        c: 333
+        c: 333,
       });
     expect(isCalled).to.equal(true);
   });
@@ -80,13 +80,13 @@ describe("兼容 connect 模块", function() {
       .send({
         a: 111,
         b: 222,
-        c: 333
+        c: 333,
       })
       .expect(200)
       .expect({
         a: 111,
         b: 222,
-        c: 333
+        c: 333,
       });
     expect(isCalled).to.equal(true);
   });
@@ -151,13 +151,13 @@ describe("使用 uws.http", function() {
       .send({
         a: 111,
         b: 222,
-        c: 333
+        c: 333,
       })
       .expect(200)
       .expect({
         a: 111,
         b: 222,
-        c: 333
+        c: 333,
       });
     await app.close();
   });

@@ -53,17 +53,13 @@ export interface ListenOptions {
 }
 
 /** 经典connect中间件 */
-export type ClassicalMiddlewareHandle = (
-  req: ServerRequest,
-  res: ServerResponse,
-  next?: NextFunction
-) => void;
+export type ClassicalMiddlewareHandle = (req: ServerRequest, res: ServerResponse, next?: NextFunction) => void;
 /** 经典connect错误处理中间件 */
 export type ClassicalMiddlewareErrorHandle = (
   err: ErrorReason,
   req: ServerRequest,
   res: ServerResponse,
-  next?: NextFunction
+  next?: NextFunction,
 ) => void;
 
 /** Context对象构造器 */
