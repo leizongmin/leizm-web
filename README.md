@@ -6,23 +6,23 @@
 [![npm download][download-image]][download-url]
 [![npm license][license-image]][download-url]
 
-[npm-image]: https://img.shields.io/npm/v/@leizm/connect.svg?style=flat-square
-[npm-url]: https://npmjs.org/package/@leizm/connect
-[travis-image]: https://img.shields.io/travis/leizongmin/leizm-connect.svg?style=flat-square
-[travis-url]: https://travis-ci.org/leizongmin/leizm-connect
-[coveralls-image]: https://img.shields.io/coveralls/leizongmin/leizm-connect.svg?style=flat-square
-[coveralls-url]: https://coveralls.io/r/leizongmin/leizm-connect?branch=master
-[david-image]: https://img.shields.io/david/leizongmin/leizm-connect.svg?style=flat-square
-[david-url]: https://david-dm.org/leizongmin/leizm-connect
+[npm-image]: https://img.shields.io/npm/v/@leizm/web.svg?style=flat-square
+[npm-url]: https://npmjs.org/package/@leizm/web
+[travis-image]: https://img.shields.io/travis/leizongmin/leizm-web.svg?style=flat-square
+[travis-url]: https://travis-ci.org/leizongmin/leizm-web
+[coveralls-image]: https://img.shields.io/coveralls/leizongmin/leizm-web.svg?style=flat-square
+[coveralls-url]: https://coveralls.io/r/leizongmin/leizm-web?branch=master
+[david-image]: https://img.shields.io/david/leizongmin/leizm-web.svg?style=flat-square
+[david-url]: https://david-dm.org/leizongmin/leizm-web
 [node-image]: https://img.shields.io/badge/node.js-%3E=_6.0-green.svg?style=flat-square
 [node-url]: http://nodejs.org/download/
-[download-image]: https://img.shields.io/npm/dm/@leizm/connect.svg?style=flat-square
-[download-url]: https://npmjs.org/package/@leizm/connect
-[license-image]: https://img.shields.io/npm/l/@leizm/connect.svg
+[download-image]: https://img.shields.io/npm/dm/@leizm/web.svg?style=flat-square
+[download-url]: https://npmjs.org/package/@leizm/web
+[license-image]: https://img.shields.io/npm/l/@leizm/web.svg
 
-# @leizm/connect
+# @leizm/web
 
-[![Greenkeeper badge](https://badges.greenkeeper.io/leizongmin/leizm-connect.svg)](https://greenkeeper.io/)
+[![Greenkeeper badge](https://badges.greenkeeper.io/leizongmin/leizm-web.svg)](https://greenkeeper.io/)
 
 现代的 Web 中间件基础框架，完美支持 TypeScript，构建可维护的大型 Web 项目。
 
@@ -36,13 +36,13 @@
 ## 安装
 
 ```bash
-npm install @leizm/connect --save
+npm install @leizm/web --save
 ```
 
 ## 基本使用方法
 
 ```typescript
-import { Connect, Router } from "@leizm/connect";
+import { Connect, Router } from "@leizm/web";
 
 const app = new Connect();
 const router = new Router();
@@ -80,12 +80,12 @@ app.listen({ port: 3000 }, () => {
 
 ## 扩展
 
-扩展 Request 与 Response 对象的方法：[参考单元测试程序](https://github.com/leizongmin/leizm-connect/blob/master/src/test/extends.test.ts)
+扩展 Request 与 Response 对象的方法：[参考单元测试程序](https://github.com/leizongmin/leizm-web/blob/master/src/test/extends.test.ts)
 
-模板文件 `connect.ts`（自己的项目中引用此文件中的 `Connect` 和 `Router`，而不是来自 `@leizm/connect` 的）：
+模板文件 `connect.ts`（自己的项目中引用此文件中的 `Connect` 和 `Router`，而不是来自 `@leizm/web` 的）：
 
 ```typescript
-import * as base from "@leizm/connect";
+import * as base from "@leizm/web";
 
 export type MiddlewareHandle = (
   ctx: Context,
@@ -120,7 +120,7 @@ export class Response extends base.Response {
 
 ## 性能
 
-[性能测试程序](https://github.com/leizongmin/leizm-connect-benchmark) 结果（性能优于主流框架 **koa** 和 **express.js**）：
+[性能测试程序](https://github.com/leizongmin/leizm-web-benchmark) 结果（性能优于主流框架 **koa** 和 **express.js**）：
 
 ```text
 ------------------------------------------------------------------------
@@ -130,7 +130,7 @@ connection: close 方式请求：
 14892.25 Requests/sec - ufeathers.js
 13657.59 Requests/sec - uexpress.js
 5853.36 Requests/sec - micro.js
-5040.39 Requests/sec - leizm-connect.js
+5040.39 Requests/sec - leizm-web.js
 5002.74 Requests/sec - rawnode.js
 4279.85 Requests/sec - koa.js
 3784.59 Requests/sec - total/total.js
@@ -150,7 +150,7 @@ connection: keep-alive 方式请求：
 14047.04 Requests/sec - ufeathers.js
 13352.23 Requests/sec - micro.js
 11644.37 Requests/sec - rawnode.js
-11088.41 Requests/sec - leizm-connect.js
+11088.41 Requests/sec - leizm-web.js
 8334.33 Requests/sec - koa.js
 7588.25 Requests/sec - total/total.js
 6026.16 Requests/sec - express.js
