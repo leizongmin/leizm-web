@@ -10,7 +10,7 @@ export class Request {
   constructor(public readonly req: ServerRequest, public readonly ctx: Context) {
     const req2 = req as ServerRequestEx;
     req2.originalUrl = req2.originalUrl || req.url;
-    this.parsedUrlInfo = parseUrl(req.url, true);
+    this.parsedUrlInfo = parseUrl(req.url || "", true);
     req2.query = this.parsedUrlInfo.query as any;
   }
 
@@ -25,8 +25,8 @@ export class Request {
   }
 
   /** 获取URL */
-  public get url() {
-    return (this.req as ServerRequestEx).url;
+  public get url(): string {
+    return (this.req as ServerRequestEx).url || "";
   }
 
   /** 更新URL */
@@ -35,8 +35,8 @@ export class Request {
   }
 
   /** 获取Path（URL不包含查询字符串部分）*/
-  public get path() {
-    return this.parsedUrlInfo.pathname;
+  public get path(): string {
+    return this.parsedUrlInfo.pathname || "";
   }
 
   /** 设置Path（URL不包含查询字符串部分）*/

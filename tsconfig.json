@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "es6",
+    "target": "esnext",
     "rootDir": "src",
     "outDir": "dist",
     "moduleResolution": "node",
@@ -8,9 +8,6 @@
     "alwaysStrict": true,
     "sourceMap": true,
     "declaration": true,
-    "noImplicitAny": true,
-    "noImplicitReturns": true,
-    "noImplicitThis": true,
-    "noUnusedLocals": true
+    "strict": true
   }
 }

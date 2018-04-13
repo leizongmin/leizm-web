@@ -8,7 +8,7 @@ import { Response } from "./response";
 
 export class Connect<C extends Context = Context<Request, Response>> extends Core<C> {
   /** http.Server实例 */
-  protected _server: Server;
+  protected _server?: Server;
 
   /** 获取当前http.Server实例 */
   public get server() {

@@ -40,7 +40,7 @@ export function parseRoutePath(route: string | RegExp, options: RegExpOptions): 
  * @param pathname 当前路径
  * @param route 当前路由规则
  */
-export function testRoutePath(pathname: string, route: ParsedRoutePathResult | null): boolean {
+export function testRoutePath(pathname: string, route: ParsedRoutePathResult | undefined): boolean {
   if (!route) {
     return true;
   }
@@ -54,7 +54,7 @@ export function testRoutePath(pathname: string, route: ParsedRoutePathResult | n
  * @param pathname 当前路径
  * @param route 当前路由规则
  */
-export function getRouteParams(pathname: string, route: ParsedRoutePathResult | null): Record<string, string> {
+export function getRouteParams(pathname: string, route: ParsedRoutePathResult | undefined): Record<string, string> {
   const params: Record<string, string> = {};
   if (route) {
     route.regexp.lastIndex = 0;

@@ -370,7 +370,7 @@ describe("Connect", function() {
   it("支持使用 connect/express 中间件", function(done) {
     const app = new Connect();
     appInstances.push(app);
-    app.use("/", fromClassicalHandle(bodyParser.json()));
+    app.use("/", fromClassicalHandle(bodyParser.json() as any));
     app.use("/", function(ctx) {
       ctx.response.setHeader("content-type", "application/json");
       ctx.response.end(JSON.stringify(ctx.request.body));

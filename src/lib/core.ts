@@ -33,7 +33,7 @@ export class Core<C extends Context = Context<Request, Response>> {
     delimiter: "/",
   };
   /** use()当前中间件时的路由规则 */
-  protected route: ParsedRoutePathResult | null = null;
+  protected route?: ParsedRoutePathResult;
 
   /**
    * 创建Context对象
@@ -51,9 +51,9 @@ export class Core<C extends Context = Context<Request, Response>> {
    * @param isPrefix 是否为前缀模式
    * @param route 路由规则
    */
-  protected parseRoutePath(isPrefix: boolean, route: string | RegExp): ParsedRoutePathResult {
+  protected parseRoutePath(isPrefix: boolean, route: string | RegExp): ParsedRoutePathResult | undefined {
     if (isPrefix && (!route || route === "/")) {
-      return null;
+      return;
     }
     return parseRoutePath(route, {
       ...this.routeOptions,
@@ -112,7 +112,7 @@ export class Core<C extends Context = Context<Request, Response>> {
    * @param route 路由
    * @param handles 中间件对象或处理函数
    */
-  protected add(route: ParsedRoutePathResult, ...handles: MiddlewareHandle<C>[]) {
+  protected add(route: ParsedRoutePathResult | undefined, ...handles: MiddlewareHandle<C>[]) {
     for (const handle of handles) {
       const item: Middleware<C> = {
         route,
@@ -135,7 +135,7 @@ export class Core<C extends Context = Context<Request, Response>> {
    * @param route 路由
    * @param handles 中间件对象或处理函数
    */
-  protected addToEnd(route: ParsedRoutePathResult, ...handles: MiddlewareHandle<C>[]) {
+  protected addToEnd(route: ParsedRoutePathResult | undefined, ...handles: MiddlewareHandle<C>[]) {
     for (const handle of handles) {
       const item: Middleware<C> = {
         route,

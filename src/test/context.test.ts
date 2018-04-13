@@ -247,7 +247,7 @@ describe("Context", function() {
 describe("Cookie", function() {
   it("解析一般的Cookie", function(done) {
     const app = new Connect();
-    app.use("/", fromClassicalHandle(cookieParser("test")));
+    app.use("/", fromClassicalHandle(cookieParser("test") as any));
     app.use("/", function(ctx) {
       expect(ctx.request.cookies).to.deep.equal({
         a: "123",
@@ -267,7 +267,7 @@ describe("Cookie", function() {
 
   it("解析签名的Cookie", function(done) {
     const app = new Connect();
-    app.use("/", fromClassicalHandle(cookieParser("test")));
+    app.use("/", fromClassicalHandle(cookieParser("test") as any));
     app.use("/", function(ctx) {
       // console.log(ctx.request.cookies, ctx.request.signedCookies);
       expect(ctx.request.cookies).to.deep.equal({});

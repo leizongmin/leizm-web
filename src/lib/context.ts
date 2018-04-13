@@ -6,9 +6,9 @@ import { NextFunction, ErrorReason, RequestConstructor, ResponseConstructor } fr
 
 export class Context<Q extends Request = Request, S extends Response = Response> extends EventEmitter {
   /** 原始ServerRequest对象 */
-  protected _request: Q;
+  protected _request?: Q;
   /** 原始ServerResponse对象 */
-  protected _response: S;
+  protected _response?: S;
   /** 用于存储next函数的堆栈 */
   protected readonly nextHandleStack: NextFunction[] = [];
   /** Request对象的构造函数 */
@@ -21,7 +21,7 @@ export class Context<Q extends Request = Request, S extends Response = Response>
    *
    * @param req 原始ServerRequest对象
    */
-  protected createRequest(req: ServerRequest) {
+  protected createRequest(req: ServerRequest): Q {
     return new this.requestConstructor(req, this) as Q;
   }
 
@@ -30,7 +30,7 @@ export class Context<Q extends Request = Request, S extends Response = Response>
    *
    * @param res 原始ServerResponse对象
    */
-  protected createResponse(res: ServerResponse) {
+  protected createResponse(res: ServerResponse): S {
     return new this.responseConstructor(res, this) as S;
   }
 
@@ -58,15 +58,15 @@ export class Context<Q extends Request = Request, S extends Response = Response>
   /**
    * 获取Request对象
    */
-  public get request() {
-    return this._request;
+  public get request(): Q {
+    return this._request as Q;
   }
 
   /**
    * 获取Response对象
    */
-  public get response() {
-    return this._response;
+  public get response(): S {
+    return this._response as S;
   }
 
   /**

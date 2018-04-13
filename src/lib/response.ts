@@ -31,7 +31,7 @@ export class Response {
    *
    * @param name 名称
    */
-  public getHeader(name: string): string | string[] | number {
+  public getHeader(name: string): string | string[] | number | undefined {
     return this.res.getHeader(name);
   }
 
@@ -175,7 +175,7 @@ export class Response {
     if (opts.signed) {
       val = "s:" + signCookie(val, secret);
     }
-    if ("maxAge" in opts) {
+    if ("maxAge" in opts && opts.maxAge) {
       opts.expires = new Date(Date.now() + opts.maxAge);
       opts.maxAge /= 1000;
     }

@@ -1,4 +1,4 @@
-import { ServerRequest, ServerResponse } from "http";
+import { IncomingMessage, ServerResponse } from "http";
 import { Request } from "./request";
 import { Response } from "./response";
 import { Context } from "./context";
@@ -6,7 +6,7 @@ import { Key as RegExpKey } from "path-to-regexp";
 export { RegExpOptions, Key as RegExpKey } from "path-to-regexp";
 
 /** 出错原因 */
-export type ErrorReason = null | string | Error | Record<any, any>;
+export type ErrorReason = undefined | null | string | Error | Record<any, any>;
 
 /** 编译路由字符串的结果 */
 export interface ParsedRoutePathResult {
@@ -30,7 +30,7 @@ export interface Middleware<C> {
   /** 是否为错误处理中间件 */
   handleError: boolean;
   /** 路由规则 */
-  route: ParsedRoutePathResult;
+  route?: ParsedRoutePathResult;
   /** 中间件处理函数 */
   handle: MiddlewareHandle<C>;
   /** 是否排在末尾 */
@@ -53,13 +53,13 @@ export interface ListenOptions {
 }
 
 /** 经典connect中间件 */
-export type ClassicalMiddlewareHandle = (req: ServerRequest, res: ServerResponse, next?: NextFunction) => void;
+export type ClassicalMiddlewareHandle = (req: IncomingMessage, res: ServerResponse, next: NextFunction) => void;
 /** 经典connect错误处理中间件 */
 export type ClassicalMiddlewareErrorHandle = (
   err: ErrorReason,
-  req: ServerRequest,
+  req: IncomingMessage,
   res: ServerResponse,
-  next?: NextFunction,
+  next: NextFunction,
 ) => void;
 
 /** Context对象构造器 */
@@ -69,7 +69,7 @@ export interface ContextConstructor {
 
 /** Request对象构造器 */
 export interface RequestConstructor {
-  new (req: ServerRequest, ctx: Context): Request;
+  new (req: IncomingMessage, ctx: Context): Request;
 }
 
 /** Response对象构造器 */
@@ -83,7 +83,7 @@ export interface Headers {
 }
 
 /** 扩展的ServerRequest对象 */
-export interface ServerRequestEx extends ServerRequest {
+export interface ServerRequestEx extends IncomingMessage {
   originalUrl?: string;
   query?: Record<string, any>;
   body?: Record<string, any>;

@@ -64,7 +64,7 @@ class MyRouter extends Router<MyContext> {
 describe("可扩展性", function() {
   it("支持扩展 Connect", function(done) {
     const app = new MyConnect();
-    app.use("/", fromClassicalHandle(bodyParser.json()));
+    app.use("/", fromClassicalHandle(bodyParser.json() as any));
     app.use("/", function(ctx) {
       expect(ctx.getHello("aa")).to.equal("hello aa");
       expect(ctx.request.getBody()).to.deep.equal({ a: 111, b: 222 });
@@ -83,7 +83,7 @@ describe("可扩展性", function() {
   it("支持扩展 Router", function(done) {
     const app = new MyConnect();
     const router = new MyRouter();
-    app.use("/", fromClassicalHandle(bodyParser.json()));
+    app.use("/", fromClassicalHandle(bodyParser.json() as any));
     router.post("/", function(ctx) {
       expect(ctx.getHello("aa")).to.equal("hello aa");
       expect(ctx.request.getBody()).to.deep.equal({ a: 111, b: 222 });

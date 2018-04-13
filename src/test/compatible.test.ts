@@ -33,7 +33,7 @@ describe("兼容 connect 模块", function() {
     const app = connect();
     const app2 = new Connect();
     appInstances.push(app2);
-    app.use(bodyParser.json());
+    app.use(bodyParser.json() as any);
     let isCalled = false;
     app.use(function(req: ServerRequest, res: ServerResponse, next: Function) {
       isCalled = true;
@@ -64,7 +64,7 @@ describe("兼容 connect 模块", function() {
     const app = connect();
     const app2 = new Connect();
     appInstances.push(app2);
-    app.use(bodyParser.json());
+    app.use(bodyParser.json() as any);
     let isCalled = false;
     app.use(function(req: ServerRequest, res: ServerResponse, next: Function) {
       isCalled = true;
@@ -118,9 +118,9 @@ describe("兼容 connect 模块", function() {
     const app = new Connect();
     appInstances.push(app);
     const app2 = new Connect();
-    app.use("/public", fromClassicalHandle(serveStatic(ROOT_DIR)));
+    app.use("/public", fromClassicalHandle(serveStatic(ROOT_DIR) as any));
     app.use("/a", app2);
-    app2.use("/static", fromClassicalHandle(serveStatic(ROOT_DIR)));
+    app2.use("/static", fromClassicalHandle(serveStatic(ROOT_DIR) as any));
     await request(app.server)
       .get("/public/package.json")
       .expect(200)
@@ -136,7 +136,7 @@ describe("使用 uws.http", function() {
   it("connect.attach()", async function() {
     const app = new Connect();
     const router = new Router();
-    app.use("/", fromClassicalHandle(bodyParser.json()));
+    app.use("/", fromClassicalHandle(bodyParser.json() as any));
     app.use("/", router);
     app.use("/", function(ctx) {
       ctx.response.setHeader("content-type", "application/json");
@@ -145,7 +145,7 @@ describe("使用 uws.http", function() {
     const server = http.createServer(app.handleRequest);
     server.address = function() {
       return null;
-    };
+    } as any;
     await request(app.server)
       .post("/")
       .send({
