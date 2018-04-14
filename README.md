@@ -30,8 +30,9 @@
 
 * 兼容 connect 中间件，可以通过内置的函数转换 connect 中间件，使用 NPM 上大量的模块资源
 * 可将本框架的实例转换为 connect 中间件，与其他项目模块紧密合作
-* 简单没有歧义的接口参数，内置 TypeScript 支持
-* 更好的性能
+* 简单没有歧义的接口参数，内置 TypeScript 支持，强大的代码自动提示支持
+* 内置路由功能，无需借助第三方模块
+* 性能由于主流框架 koa 和 express
 
 ## 安装
 
@@ -120,7 +121,7 @@ export class Response extends base.Response {
 
 ## 性能
 
-[性能测试程序](https://github.com/leizongmin/leizm-web-benchmark) 结果（性能优于主流框架 **koa** 和 **express.js**）：
+[性能测试程序](https://github.com/leizongmin/leizm-web-benchmark) 结果（性能优于主流框架 **koa** 的 17%，**express** 的 43%）：
 
 ```text
 ------------------------------------------------------------------------
