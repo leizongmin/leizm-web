@@ -121,44 +121,38 @@ export class Response extends base.Response {
 
 ## 性能
 
-[性能测试程序](https://github.com/leizongmin/leizm-web-benchmark) 结果（性能优于主流框架 **koa** 的 17%，**express** 的 43%）：
+[性能测试程序](https://github.com/leizongmin/leizm-web-benchmark) 结果（性能优于主流框架 **koa** 的 13%，**express** 的 43%）：
 
 ```text
 ------------------------------------------------------------------------
 connection: close 方式请求：
 
-26882.24 Requests/sec - ukoa.js
-14892.25 Requests/sec - ufeathers.js
-13657.59 Requests/sec - uexpress.js
-5853.36 Requests/sec - micro.js
-5040.39 Requests/sec - leizm-web.js
-5002.74 Requests/sec - rawnode.js
-4279.85 Requests/sec - koa.js
-3784.59 Requests/sec - total/total.js
-3509.53 Requests/sec - express.js
-3469.05 Requests/sec - feathers.js
-3025.51 Requests/sec - restify.js
-1261.24 Requests/sec - hapi.js
-1097.77 Requests/sec - sails/sails.js
-156.60 Requests/sec - uws.js
+8390.82 Requests/sec - restify.js
+6983.61 Requests/sec - micro.js
+6905.93 Requests/sec - leizm-web.js
+6578.84 Requests/sec - http.js
+6415.45 Requests/sec - rawnode.js
+5414.55 Requests/sec - koa.js
+5263.68 Requests/sec - total/total.js
+4926.65 Requests/sec - feathers.js
+4829.53 Requests/sec - express.js
+4401.81 Requests/sec - hapi.js
+1640.84 Requests/sec - sails/sails.js
 
 ------------------------------------------------------------------------
 connection: keep-alive 方式请求：
 
-31348.44 Requests/sec - uws.js
-27884.30 Requests/sec - ukoa.js
-14129.84 Requests/sec - uexpress.js
-14047.04 Requests/sec - ufeathers.js
-13352.23 Requests/sec - micro.js
-11644.37 Requests/sec - rawnode.js
-11088.41 Requests/sec - leizm-web.js
-8334.33 Requests/sec - koa.js
-7588.25 Requests/sec - total/total.js
-6026.16 Requests/sec - express.js
-5370.37 Requests/sec - restify.js
-3443.71 Requests/sec - feathers.js
-1617.57 Requests/sec - hapi.js
-1508.43 Requests/sec - sails/sails.js
+12279.14 Requests/sec - restify.js
+11630.27 Requests/sec - micro.js
+11584.45 Requests/sec - leizm-web.js
+11298.82 Requests/sec - http.js
+10730.96 Requests/sec - rawnode.js
+9415.69 Requests/sec - koa.js
+9178.14 Requests/sec - total/total.js
+7024.93 Requests/sec - express.js
+6038.25 Requests/sec - hapi.js
+4772.14 Requests/sec - feathers.js
+1640.60 Requests/sec - sails/sails.js
 ```
 
 ## 授权协议
