@@ -8,9 +8,9 @@
     "dist/lib"
   ],
   "scripts": {
-    "test": "npm run format && mocha --require ts-node/register \"src/test/**/*.ts\"",
-    "test-file": "mocha --require ts-node/register",
-    "test-cov": "nyc --reporter=lcov mocha --require ts-node/register \"src/test/**/*.ts\" && nyc report",
+    "test": "npm run format && mocha --require ts-node/register --exit \"src/test/**/*.ts\"",
+    "test-file": "mocha --require ts-node/register --exit",
+    "test-cov": "nyc --reporter=lcov mocha --require ts-node/register --exit \"src/test/**/*.ts\" && nyc report",
     "coveralls": "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js",
     "clean": "rm -rf dist",
     "compile": "npm run clean && tsc",
