@@ -6,7 +6,7 @@ import { Connect, fromClassicalHandle, Router } from "../lib";
 import * as request from "supertest";
 import * as connect from "connect";
 import * as bodyParser from "body-parser";
-import { http } from "uws";
+import * as uws from "uws";
 import * as serveStatic from "serve-static";
 
 export function readFile(file: string) {
@@ -142,7 +142,7 @@ describe("使用 uws.http", function() {
       ctx.response.setHeader("content-type", "application/json");
       ctx.response.end(JSON.stringify(ctx.request.body));
     });
-    const server = http.createServer(app.handleRequest);
+    const server = uws.http.createServer(app.handleRequest);
     server.address = function() {
       return null;
     } as any;
