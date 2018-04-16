@@ -6,7 +6,6 @@ import { Connect, fromClassicalHandle, Router } from "../lib";
 import * as request from "supertest";
 import * as connect from "connect";
 import * as bodyParser from "body-parser";
-import * as uws from "uws";
 import * as serveStatic from "serve-static";
 
 export function readFile(file: string) {
@@ -129,36 +128,5 @@ describe("兼容 connect 模块", function() {
       .get("/a/static/package.json")
       .expect(200)
       .expect(await readFile(path.resolve(ROOT_DIR, "package.json")));
-  });
-});
-
-describe("使用 uws.http", function() {
-  it("connect.attach()", async function() {
-    const app = new Connect();
-    const router = new Router();
-    app.use("/", fromClassicalHandle(bodyParser.json() as any));
-    app.use("/", router);
-    app.use("/", function(ctx) {
-      ctx.response.setHeader("content-type", "application/json");
-      ctx.response.end(JSON.stringify(ctx.request.body));
-    });
-    const server = uws.http.createServer(app.handleRequest);
-    server.address = function() {
-      return null;
-    } as any;
-    await request(app.server)
-      .post("/")
-      .send({
-        a: 111,
-        b: 222,
-        c: 333,
-      })
-      .expect(200)
-      .expect({
-        a: 111,
-        b: 222,
-        c: 333,
-      });
-    await app.close();
   });
 });
