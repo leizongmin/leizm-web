@@ -128,7 +128,7 @@ export class Response {
    * @param encoding 字符编码
    * @param callback 回调函数
    */
-  public end(data: string | Buffer | Uint8Array, encoding?: string, callback?: () => void): boolean {
+  public end(data?: string | Buffer | Uint8Array, encoding?: string, callback?: () => void): boolean {
     return this.res.end.apply(this.res, arguments);
   }
 
