@@ -151,6 +151,26 @@ export class Response {
   }
 
   /**
+   * HTTP 302 临时重定向
+   * @param url 网址
+   * @param content 内容
+   */
+  public temporaryRedirect(url: string, content: string = ""): void {
+    this.writeHead(302, { Location: url });
+    this.end(content);
+  }
+
+  /**
+   * HTTP 301 永久重定向
+   * @param url 网址
+   * @param content 内容
+   */
+  public permanentRedirect(url: string, content: string = ""): void {
+    this.writeHead(301, { Location: url });
+    this.end(content);
+  }
+
+  /**
    * 删除Cookie
    * @param name 名称
    * @param options 选项
