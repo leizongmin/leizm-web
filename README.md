@@ -155,6 +155,10 @@ connection: keep-alive 方式请求：
 1640.60 Requests/sec - sails/sails.js
 ```
 
+## Wiki
+
+阅读 https://github.com/leizongmin/leizm-web/wiki
+
 ## 授权协议
 
 ```text
