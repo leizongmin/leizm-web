@@ -34,6 +34,8 @@
 * 内置路由功能，无需借助第三方模块
 * 性能由于主流框架 koa 和 express
 
+详细使用说明可阅读 https://github.com/leizongmin/leizm-web/wiki
+
 ## 安装
 
 ```bash
@@ -56,7 +58,7 @@ app.use("/", function(ctx) {
 
 // 支持 async function
 app.use("/", async function(ctx) {
-  consoole.log("async function");
+  console.log("async function");
   await sleep(1000);
   ctx.next();
 });
@@ -154,10 +156,6 @@ connection: keep-alive 方式请求：
 4772.14 Requests/sec - feathers.js
 1640.60 Requests/sec - sails/sails.js
 ```
-
-## Wiki
-
-阅读 https://github.com/leizongmin/leizm-web/wiki
 
 ## 授权协议
 
