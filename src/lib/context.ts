@@ -56,7 +56,8 @@ export class Context<Q extends Request = Request, S extends Response = Response>
   }
 
   /**
-   * 初始化完成
+   * 初始化完成，由 `Context.init()` 自动调用
+   * 一般用于自定义扩展 Context 时，在此方法中加上自己的祝时候完成的代码
    */
   public inited() {}
 

@@ -17,7 +17,8 @@ export class Response {
   constructor(public readonly res: ServerResponse, public readonly ctx: Context) {}
 
   /**
-   * 初始化完成
+   * 初始化完成，由 `Context.init()` 自动调用
+   * 一般用于自定义扩展 Response 时，在此方法中加上自己的祝时候完成的代码
    */
   public inited() {}
 
