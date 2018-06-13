@@ -168,4 +168,14 @@ export class Request {
   public hasSession() {
     return !!(this.req as any).session;
   }
+
+  /** 客户端IP地址，来源于req.socket.remoteAddress */
+  public get ip() {
+    return this.req.socket.remoteAddress;
+  }
+
+  /** 请求的socket对象 */
+  public get socket() {
+    return this.req.socket;
+  }
 }
