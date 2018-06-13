@@ -7,7 +7,7 @@ import { expect } from "chai";
 import * as path from "path";
 import * as fs from "fs";
 import { IncomingMessage, ServerResponse } from "http";
-import { Connect, fromClassicalHandle, Router } from "../lib";
+import { Connect, fromClassicalHandle, Router, toClassicalHandle } from "../lib";
 import * as request from "supertest";
 import * as connect from "connect";
 import * as bodyParser from "body-parser";
@@ -133,5 +133,29 @@ describe("兼容 connect 模块", function() {
       .get("/a/static/package.json")
       .expect(200)
       .expect(await readFile(path.resolve(ROOT_DIR, "package.json")));
+  });
+
+  it("@leizm/web 格式的中间件作为 connect 中间件", async function() {
+    const app = connect();
+    app.use(
+      "/a",
+      toClassicalHandle(function(ctx) {
+        ctx.response.end("this is a");
+      }),
+    );
+    app.use(
+      "/b",
+      toClassicalHandle(function(ctx) {
+        ctx.response.end("this is b");
+      }),
+    );
+    await request(app)
+      .get("/a")
+      .expect(200)
+      .expect("this is a");
+    await request(app)
+      .post("/b")
+      .expect(200)
+      .expect("this is b");
   });
 });

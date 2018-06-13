@@ -12,8 +12,11 @@ import {
   RegExpOptions,
   RegExpKey,
   ParsedRoutePathResult,
+  ContextConstructor,
 } from "./define";
 import { Context } from "./context";
+import { IncomingMessage, ServerResponse } from "http";
+import * as finalhandler from "finalhandler";
 
 /**
  * 判断是否为Promise对象
@@ -111,6 +114,30 @@ export function fromClassicalHandle<C extends Context>(fn: ClassicalMiddlewareHa
   };
   handle.classical = true;
   return handle;
+}
+
+/**
+ * 转换为经典的connect中间件
+ *
+ * @param fn 处理函数
+ */
+export function toClassicalHandle(
+  fn: MiddlewareHandle<Context>,
+  contextConstructor: ContextConstructor = Context,
+): ClassicalMiddlewareHandle {
+  return function(req: IncomingMessage, res: ServerResponse, next: Function) {
+    const ctx = new contextConstructor().init(req, res);
+    const ret = fn(ctx) as any;
+    if (isPromise(ret)) {
+      (ret as Promise<any>).catch(err => {
+        if (typeof next === "function") {
+          next(err);
+        } else {
+          finalhandler(req, res)(err);
+        }
+      });
+    }
+  };
 }
 
 /**
