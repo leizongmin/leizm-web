@@ -11,4 +11,4 @@ export * from "./router";
 export * from "./context";
 export * from "./request";
 export * from "./response";
-export * from "./cookie";
+export * from "./component/cookie";

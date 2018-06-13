@@ -1,5 +1,5 @@
 import * as originCookieParser from "cookie-parser";
-import { Context } from "./context";
+import { Context } from "../context";
 
 export interface CookieParserOptions {
   secret?: string;
