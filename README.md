@@ -30,6 +30,7 @@
 
 * 兼容 connect 中间件，可以通过内置的函数转换 connect 中间件，使用 NPM 上大量的模块资源
 * 可将本框架的实例转换为 connect 中间件，与其他项目模块紧密合作
+* 支持直接操作原生 req 和 res 对象
 * 简单没有歧义的接口参数，内置 TypeScript 支持，强大的代码自动提示支持
 * 内置路由功能，无需借助第三方模块
 * 性能由于主流框架 koa 和 express
@@ -39,7 +40,7 @@
 ## 安装
 
 ```bash
-npm install @leizm/web --save
+npm i @leizm/web -S
 ```
 
 ## 基本使用方法
@@ -85,15 +86,12 @@ app.listen({ port: 3000 }, () => {
 
 扩展 Request 与 Response 对象的方法：[参考单元测试程序](https://github.com/leizongmin/leizm-web/blob/master/src/test/extends.test.ts)
 
-模板文件 `connect.ts`（自己的项目中引用此文件中的 `Connect` 和 `Router`，而不是来自 `@leizm/web` 的）：
+模板文件 `web.ts`（自己的项目中引用此文件中的 `Connect` 和 `Router`，而不是来自 `@leizm/web` 的）：
 
 ```typescript
 import * as base from "@leizm/web";
 
-export type MiddlewareHandle = (
-  ctx: Context,
-  err?: base.ErrorReason
-) => Promise<void> | void;
+export type MiddlewareHandle = (ctx: Context, err?: base.ErrorReason) => Promise<void> | void;
 
 export class Connect extends base.Connect<Context> {
   protected contextConstructor: base.ContextConstructor = Context;
@@ -108,10 +106,15 @@ export class Context extends base.Context<Request, Response> {
   protected responseConstructor: base.ResponseConstructor = Response;
 }
 
-export class Request extends base.Request {}
+export class Request extends base.Request {
+  // 扩展 Request
+  public get ip() {
+    return this.req.headers["x-real-ip"] || this.req.headers["x-forwarded-for"] || this.req.socket.remoteAddress;
+  }
+}
 
 export class Response extends base.Response {
-  // 扩展方法
+  // 扩展 Response
   public ok(data: any) {
     this.json({ data });
   }
