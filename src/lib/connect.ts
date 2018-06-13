@@ -3,7 +3,7 @@
  * @author Zongmin Lei <leizongmin@gmail.com>
  */
 
-import { Server, ServerRequest, ServerResponse } from "http";
+import { Server, IncomingMessage, ServerResponse } from "http";
 import * as finalhandler from "finalhandler";
 import { Core } from "./core";
 import { ListenOptions, ErrorReason } from "./define";
@@ -61,7 +61,7 @@ export class Connect<C extends Context = Context<Request, Response>> extends Cor
    * @param res ServerResponse对象
    * @param done 未处理请求的回调函数
    */
-  public handleRequest = (req: ServerRequest, res: ServerResponse, done?: (err?: ErrorReason) => void) => {
+  public handleRequest = (req: IncomingMessage, res: ServerResponse, done?: (err?: ErrorReason) => void) => {
     this.handleRequestByRequestResponse(
       req,
       res,

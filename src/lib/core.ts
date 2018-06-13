@@ -3,7 +3,7 @@
  * @author Zongmin Lei <leizongmin@gmail.com>
  */
 
-import { ServerRequest, ServerResponse } from "http";
+import { IncomingMessage, ServerResponse } from "http";
 import { Context } from "./context";
 import {
   Middleware,
@@ -46,7 +46,7 @@ export class Core<C extends Context = Context<Request, Response>> {
    * @param req 原始ServerRequest对象
    * @param res 原始ServerResponse对象
    */
-  protected createContext(req: ServerRequest, res: ServerResponse) {
+  protected createContext(req: IncomingMessage, res: ServerResponse) {
     return new this.contextConstructor().init(req, res) as C;
   }
 
@@ -158,7 +158,11 @@ export class Core<C extends Context = Context<Request, Response>> {
    * @param res 原始ServerResponse对象
    * @param done 未处理请求回调函数
    */
-  protected handleRequestByRequestResponse(req: ServerRequest, res: ServerResponse, done: (err?: ErrorReason) => void) {
+  protected handleRequestByRequestResponse(
+    req: IncomingMessage,
+    res: ServerResponse,
+    done: (err?: ErrorReason) => void,
+  ) {
     this.handleRequestByContext(this.createContext(req, res), done);
   }
 

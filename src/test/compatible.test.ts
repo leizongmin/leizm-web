@@ -6,7 +6,7 @@
 import { expect } from "chai";
 import * as path from "path";
 import * as fs from "fs";
-import { ServerRequest, ServerResponse } from "http";
+import { IncomingMessage, ServerResponse } from "http";
 import { Connect, fromClassicalHandle, Router } from "../lib";
 import * as request from "supertest";
 import * as connect from "connect";
@@ -39,7 +39,7 @@ describe("兼容 connect 模块", function() {
     appInstances.push(app2);
     app.use(bodyParser.json() as any);
     let isCalled = false;
-    app.use(function(req: ServerRequest, res: ServerResponse, next: Function) {
+    app.use(function(req: IncomingMessage, res: ServerResponse, next: Function) {
       isCalled = true;
       next();
     });
@@ -70,7 +70,7 @@ describe("兼容 connect 模块", function() {
     appInstances.push(app2);
     app.use(bodyParser.json() as any);
     let isCalled = false;
-    app.use(function(req: ServerRequest, res: ServerResponse, next: Function) {
+    app.use(function(req: IncomingMessage, res: ServerResponse, next: Function) {
       isCalled = true;
       next();
     });

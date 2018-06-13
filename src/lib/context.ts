@@ -3,7 +3,7 @@
  * @author Zongmin Lei <leizongmin@gmail.com>
  */
 
-import { ServerRequest, ServerResponse } from "http";
+import { IncomingMessage, ServerResponse } from "http";
 import { EventEmitter } from "events";
 import { Request } from "./request";
 import { Response } from "./response";
@@ -26,7 +26,7 @@ export class Context<Q extends Request = Request, S extends Response = Response>
    *
    * @param req 原始ServerRequest对象
    */
-  protected createRequest(req: ServerRequest): Q {
+  protected createRequest(req: IncomingMessage): Q {
     return new this.requestConstructor(req, this) as Q;
   }
 
@@ -45,7 +45,7 @@ export class Context<Q extends Request = Request, S extends Response = Response>
    * @param req 原始ServerRequest对象
    * @param res 原始ServerResponse对象
    */
-  public init(req: ServerRequest, res: ServerResponse) {
+  public init(req: IncomingMessage, res: ServerResponse) {
     this._request = this.createRequest(req);
     this._request.inited();
     this._response = this.createResponse(res);
