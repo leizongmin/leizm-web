@@ -137,6 +137,13 @@ describe("兼容 connect 模块", function() {
 
   it("@leizm/web 格式的中间件作为 connect 中间件", async function() {
     const app = connect();
+    let counter = 0;
+    app.use(
+      toClassicalHandle(function(ctx) {
+        counter++;
+        ctx.next();
+      }),
+    );
     app.use(
       "/a",
       toClassicalHandle(function(ctx) {
@@ -157,5 +164,6 @@ describe("兼容 connect 模块", function() {
       .post("/b")
       .expect(200)
       .expect("this is b");
+    expect(counter).to.equal(2);
   });
 });

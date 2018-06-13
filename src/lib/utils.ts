@@ -125,17 +125,13 @@ export function toClassicalHandle(
   fn: MiddlewareHandle<Context>,
   contextConstructor: ContextConstructor = Context,
 ): ClassicalMiddlewareHandle {
-  return function(req: IncomingMessage, res: ServerResponse, next: Function) {
+  return function(req: IncomingMessage, res: ServerResponse, next: (err: ErrorReason) => void) {
     const ctx = new contextConstructor().init(req, res);
+    if (typeof next !== "function") next = finalhandler(req, res);
+    ctx.pushNextHandle(next);
     const ret = fn(ctx) as any;
     if (isPromise(ret)) {
-      (ret as Promise<any>).catch(err => {
-        if (typeof next === "function") {
-          next(err);
-        } else {
-          finalhandler(req, res)(err);
-        }
-      });
+      (ret as Promise<any>).catch(next);
     }
   };
 }
