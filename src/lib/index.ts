@@ -11,4 +11,6 @@ export * from "./router";
 export * from "./context";
 export * from "./request";
 export * from "./response";
-export * from "./component/cookie";
+
+import * as component from "./component";
+export { component };
