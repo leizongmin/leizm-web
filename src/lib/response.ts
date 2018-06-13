@@ -3,10 +3,12 @@
  * @author Zongmin Lei <leizongmin@gmail.com>
  */
 
+import * as path from "path";
 import { ServerResponse } from "http";
 import { Context } from "./context";
 import { sign as signCookie } from "cookie-signature";
 import * as cookie from "cookie";
+import * as send from "send";
 
 export interface CookieOptions extends cookie.CookieSerializeOptions {
   /** 是否签名 */
@@ -154,6 +156,20 @@ export class Response {
   public html(str: Buffer | string): void {
     this.setHeader("Content-Type", "text/html");
     this.end(str);
+  }
+
+  /**
+   * 响应文件内容
+   * @param file 文件名
+   * @param options
+   */
+  public file(file: string, options?: send.SendOptions) {
+    send(this.ctx.request.req, path.resolve(file), options)
+      .on("error", err => {
+        this.res.statusCode = err.status || 500;
+        this.res.end(err.message);
+      })
+      .pipe(this.res);
   }
 
   /**

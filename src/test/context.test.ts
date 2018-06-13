@@ -3,11 +3,22 @@
  * @author Zongmin Lei <leizongmin@gmail.com>
  */
 
+import * as fs from "fs";
+import * as path from "path";
 import { expect } from "chai";
 import { Connect, fromClassicalHandle } from "../lib";
 import * as request from "supertest";
 import * as cookieParser from "cookie-parser";
 import { sign as signCookie } from "cookie-signature";
+
+function readFile(file: string): Promise<Buffer> {
+  return new Promise((resolve, reject) => {
+    fs.readFile(file, (err, ret) => {
+      if (err) return reject(err);
+      resolve(ret);
+    });
+  });
+}
 
 describe("Request", function() {
   it("正确解析 query, url, path, search, httpVersion 等基本信息", function(done) {
@@ -168,6 +179,28 @@ describe("Response", function() {
     await request(app.server)
       .get("/html")
       .expect(200, "hello, world");
+  });
+
+  it("file()", async function() {
+    const file1 = path.resolve(__dirname, "../../package.json");
+    const file1data = (await readFile(file1)).toString();
+    const file2 = path.resolve(__dirname, "../../README.md");
+    const file2data = (await readFile(file2)).toString();
+    const app = new Connect();
+    app.use("/file1", function(ctx) {
+      ctx.response.file(file1);
+    });
+    app.use("/file2", function(ctx) {
+      ctx.response.file(file2);
+    });
+    await request(app.server)
+      .get("/file1")
+      .expect("content-type", "application/json; charset=UTF-8")
+      .expect(200, file1data);
+    await request(app.server)
+      .get("/file2")
+      .expect("content-type", "text/markdown; charset=UTF-8")
+      .expect(200, file2data);
   });
 });
 

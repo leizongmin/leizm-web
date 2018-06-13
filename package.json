@@ -44,10 +44,12 @@
     "@types/cookie-signature": "^1.0.1",
     "@types/finalhandler": "0.0.32",
     "@types/node": "^10.0.7",
+    "@types/send": "^0.14.4",
     "cookie": "^0.3.1",
     "cookie-signature": "^1.1.0",
     "finalhandler": "^1.1.1",
-    "path-to-regexp": "^2.2.0"
+    "path-to-regexp": "^2.2.0",
+    "send": "^0.16.2"
   },
   "devDependencies": {
     "@types/body-parser": "^1.16.8",
