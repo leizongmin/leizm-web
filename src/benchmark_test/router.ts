@@ -1,3 +1,8 @@
+/**
+ * @leizm/web 中间件基础框架 - 性能测试
+ * @author Zongmin Lei <leizongmin@gmail.com>
+ */
+
 import { Connect, Router } from "../lib";
 
 const app = new Connect();

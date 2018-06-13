@@ -1,3 +1,8 @@
+/**
+ * @leizm/web 中间件基础框架
+ * @author Zongmin Lei <leizongmin@gmail.com>
+ */
+
 import { Core } from "./core";
 import { MiddlewareHandle } from "./define";
 import { wrapMiddlewareHandleWithMethod } from "./utils";

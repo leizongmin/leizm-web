@@ -118,7 +118,7 @@ export class Response extends base.Response {
   public ok(data: any) {
     this.json({ data });
   }
-  public error(error: message) {
+  public error(error: string) {
     this.json({ error });
   }
 }

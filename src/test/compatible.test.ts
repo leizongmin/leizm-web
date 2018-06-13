@@ -1,3 +1,8 @@
+/**
+ * @leizm/web 中间件基础框架 - 单元测试
+ * @author Zongmin Lei <leizongmin@gmail.com>
+ */
+
 import { expect } from "chai";
 import * as path from "path";
 import * as fs from "fs";

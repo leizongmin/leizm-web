@@ -1,3 +1,8 @@
+/**
+ * @leizm/web 中间件基础框架
+ * @author Zongmin Lei <leizongmin@gmail.com>
+ */
+
 import { ServerResponse } from "http";
 import { Context } from "./context";
 import { sign as signCookie } from "cookie-signature";

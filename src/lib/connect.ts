@@ -1,3 +1,8 @@
+/**
+ * @leizm/web 中间件基础框架
+ * @author Zongmin Lei <leizongmin@gmail.com>
+ */
+
 import { Server, ServerRequest, ServerResponse } from "http";
 import * as finalhandler from "finalhandler";
 import { Core } from "./core";

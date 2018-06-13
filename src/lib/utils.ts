@@ -1,3 +1,8 @@
+/**
+ * @leizm/web 中间件基础框架
+ * @author Zongmin Lei <leizongmin@gmail.com>
+ */
+
 import * as pathToRegExp from "path-to-regexp";
 import {
   MiddlewareHandle,

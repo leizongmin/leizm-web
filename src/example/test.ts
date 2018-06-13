@@ -1,3 +1,8 @@
+/**
+ * @leizm/web 中间件基础框架 - 示例代码
+ * @author Zongmin Lei <leizongmin@gmail.com>
+ */
+
 import { Connect, fromClassicalHandle, Router } from "../lib";
 
 function sleep(ms = 1000) {

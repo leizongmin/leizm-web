@@ -1,3 +1,8 @@
+/**
+ * @leizm/web 中间件基础框架
+ * @author Zongmin Lei <leizongmin@gmail.com>
+ */
+
 import { ServerRequest, ServerResponse } from "http";
 import { Context } from "./context";
 import {

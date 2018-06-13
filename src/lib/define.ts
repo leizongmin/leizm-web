@@ -1,3 +1,8 @@
+/**
+ * @leizm/web 中间件基础框架
+ * @author Zongmin Lei <leizongmin@gmail.com>
+ */
+
 import { IncomingMessage, ServerResponse } from "http";
 import { Request } from "./request";
 import { Response } from "./response";

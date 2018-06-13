@@ -1,4 +1,9 @@
-import * as base from "@leizm/web";
+/**
+ * @leizm/web 中间件基础框架 - 示例代码
+ * @author Zongmin Lei <leizongmin@gmail.com>
+ */
+
+import * as base from "../lib";
 
 export type MiddlewareHandle = (ctx: Context, err?: base.ErrorReason) => Promise<void> | void;
 
@@ -27,7 +32,7 @@ export class Response extends base.Response {
   public ok(data: any) {
     this.json({ data });
   }
-  public error(error: message) {
+  public error(error: string) {
     this.json({ error });
   }
 }

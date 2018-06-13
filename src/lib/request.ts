@@ -3,6 +3,11 @@ import { parse as parseUrl, Url } from "url";
 import { Headers, ServerRequestEx } from "./define";
 import { Context } from "./context";
 
+/**
+ * @leizm/web 中间件基础框架
+ * @author Zongmin Lei <leizongmin@gmail.com>
+ */
+
 export class Request {
   /** 已解析的URL信息 */
   protected parsedUrlInfo: Url;
