@@ -23,7 +23,9 @@ export class Context extends base.Context<Request, Response> {
 export class Request extends base.Request {
   // 扩展 Request
   public get ip() {
-    return this.req.headers["x-real-ip"] || this.req.headers["x-forwarded-for"] || this.req.socket.remoteAddress;
+    return String(
+      this.req.headers["x-real-ip"] || this.req.headers["x-forwarded-for"] || this.req.socket.remoteAddress,
+    );
   }
 }
 

@@ -2,6 +2,7 @@ import { IncomingMessage } from "http";
 import { parse as parseUrl, Url } from "url";
 import { Headers, ServerRequestEx } from "./define";
 import { Context } from "./context";
+import { Socket } from "net";
 
 /**
  * @leizm/web 中间件基础框架
@@ -175,7 +176,7 @@ export class Request {
   }
 
   /** 请求的socket对象 */
-  public get socket() {
+  public get socket(): Socket {
     return this.req.socket;
   }
 }
