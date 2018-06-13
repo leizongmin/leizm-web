@@ -298,30 +298,30 @@ describe("Cookie", function() {
       )
       .expect("ok", done);
   });
+});
 
-  describe("Redirect", function() {
-    it("临时重定向", function(done) {
-      const app = new Connect();
-      app.use("/", function(ctx) {
-        ctx.response.temporaryRedirect("/a", "ok");
-      });
-      request(app.server)
-        .get("/")
-        .expect(302)
-        .expect("Location", "/a")
-        .expect("ok", done);
+describe("Redirect", function() {
+  it("临时重定向", function(done) {
+    const app = new Connect();
+    app.use("/", function(ctx) {
+      ctx.response.temporaryRedirect("/a", "ok");
     });
+    request(app.server)
+      .get("/")
+      .expect(302)
+      .expect("Location", "/a")
+      .expect("ok", done);
+  });
 
-    it("永久重定向", function(done) {
-      const app = new Connect();
-      app.use("/", function(ctx) {
-        ctx.response.permanentRedirect("/a", "ok");
-      });
-      request(app.server)
-        .get("/")
-        .expect(301)
-        .expect("Location", "/a")
-        .expect("ok", done);
+  it("永久重定向", function(done) {
+    const app = new Connect();
+    app.use("/", function(ctx) {
+      ctx.response.permanentRedirect("/a", "ok");
     });
+    request(app.server)
+      .get("/")
+      .expect(301)
+      .expect("Location", "/a")
+      .expect("ok", done);
   });
 });
