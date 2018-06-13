@@ -1,6 +1,6 @@
 {
   "name": "@leizm/web",
-  "version": "1.7.1",
+  "version": "1.8.0",
   "description": "现代的 Web 中间件基础框架，完美支持 TypeScript，构建可维护的大型 Web 项目。",
   "main": "dist/lib/index.js",
   "typings": "dist/lib/index.d.ts",
