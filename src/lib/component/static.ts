@@ -4,6 +4,7 @@
  */
 
 import { Context } from "../context";
+import { MiddlewareHandle } from "../define";
 import * as send from "send";
 
 export interface ServeStaticOptions extends send.SendOptions {
@@ -15,7 +16,7 @@ export interface ServeStaticOptions extends send.SendOptions {
   maxAge?: number | string;
 }
 
-export function serveStatic(options: ServeStaticOptions) {
+export function serveStatic(options: ServeStaticOptions): MiddlewareHandle<Context> {
   return function(ctx: Context) {
     console.log(ctx.request.url);
     const file = ctx.request.url.slice(1);

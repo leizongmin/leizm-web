@@ -5,3 +5,5 @@
 
 export * from "./cookie";
 export * from "./static";
+import * as bodyParser from "./body";
+export { bodyParser };
