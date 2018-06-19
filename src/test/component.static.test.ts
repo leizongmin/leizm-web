@@ -21,7 +21,7 @@ describe("component.static", function() {
     const file2 = path.resolve(__dirname, "../../README.md");
     const file2data = (await readFile(file2)).toString();
     const app = new Connect();
-    app.use("/", component.serveStatic({ root: path.resolve(__dirname, "../..") }));
+    app.use("/", component.serveStatic(path.resolve(__dirname, "../..")));
     await request(app.server)
       .get("/package.json")
       .expect("content-type", "application/json; charset=UTF-8")
@@ -32,20 +32,37 @@ describe("component.static", function() {
       .expect(200, file2data);
   });
 
-  // it("作为二级字路径", async function() {
-  //   const file1 = path.resolve(__dirname, "../../package.json");
-  //   const file1data = (await readFile(file1)).toString();
-  //   const file2 = path.resolve(__dirname, "../../README.md");
-  //   const file2data = (await readFile(file2)).toString();
-  //   const app = new Connect();
-  //   app.use("/public", component.serveStatic({ root: path.resolve(__dirname, "../..") }));
-  //   await request(app.server)
-  //     .get("/public/package.json")
-  //     .expect(200, file1data)
-  //     .expect("content-type", "application/json; charset=UTF-8");
-  //   await request(app.server)
-  //     .get("/public/README.md")
-  //     .expect(200, file2data)
-  //     .expect("content-type", "text/markdown; charset=UTF-8");
-  // });
+  it("作为二级子路径", async function() {
+    const file1 = path.resolve(__dirname, "../../package.json");
+    const file1data = (await readFile(file1)).toString();
+    const file2 = path.resolve(__dirname, "../../README.md");
+    const file2data = (await readFile(file2)).toString();
+    const app = new Connect();
+    app.use("/public", component.serveStatic(path.resolve(__dirname, "../..")));
+    await request(app.server)
+      .get("/public/package.json")
+      .expect(200, file1data)
+      .expect("content-type", "application/json; charset=UTF-8");
+    await request(app.server)
+      .get("/public/README.md")
+      .expect(200, file2data)
+      .expect("content-type", "text/markdown; charset=UTF-8");
+  });
+
+  it("作为三级子路径", async function() {
+    const file1 = path.resolve(__dirname, "../../package.json");
+    const file1data = (await readFile(file1)).toString();
+    const file2 = path.resolve(__dirname, "../../README.md");
+    const file2data = (await readFile(file2)).toString();
+    const app = new Connect();
+    app.use("/public/assets", component.serveStatic(path.resolve(__dirname, "../..")));
+    await request(app.server)
+      .get("/public/assets/package.json")
+      .expect(200, file1data)
+      .expect("content-type", "application/json; charset=UTF-8");
+    await request(app.server)
+      .get("/public/assets/README.md")
+      .expect(200, file2data)
+      .expect("content-type", "text/markdown; charset=UTF-8");
+  });
 });
