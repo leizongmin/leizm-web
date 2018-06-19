@@ -6,7 +6,7 @@ import { sign as signCookie } from "cookie-signature";
 describe("component.cookie", function() {
   it("解析一般的Cookie", function(done) {
     const app = new Connect();
-    app.use("/", component.cookieParser({ secret: "test" }));
+    app.use("/", component.cookieParser("test"));
     app.use("/", function(ctx) {
       expect(ctx.request.cookies).to.deep.equal({
         a: "123",
@@ -26,7 +26,7 @@ describe("component.cookie", function() {
 
   it("解析签名的Cookie", function(done) {
     const app = new Connect();
-    app.use("/", component.cookieParser({ secret: "test" }));
+    app.use("/", component.cookieParser("test"));
     app.use("/", function(ctx) {
       // console.log(ctx.request.cookies, ctx.request.signedCookies);
       expect(ctx.request.cookies).to.deep.equal({});
