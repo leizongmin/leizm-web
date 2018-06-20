@@ -107,6 +107,7 @@ export class SessionInstance {
   public regenerate(): Promise<void> {
     return this.destroy().then(() => {
       this.data = {};
+      this._isDestroy = false;
     });
   }
 

@@ -128,6 +128,34 @@ describe("component.session", function() {
       await agent.get("/b").expect(200, { yes: false });
     });
 
+    it("session.regenerate()", async function() {
+      const app = new Connect();
+      appInstances.push(app);
+      app.use("/", component.cookieParser());
+      app.use("/", component.session({ maxAge: 1000 }));
+      app.use("/a", async function(ctx) {
+        ctx.session!.data.yes = false;
+        await ctx.session!.save();
+        ctx.response.json(ctx.session!.data);
+      });
+      app.use("/b", async function(ctx) {
+        expect(ctx.session!.data).to.deep.equal({ yes: false });
+        ctx.session!.data.yes = true;
+        expect(ctx.session!.data).to.deep.equal({ yes: true });
+        await ctx.session!.regenerate();
+        expect(ctx.session!.data).to.deep.equal({});
+        ctx.session!.data.no = true;
+        ctx.response.json(ctx.session!.data);
+      });
+      app.use("/c", async function(ctx) {
+        ctx.response.json(ctx.session!.data);
+      });
+      const agent = request.agent(app.server);
+      await agent.get("/a").expect(200, { yes: false });
+      await agent.get("/b").expect(200, { no: true });
+      await agent.get("/c").expect(200, { no: true });
+    });
+
     it("session.destroy()", async function() {
       const app = new Connect();
       appInstances.push(app);
