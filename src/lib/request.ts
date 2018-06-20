@@ -1,3 +1,8 @@
+/**
+ * @leizm/web 中间件基础框架
+ * @author Zongmin Lei <leizongmin@gmail.com>
+ */
+
 import { IncomingMessage } from "http";
 import { parse as parseUrl, Url } from "url";
 import { Headers, ServerRequestEx } from "./define";

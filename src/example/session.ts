@@ -9,6 +9,7 @@ import { createClient } from "redis";
 
 const redis1 = new Redis();
 const redis2 = createClient();
+const redis3 = new component.SimpleRedisClient();
 
 const app = new Connect();
 app.use("/", component.cookieParser(""));
@@ -23,6 +24,13 @@ app.use(
   "/b",
   component.session({
     store: new component.SessiionRedisStore({ client: redis2 }),
+    maxAge: 60000,
+  }),
+);
+app.use(
+  "/c",
+  component.session({
+    store: new component.SessiionRedisStore({ client: redis3 }),
     maxAge: 60000,
   }),
 );

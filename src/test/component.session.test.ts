@@ -102,6 +102,35 @@ describe("component.session", function() {
       await agent.get("/").expect(200, { counter: 1 });
       await agent.get("/").expect(200, { counter: 2 });
     });
+
+    it("SessionRedisStore with builtin SimpleRedisClient", async function() {
+      const app = new Connect();
+      appInstances.push(app);
+      app.use("/", component.cookieParser());
+      const client = new component.SimpleRedisClient();
+      const prefix = `test:sess:${Date.now()}:${Math.random()}:`;
+      app.use(
+        "/",
+        component.session({
+          store: new component.SessiionRedisStore({ client, prefix }),
+          maxAge: 1000,
+        }),
+      );
+      app.use("/", function(ctx) {
+        ctx.session!.data.counter = ctx.session!.data.counter || 0;
+        ctx.session!.data.counter++;
+        ctx.response.json(ctx.session!.data);
+      });
+      const agent = request.agent(app.server);
+      await agent.get("/").expect(200, { counter: 1 });
+      await agent.get("/").expect(200, { counter: 2 });
+      await agent.get("/").expect(200, { counter: 3 });
+      await agent.get("/").expect(200, { counter: 4 });
+      await agent.get("/").expect(200, { counter: 5 });
+      await sleep(1500);
+      await agent.get("/").expect(200, { counter: 1 });
+      await agent.get("/").expect(200, { counter: 2 });
+    });
   });
 
   describe("methods", function() {
