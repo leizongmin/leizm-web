@@ -9,7 +9,7 @@ import { MiddlewareHandle } from "../define";
 
 export interface CookieParserOptions extends originCookieParser.CookieParseOptions {}
 
-export function cookieParser(secret: string, options: CookieParserOptions = {}): MiddlewareHandle<Context> {
+export function cookieParser(secret?: string, options: CookieParserOptions = {}): MiddlewareHandle<Context> {
   const handler = originCookieParser(secret, options);
   return function(ctx: Context) {
     handler(ctx.request.req as any, ctx.response.res as any, (err?: Error) => ctx.next(err));

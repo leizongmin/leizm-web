@@ -13,7 +13,7 @@ import { crc32 } from "crc";
  * Session中间件
  * 注意：需要依赖cookieParser中间件，否则无法正确取得sessionId
  */
-export function session(options: SessionOptions): MiddlewareHandle<Context> {
+export function session(options: SessionOptions = {}): MiddlewareHandle<Context> {
   const opts: Required<SessionOptions> = { ...DEFAULT_SESSION_OPTIONS, ...options };
   const isSigned = !!(opts.cookie && opts.cookie.signed);
   const cookieName = opts.name;
