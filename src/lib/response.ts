@@ -9,11 +9,7 @@ import { Context } from "./context";
 import { sign as signCookie } from "cookie-signature";
 import * as cookie from "cookie";
 import * as send from "send";
-
-export interface CookieOptions extends cookie.CookieSerializeOptions {
-  /** 是否签名 */
-  signed?: boolean;
-}
+import { CookieOptions } from "./define";
 
 export class Response {
   constructor(public readonly res: ServerResponse, public readonly ctx: Context) {}

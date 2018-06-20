@@ -9,6 +9,7 @@ import { Response } from "./response";
 import { Context } from "./context";
 import { Key as RegExpKey } from "path-to-regexp";
 export { RegExpOptions, Key as RegExpKey } from "path-to-regexp";
+import * as cookie from "cookie";
 
 /** 出错原因 */
 export type ErrorReason = undefined | null | string | Error | Record<any, any>;
@@ -97,4 +98,10 @@ export interface ServerRequestEx extends IncomingMessage {
   session?: Record<string, any>;
   cookies?: Record<string, any>;
   signedCookies?: Record<string, any>;
+}
+
+/** 设置Cookie选项 */
+export interface CookieOptions extends cookie.CookieSerializeOptions {
+  /** 是否签名 */
+  signed?: boolean;
 }

@@ -8,6 +8,8 @@ import { EventEmitter } from "events";
 import { Request } from "./request";
 import { Response } from "./response";
 import { NextFunction, ErrorReason, RequestConstructor, ResponseConstructor } from "./define";
+import { SessionInstance } from "./component/session";
+const onHeaders = require("on-headers");
 
 export class Context<Q extends Request = Request, S extends Response = Response> extends EventEmitter {
   /** 原始ServerRequest对象 */
@@ -20,6 +22,9 @@ export class Context<Q extends Request = Request, S extends Response = Response>
   protected requestConstructor: RequestConstructor = Request;
   /** Response对象的构造函数 */
   protected responseConstructor: ResponseConstructor = Response;
+
+  /** Session对象 */
+  public readonly session?: SessionInstance;
 
   /**
    * 创建Request对象
@@ -51,6 +56,7 @@ export class Context<Q extends Request = Request, S extends Response = Response>
     this._response = this.createResponse(res);
     this._response.inited();
     res.once("finish", () => this.emit("finish"));
+    onHeaders(res, () => this.emit("writeHead"));
     this.inited();
     return this;
   }
@@ -119,5 +125,14 @@ export class Context<Q extends Request = Request, S extends Response = Response>
    */
   public onFinish(callback: () => void) {
     this.on("finish", callback);
+  }
+
+  /**
+   * 注册准备输出响应头时的事件监听
+   *
+   * @param callback 回调函数
+   */
+  public onWriteHead(callback: () => void) {
+    this.on("writeHead", callback);
   }
 }
