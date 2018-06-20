@@ -5,6 +5,10 @@
 
 export * from "./cookie";
 export * from "./static";
+
 export * from "./session";
+export * from "./session.memory";
+export * from "./session.redis";
+
 import * as bodyParser from "./body";
 export { bodyParser };

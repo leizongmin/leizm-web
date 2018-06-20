@@ -5,12 +5,16 @@
 
 import { Context } from "../context";
 import { MiddlewareHandle, CookieOptions } from "../define";
+import { SessiionMemoryStore } from "./session.memory";
 import * as uuid from "uuid";
 import { crc32 } from "crc";
 
-/** Session中间件 */
+/**
+ * Session中间件
+ * 注意：需要依赖cookieParser中间件，否则无法正确取得sessionId
+ */
 export function session(options: SessionOptions): MiddlewareHandle<Context> {
-  const opts: Required<SessionOptions> = { ...DEFAULT_OPTIONS, ...options };
+  const opts: Required<SessionOptions> = { ...DEFAULT_SESSION_OPTIONS, ...options };
   const isSigned = !!(opts.cookie && opts.cookie.signed);
   const cookieName = opts.name;
   opts.cookie.maxAge = opts.maxAge;
@@ -25,7 +29,7 @@ export function session(options: SessionOptions): MiddlewareHandle<Context> {
       await sess.reload();
     }
     ctx.onWriteHead(() => {
-      ctx.response.cookie(sess.cookieName, sess.id, sess.cookie.options);
+      ctx.response.cookie(sess.cookieName, sess.id, opts.cookie);
       sess.save();
     });
     ctx.next();
@@ -38,7 +42,7 @@ export type GenerateSessionIdFunction = (ctx: Context) => string;
 /** Session中间件初始化选项 */
 export interface SessionOptions {
   /** 存储引擎实例 */
-  store: SessionStore;
+  store?: SessionStore;
   /** Cookie名称 */
   name?: string;
   /** Cookie选项 */
@@ -82,15 +86,14 @@ export class SessionInstance {
   public readonly cookieName: string;
   public readonly store: Required<SessionStore>;
   public readonly maxAge: number;
-  public cookie: Cookie;
   protected _data: Record<string, any> = {};
   protected _hash: string = "";
+  protected _isDestroy: boolean = false;
 
   constructor(public readonly ctx: Context, public readonly id: string, options: Required<SessionOptions>) {
     this.store = options.store;
     this.cookieName = options.name;
     this.maxAge = options.maxAge;
-    this.cookie = new Cookie(options.cookie);
   }
 
   public get data() {
@@ -108,7 +111,11 @@ export class SessionInstance {
   }
 
   public destroy(): Promise<void> {
-    return this.store.destroy(this.id);
+    return this.store.destroy(this.id).then(() => {
+      this.data = {};
+      this._hash = "";
+      this._isDestroy = true;
+    });
   }
 
   public reload(): Promise<void> {
@@ -119,6 +126,7 @@ export class SessionInstance {
   }
 
   public save(): Promise<void> {
+    if (this._isDestroy) return Promise.resolve();
     const hash = getDataHash(this.data);
     if (hash === this._hash) {
       // 如果内容没有改变，则只执行touch
@@ -140,118 +148,35 @@ export function getDataHash(data: any): string {
   return crc32(JSON.stringify(data)).toString(16);
 }
 
-export class Cookie {
-  constructor(public readonly options: CookieOptions = {}) {
-    this.options = { ...this.options, ...DEFAULT_COOKIE };
-  }
-
-  public get path() {
-    return this.options.path;
-  }
-  public get domain() {
-    return this.options.domain;
-  }
-  public get maxAge() {
-    return this.options.maxAge;
-  }
-  public get httpOnly() {
-    return this.options.httpOnly;
-  }
-  public get secure() {
-    return this.options.secure;
-  }
-  public get expires() {
-    return this.options.expires;
-  }
-
-  public set path(v) {
-    this.options.path = v;
-  }
-  public set domain(v) {
-    this.options.domain = v;
-  }
-  public set maxAge(v) {
-    this.options.maxAge = v;
-  }
-  public set httpOnly(v) {
-    this.options.httpOnly = v;
-  }
-  public set secure(v) {
-    this.options.secure = v;
-  }
-  public set expires(v) {
-    this.options.expires = v;
-  }
-}
-
-export class SessiionMemoryStore implements SessionStore {
-  protected data: Map<
-    string,
-    {
-      expires: Date;
-      value: Record<string, any>;
-    }
-  > = new Map();
-
-  protected isExpired(expires: Date): boolean {
-    return expires.getTime() < Date.now();
-  }
-
-  public get(sid: string): Promise<Record<string, any>> {
-    return new Promise((resolve, reject) => {
-      const data = this.data.get(sid);
-      if (!data) return resolve({});
-      if (this.isExpired(data.expires)) {
-        this.data.delete(sid);
-        return resolve({});
-      }
-      resolve(data.value);
-    });
-  }
-
-  public set(sid: string, data: Record<string, any>, maxAge: number): Promise<void> {
-    return new Promise((resolve, reject) => {
-      const expires = new Date(Date.now() + maxAge);
-      this.data.set(sid, { expires, value: data });
-      resolve();
-    });
-  }
-
-  public destroy(sid: string): Promise<void> {
-    return new Promise((resolve, reject) => {
-      this.data.delete(sid);
-      resolve();
-    });
-  }
-
-  public touch(sid: string, maxAge: number): Promise<void> {
-    return new Promise((resolve, reject) => {
-      const data = this.data.get(sid);
-      if (data) {
-        data.expires = new Date(data.expires.getTime() + maxAge);
-        this.data.set(sid, data);
-      }
-      resolve();
-    });
-  }
-}
-
 /** 默认生成SessionId的函数 */
-export const DEFAULT_GENID = (ctx: Context) => uuid.v4().replace(/-/g, "");
+export const DEFAULT_SESSION_GENID = (ctx: Context) => uuid.v4().replace(/-/g, "");
 
 /** 默认SessionId存储于Cookie的名称 */
-export const DEFAULT_NAME = "web.sid";
+export const DEFAULT_SESSION_NAME = "web.sid";
 
 /** 默认Cookie选项 */
-export const DEFAULT_COOKIE: CookieOptions = { path: "/", httpOnly: true };
+export const DEFAULT_SESSION_COOKIE: CookieOptions = { path: "/", httpOnly: true };
 
 /** 默认Session MaxAge */
-export const DEFAULT_MAX_AGE = 0;
+export const DEFAULT_SESSION_MAX_AGE = 0;
 
-export const DEFAULT_OPTIONS: Required<SessionOptions> = {
-  cookie: DEFAULT_COOKIE,
-  genid: DEFAULT_GENID,
-  name: DEFAULT_NAME,
+/** 默认Session中间件选项 */
+export const DEFAULT_SESSION_OPTIONS: Required<SessionOptions> = {
+  cookie: DEFAULT_SESSION_COOKIE,
+  genid: DEFAULT_SESSION_GENID,
+  name: DEFAULT_SESSION_NAME,
   store: new SessiionMemoryStore(),
-  maxAge: DEFAULT_MAX_AGE,
+  maxAge: DEFAULT_SESSION_MAX_AGE,
 };
+
+/** Session数据序列化函数 */
+export type SessionDataSerializeFunction = (data: any) => string;
+
+/** Session数据反序列化函数 */
+export type SessionDataUnSerializeFunction = (data: string) => any;
+
+/** 默认Session数据序列化函数 */
+export const DEFAULT_SESSION_SERIALIZE = (data: any) => JSON.stringify(data || {});
+
+/** 默认Session数据反序列化函数 */
+export const DEFAULT_SESSION_UNSERIALIZE = (data: string) => JSON.parse(data) || {};
