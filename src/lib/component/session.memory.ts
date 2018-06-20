@@ -3,14 +3,18 @@
  * @author Zongmin Lei <leizongmin@gmail.com>
  */
 
-import { SessionStore } from "./session";
+import {
+  SessionStore,
+  DEFAULT_SESSION_SERIALIZE as serialize,
+  DEFAULT_SESSION_UNSERIALIZE as unserialize,
+} from "./session";
 
 export class SessiionMemoryStore implements SessionStore {
   protected data: Map<
     string,
     {
       expires: Date;
-      value: Record<string, any>;
+      value: string;
     }
   > = new Map();
 
@@ -26,14 +30,14 @@ export class SessiionMemoryStore implements SessionStore {
         this.data.delete(sid);
         return resolve({});
       }
-      resolve(data.value);
+      resolve(unserialize(data.value));
     });
   }
 
   public set(sid: string, data: Record<string, any>, maxAge: number): Promise<void> {
     return new Promise((resolve, reject) => {
       const expires = new Date(Date.now() + maxAge);
-      this.data.set(sid, { expires, value: data });
+      this.data.set(sid, { expires, value: serialize(data) });
       resolve();
     });
   }
