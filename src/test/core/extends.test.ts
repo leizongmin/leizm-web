@@ -6,17 +6,7 @@
 import { expect } from "chai";
 import * as request from "supertest";
 import * as bodyParser from "body-parser";
-import {
-  Connect,
-  Router,
-  Context,
-  Request,
-  Response,
-  ContextConstructor,
-  RequestConstructor,
-  ResponseConstructor,
-  fromClassicalHandle,
-} from "../../lib";
+import { Connect, Router, Context, Request, Response, fromClassicalHandle } from "../../lib";
 
 ////////////////////////////////////////////////////////////////////////
 // 扩展的 Request 对象

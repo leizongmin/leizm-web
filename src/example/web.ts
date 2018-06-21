@@ -4,6 +4,7 @@
  */
 
 import * as base from "../lib";
+export * from "../lib";
 
 export type MiddlewareHandle = (ctx: Context, err?: base.ErrorReason) => Promise<void> | void;
 

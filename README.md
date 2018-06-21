@@ -63,6 +63,7 @@ npm i @leizm/web -S
 
 ```typescript
 import { Connect, Router, component } from "@leizm/web";
+export * from "@leizm/web";
 
 const app = new Connect();
 const router = new Router();
