@@ -3,7 +3,7 @@
  * @author Zongmin Lei <leizongmin@gmail.com>
  */
 
-import { Connect, component } from "../lib";
+import { Connect, component } from "../../lib";
 import * as request from "supertest";
 import { expect } from "chai";
 import { ClientResponse } from "http";

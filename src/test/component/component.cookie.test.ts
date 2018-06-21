@@ -1,5 +1,5 @@
 import { expect } from "chai";
-import { Connect, component } from "../lib";
+import { Connect, component } from "../../lib";
 import * as request from "supertest";
 import { sign as signCookie } from "cookie-signature";
 

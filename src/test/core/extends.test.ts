@@ -16,7 +16,7 @@ import {
   RequestConstructor,
   ResponseConstructor,
   fromClassicalHandle,
-} from "../lib";
+} from "../../lib";
 
 ////////////////////////////////////////////////////////////////////////
 // 扩展的 Request 对象

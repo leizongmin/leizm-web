@@ -6,7 +6,7 @@
 import * as fs from "fs";
 import * as path from "path";
 import { expect } from "chai";
-import { Connect, fromClassicalHandle } from "../lib";
+import { Connect, fromClassicalHandle } from "../../lib";
 import * as request from "supertest";
 import * as cookieParser from "cookie-parser";
 import { sign as signCookie } from "cookie-signature";
@@ -19,6 +19,8 @@ function readFile(file: string): Promise<Buffer> {
     });
   });
 }
+
+const ROOT_DIR = path.resolve(__dirname, "../../..");
 
 describe("Request", function() {
   it("正确解析 query, url, path, search, httpVersion 等基本信息", function(done) {
@@ -182,9 +184,9 @@ describe("Response", function() {
   });
 
   it("file()", async function() {
-    const file1 = path.resolve(__dirname, "../../package.json");
+    const file1 = path.resolve(ROOT_DIR, "package.json");
     const file1data = (await readFile(file1)).toString();
-    const file2 = path.resolve(__dirname, "../../README.md");
+    const file2 = path.resolve(ROOT_DIR, "README.md");
     const file2data = (await readFile(file2)).toString();
     const app = new Connect();
     app.use("/file1", function(ctx) {

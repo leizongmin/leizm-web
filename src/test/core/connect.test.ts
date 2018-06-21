@@ -5,7 +5,7 @@
 
 import { expect } from "chai";
 import { Server } from "http";
-import { Connect, Router, fromClassicalHandle, fromClassicalErrorHandle } from "../lib";
+import { Connect, Router, fromClassicalHandle, fromClassicalErrorHandle } from "../../lib";
 import * as request from "supertest";
 import * as bodyParser from "body-parser";
 

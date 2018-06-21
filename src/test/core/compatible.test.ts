@@ -7,7 +7,7 @@ import { expect } from "chai";
 import * as path from "path";
 import * as fs from "fs";
 import { IncomingMessage, ServerResponse } from "http";
-import { Connect, fromClassicalHandle, Router, toClassicalHandle } from "../lib";
+import { Connect, fromClassicalHandle, Router, toClassicalHandle } from "../../lib";
 import * as request from "supertest";
 import * as connect from "connect";
 import * as bodyParser from "body-parser";
@@ -24,6 +24,8 @@ export function readFile(file: string) {
     });
   });
 }
+
+const ROOT_DIR = path.resolve(__dirname, "../../..");
 
 describe("兼容 connect 模块", function() {
   const appInstances: Connect[] = [];
@@ -118,7 +120,6 @@ describe("兼容 connect 模块", function() {
   });
 
   it("兼容 serve-static 模块", async function() {
-    const ROOT_DIR = path.resolve(__dirname, "../..");
     const app = new Connect();
     appInstances.push(app);
     const app2 = new Connect();

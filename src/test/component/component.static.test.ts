@@ -1,7 +1,7 @@
 import * as fs from "fs";
 import * as path from "path";
 import { expect } from "chai";
-import { Connect, component } from "../lib";
+import { Connect, component } from "../../lib";
 import * as request from "supertest";
 import { sign as signCookie } from "cookie-signature";
 
@@ -14,14 +14,16 @@ function readFile(file: string): Promise<Buffer> {
   });
 }
 
+const ROOT_DIR = path.resolve(__dirname, "../../..");
+
 describe("component.static", function() {
   it("作为根路径", async function() {
-    const file1 = path.resolve(__dirname, "../../package.json");
+    const file1 = path.resolve(ROOT_DIR, "package.json");
     const file1data = (await readFile(file1)).toString();
-    const file2 = path.resolve(__dirname, "../../README.md");
+    const file2 = path.resolve(ROOT_DIR, "README.md");
     const file2data = (await readFile(file2)).toString();
     const app = new Connect();
-    app.use("/", component.serveStatic(path.resolve(__dirname, "../..")));
+    app.use("/", component.serveStatic(ROOT_DIR));
     await request(app.server)
       .get("/package.json")
       .expect("content-type", "application/json; charset=UTF-8")
@@ -33,12 +35,12 @@ describe("component.static", function() {
   });
 
   it("作为二级子路径", async function() {
-    const file1 = path.resolve(__dirname, "../../package.json");
+    const file1 = path.resolve(ROOT_DIR, "package.json");
     const file1data = (await readFile(file1)).toString();
-    const file2 = path.resolve(__dirname, "../../README.md");
+    const file2 = path.resolve(ROOT_DIR, "README.md");
     const file2data = (await readFile(file2)).toString();
     const app = new Connect();
-    app.use("/public", component.serveStatic(path.resolve(__dirname, "../..")));
+    app.use("/public", component.serveStatic(ROOT_DIR));
     await request(app.server)
       .get("/public/package.json")
       .expect(200, file1data)
@@ -50,12 +52,12 @@ describe("component.static", function() {
   });
 
   it("作为三级子路径", async function() {
-    const file1 = path.resolve(__dirname, "../../package.json");
+    const file1 = path.resolve(ROOT_DIR, "package.json");
     const file1data = (await readFile(file1)).toString();
-    const file2 = path.resolve(__dirname, "../../README.md");
+    const file2 = path.resolve(ROOT_DIR, "README.md");
     const file2data = (await readFile(file2)).toString();
     const app = new Connect();
-    app.use("/public/assets", component.serveStatic(path.resolve(__dirname, "../..")));
+    app.use("/public/assets", component.serveStatic(ROOT_DIR));
     await request(app.server)
       .get("/public/assets/package.json")
       .expect(200, file1data)

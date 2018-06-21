@@ -4,7 +4,7 @@
  */
 
 import { expect } from "chai";
-import { Connect, Router, Context, ErrorReason } from "../lib";
+import { Connect, Router, Context, ErrorReason } from "../../lib";
 import * as request from "supertest";
 
 const METHODS = ["get", "head", "post", "put", "delete", "connect", "options", "trace", "patch"];
