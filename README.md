@@ -63,7 +63,6 @@ npm i @leizm/web -S
 
 ```typescript
 import { Connect, Router, component } from "@leizm/web";
-export * from "@leizm/web";
 
 const app = new Connect();
 const router = new Router();
@@ -110,6 +109,7 @@ app.listen({ port: 3000 }, () => {
 
 ```typescript
 import * as base from "@leizm/web";
+export * from "@leizm/web";
 
 export type MiddlewareHandle = (ctx: Context, err?: base.ErrorReason) => Promise<void> | void;
 
