@@ -23,6 +23,11 @@ export class Context<Q extends Request = Request, S extends Response = Response>
   /** Response对象的构造函数 */
   protected responseConstructor: ResponseConstructor = Response;
 
+  /** Request对象的构造函数列表，如果列表不为空则requestConstructor参数无效 */
+  protected requestConstructorList: RequestConstructor[] = [];
+  /** Response对象的构造函数列表，如果列表不为空则responseConstructor参数无效 */
+  protected responseConstructorList: ResponseConstructor[] = [];
+
   /** Session对象 */
   public readonly session?: SessionInstance;
 
