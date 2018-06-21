@@ -37,6 +37,21 @@
 
 详细使用说明可阅读 https://github.com/leizongmin/leizm-web/wiki
 
+内置中间件列表：
+
+* `bodyParser` 请求体解析：
+  * `json` 解析 application/json，由 [body-parser](https://www.npmjs.com/package/body-parser) 模块提供
+  * `text` 解析 text/plain，由 [body-parser](https://www.npmjs.com/package/body-parser) 模块提供
+  * `urlencoded` 解析 application/x-www-form-urlencoded，由 [body-parser](https://www.npmjs.com/package/body-parser) 模块提供
+  * `raw` 解析 application/octet-stream，由 [body-parser](https://www.npmjs.com/package/body-parser) 模块提供
+* `cookieParser` 解析 Cookie，由 [cookie-parser](https://www.npmjs.com/package/cookie-parser) 模块提供
+* `serveStatic` 静态文件服务，由 [serve-static](https://www.npmjs.com/package/serve-static) 模块提供
+* `cors` 设置 CORS
+* `session` 提供多存储引擎的 Session 支持：
+  * `SessiionMemoryStore` 内存存储引擎
+  * `SessiionRedisStore` Redis 存储引擎，通过传入 Redis 客户端实例实现存储，支持 [ioredis](https://www.npmjs.com/package/ioredis) 和 [redis](https://www.npmjs.com/package/redis) 模块
+  * `SimpleRedisClientOptions` 简单 Redis 客户端，可以不依赖第三方模块的情况下实现 Redis 存储
+
 ## 安装
 
 ```bash
