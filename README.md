@@ -32,10 +32,9 @@
 * 可将本框架的实例转换为 connect 中间件，与其他项目模块紧密合作
 * 支持直接操作原生 req 和 res 对象
 * 简单没有歧义的接口参数，内置 TypeScript 支持，强大的代码自动提示支持
-* 内置路由功能，无需借助第三方模块
+* 内置路由功能及众多常用的中间件，无需借助第三方模块
 * 性能由于主流框架 koa 和 express
-
-详细使用说明可阅读 https://github.com/leizongmin/leizm-web/wiki
+* 代码库轻盈，依赖模块少
 
 内置中间件列表：
 
@@ -52,6 +51,8 @@
   * `SessiionRedisStore` Redis 存储引擎，通过传入 Redis 客户端实例实现存储，支持 [ioredis](https://www.npmjs.com/package/ioredis) 和 [redis](https://www.npmjs.com/package/redis) 模块
   * `SimpleRedisClientOptions` 简单 Redis 客户端，可以不依赖第三方模块的情况下实现 Redis 存储
 
+详细使用说明可阅读 [Wiki](https://github.com/leizongmin/leizm-web/wiki)
+
 ## 安装
 
 ```bash
@@ -61,10 +62,13 @@ npm i @leizm/web -S
 ## 基本使用方法
 
 ```typescript
-import { Connect, Router } from "@leizm/web";
+import { Connect, Router, component } from "@leizm/web";
 
 const app = new Connect();
 const router = new Router();
+
+// 使用内置中间件
+app.use("/", component.cookieParser());
 
 // 基本的中间件
 app.use("/", function(ctx) {
