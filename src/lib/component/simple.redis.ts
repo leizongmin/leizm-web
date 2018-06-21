@@ -111,9 +111,13 @@ class RedisParser {
 }
 
 export interface SimpleRedisClientOptions {
+  /** Redis服务器地址 */
   host?: string;
+  /** Redis服务器端口 */
   port?: number;
+  /** Redis服务器数据库号 */
   db?: number;
+  /** Redis服务器密码 */
   password?: string;
 }
 

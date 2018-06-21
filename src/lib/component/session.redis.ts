@@ -10,15 +10,16 @@ import {
   DEFAULT_SESSION_SERIALIZE,
   DEFAULT_SESSION_UNSERIALIZE,
 } from "./session";
+import { SimpleRedisClientOptions, SimpleRedisClient } from "./simple.redis";
 
 /** 默认Redis Key前缀 */
 export const DEFAULT_REDIS_PREFIX = "sess:";
 
-export interface SessiionRedisStoreOptions {
+export interface SessiionRedisStoreOptions extends SimpleRedisClientOptions {
   /** key前缀 */
   prefix?: string;
   /** 客户端实例 */
-  client: RedisCompatibleClient;
+  client?: RedisCompatibleClient;
   /** 数据序列化函数 */
   serialize?: SessionDataSerializeFunction;
   /** 数据反序列化函数 */
@@ -48,7 +49,7 @@ export class SessiionRedisStore implements SessionStore {
 
   constructor(protected readonly options: SessiionRedisStoreOptions) {
     this.keyPrefix = options.prefix || DEFAULT_REDIS_PREFIX;
-    this.client = options.client;
+    this.client = options.client || new SimpleRedisClient(options);
     this.serialize = options.serialize || DEFAULT_SESSION_SERIALIZE;
     this.unserialize = options.unserialize || DEFAULT_SESSION_UNSERIALIZE;
   }
