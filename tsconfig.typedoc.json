@@ -6,7 +6,6 @@
     "moduleResolution": "node",
     "module": "commonjs",
     "alwaysStrict": true,
-    "sourceMap": true,
     "declaration": true,
     "strict": true,
     "declarationMap": true
