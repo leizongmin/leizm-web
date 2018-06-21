@@ -44,8 +44,8 @@ class MyResponse extends Response {
 
 // 扩展 Context 对象
 class MyContext extends Context<MyRequest, MyResponse> {
-  protected requestConstructor: RequestConstructor = MyRequest;
-  protected responseConstructor: ResponseConstructor = MyResponse;
+  protected requestConstructor = MyRequest;
+  protected responseConstructor = MyResponse;
   public isInited = false;
   public getHello(msg: string) {
     return `hello ${msg}`;
@@ -57,12 +57,12 @@ class MyContext extends Context<MyRequest, MyResponse> {
 
 // 扩展 Connect 对象
 class MyConnect extends Connect<MyContext> {
-  protected contextConstructor: ContextConstructor = MyContext;
+  protected contextConstructor = MyContext;
 }
 
 // 扩展 Router 对象
 class MyRouter extends Router<MyContext> {
-  protected contextConstructor: ContextConstructor = MyContext;
+  protected contextConstructor = MyContext;
 }
 ////////////////////////////////////////////////////////////////////////
 

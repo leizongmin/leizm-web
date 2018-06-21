@@ -113,21 +113,21 @@ import * as base from "@leizm/web";
 export type MiddlewareHandle = (ctx: Context, err?: base.ErrorReason) => Promise<void> | void;
 
 export class Connect extends base.Connect<Context> {
-  protected contextConstructor: base.ContextConstructor = Context;
+  protected contextConstructor = Context;
 }
 
 export class Router extends base.Router<Context> {
-  protected contextConstructor: base.ContextConstructor = Context;
+  protected contextConstructor = Context;
 }
 
 export class Context extends base.Context<Request, Response> {
-  protected requestConstructor: base.RequestConstructor = Request;
-  protected responseConstructor: base.ResponseConstructor = Response;
+  protected requestConstructor = Request;
+  protected responseConstructor = Response;
 }
 
 export class Request extends base.Request {
   // 扩展 Request
-  public get ip() {
+  public get remoteIP() {
     return String(this.req.headers["x-real-ip"] || this.req.headers["x-forwarded-for"] || this.req.socket.remoteAddress);
   }
 }
