@@ -150,7 +150,7 @@ export function getDataHash(data: any): string {
 }
 
 /** 默认生成SessionId的函数 */
-export const DEFAULT_SESSION_GENID = (ctx: Context) => uuid.v4().replace(/-/g, "");
+export const DEFAULT_SESSION_GENID: GenerateSessionIdFunction = (ctx: Context) => uuid.v4().replace(/-/g, "");
 
 /** 默认SessionId存储于Cookie的名称 */
 export const DEFAULT_SESSION_NAME = "web.sid";
