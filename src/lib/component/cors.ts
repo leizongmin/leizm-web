@@ -6,6 +6,7 @@
 import * as assert from "assert";
 import { parse as parseURL } from "url";
 import { Context } from "../context";
+import { MiddlewareHandle } from "../define";
 
 export interface CorsOptions {
   /** 允许的域名列表 */
@@ -37,7 +38,7 @@ export const DEFAULT_CORS_OPTIONS: Required<CorsOptions> = {
 /**
  * CORS中间件
  */
-export function cors(options: CorsOptions = {}) {
+export function cors(options: CorsOptions = {}): MiddlewareHandle<Context> {
   const opts: Required<CorsOptions> = { ...DEFAULT_CORS_OPTIONS, ...options };
 
   if (opts.any) {

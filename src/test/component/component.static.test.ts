@@ -1,9 +1,7 @@
 import * as fs from "fs";
 import * as path from "path";
-import { expect } from "chai";
 import { Connect, component } from "../../lib";
 import * as request from "supertest";
-import { sign as signCookie } from "cookie-signature";
 
 function readFile(file: string): Promise<Buffer> {
   return new Promise((resolve, reject) => {

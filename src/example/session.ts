@@ -3,7 +3,7 @@
  * @author Zongmin Lei <leizongmin@gmail.com>
  */
 
-import { Connect, fromClassicalHandle, Router, component } from "../lib";
+import { Connect, component } from "../lib";
 import * as Redis from "ioredis";
 import { createClient } from "redis";
 
