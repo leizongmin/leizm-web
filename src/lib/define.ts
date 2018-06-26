@@ -3,7 +3,7 @@
  * @author Zongmin Lei <leizongmin@gmail.com>
  */
 
-import { IncomingMessage, ServerResponse } from "http";
+import { IncomingMessage, ServerResponse, IncomingHttpHeaders } from "http";
 import { Request } from "./request";
 import { Response } from "./response";
 import { Context } from "./context";
@@ -84,9 +84,7 @@ export interface ResponseConstructor {
 }
 
 /** 请求头 */
-export interface Headers {
-  [name: string]: string | string[] | number;
-}
+export interface Headers extends IncomingHttpHeaders {}
 
 /** 扩展的ServerRequest对象 */
 export interface ServerRequestEx extends IncomingMessage {
