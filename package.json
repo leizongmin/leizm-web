@@ -57,7 +57,6 @@
     "cookie-signature": "^1.1.0",
     "crc": "^3.5.0",
     "finalhandler": "^1.1.1",
-    "on-headers": "^1.0.1",
     "path-to-regexp": "^2.2.1",
     "send": "^0.16.2",
     "serve-static": "^1.13.2",

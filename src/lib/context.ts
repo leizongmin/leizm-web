@@ -10,7 +10,7 @@ import { Response } from "./response";
 import { Connect } from "./connect";
 import { NextFunction, ErrorReason, RequestConstructor, ResponseConstructor, KEY_CONNECT } from "./define";
 import { SessionInstance } from "./component/session";
-const onHeaders = require("on-headers");
+import onWriteHead from "./module/on.writehead";
 
 export class Context<Q extends Request = Request, S extends Response = Response> extends EventEmitter {
   /** 原始ServerRequest对象 */
@@ -61,7 +61,7 @@ export class Context<Q extends Request = Request, S extends Response = Response>
     this._response.inited();
     this.response.setHeader("X-Powered-By", "@leizm/web");
     res.once("finish", () => this.emit("finish"));
-    onHeaders(res, () => this.emit("writeHead"));
+    onWriteHead(res, () => this.emit("writeHead"));
     this.inited();
     return this;
   }
