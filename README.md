@@ -39,12 +39,13 @@
 内置中间件列表：
 
 * `bodyParser` 请求体解析：
-  * `json` 解析 application/json，由 [body-parser](https://www.npmjs.com/package/body-parser) 模块提供
-  * `text` 解析 text/plain，由 [body-parser](https://www.npmjs.com/package/body-parser) 模块提供
-  * `urlencoded` 解析 application/x-www-form-urlencoded，由 [body-parser](https://www.npmjs.com/package/body-parser) 模块提供
-  * `raw` 解析 application/octet-stream，由 [body-parser](https://www.npmjs.com/package/body-parser) 模块提供
-* `cookieParser` 解析 Cookie，由 [cookie-parser](https://www.npmjs.com/package/cookie-parser) 模块提供
-* `serveStatic` 静态文件服务，由 [serve-static](https://www.npmjs.com/package/serve-static) 模块提供
+  * `json` 解析 application/json，基于模块[body-parser](https://www.npmjs.com/package/body-parser)
+  * `text` 解析 text/plain，基于模块 [body-parser](https://www.npmjs.com/package/body-parser)
+  * `urlencoded` 解析 application/x-www-form-urlencoded，基于模块 [body-parser](https://www.npmjs.com/package/body-parser)
+  * `raw` 解析 application/octet-stream，基于模块 [body-parser](https://www.npmjs.com/package/body-parser)
+  * `multipart` 解析 multipart/form-data ，基于模块 [busboy](https://www.npmjs.com/package/busboy)
+* `cookieParser` 解析 Cookie，基于模块 [cookie-parser](https://www.npmjs.com/package/cookie-parser)
+* `serveStatic` 静态文件服务，基于模块 [serve-static](https://www.npmjs.com/package/serve-static)
 * `cors` 设置 CORS
 * `session` 提供多存储引擎的 Session 支持：
   * `SessiionMemoryStore` 内存存储引擎

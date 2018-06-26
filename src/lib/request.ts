@@ -8,6 +8,7 @@ import { parse as parseUrl, Url } from "url";
 import { Headers, ServerRequestEx } from "./define";
 import { Context } from "./context";
 import { Socket } from "net";
+import { parseMultipart, MultipartParserOptions } from "./component/body";
 
 /**
  * @leizm/web 中间件基础框架
@@ -183,5 +184,10 @@ export class Request {
   /** 请求的socket对象 */
   public get socket(): Socket {
     return this.req.socket;
+  }
+
+  /** 解析multipart内容 */
+  public parseMultipart(options: MultipartParserOptions = {}): Promise<void> {
+    return parseMultipart(this.ctx, options);
   }
 }

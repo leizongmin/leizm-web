@@ -5,6 +5,20 @@
 
 import { Connect, component } from "../../lib";
 import * as request from "supertest";
+import { expect } from "chai";
+import * as fs from "fs";
+import * as path from "path";
+
+function readFile(file: string): Promise<Buffer> {
+  return new Promise((resolve, reject) => {
+    fs.readFile(file, (err, ret) => {
+      if (err) return reject(err);
+      resolve(ret);
+    });
+  });
+}
+
+// const ROOT_DIR = path.resolve(__dirname, "../../..");
 
 describe("component.body", function() {
   const appInstances: Connect[] = [];
@@ -91,5 +105,101 @@ describe("component.body", function() {
       .send("hello, world")
       .expect(200)
       .expect(JSON.stringify(Buffer.from("hello, world").toJSON()));
+  });
+
+  describe("multipart", function() {
+    it("smallFileSize=Infinity 文件存储于内存中", async function() {
+      const app = new Connect();
+      appInstances.push(app);
+      app.use("/", component.bodyParser.multipart({ smallFileSize: Infinity }));
+      app.use("/", function(ctx) {
+        ctx.response.json({ ...ctx.request.body, ...ctx.request.files });
+      });
+      const c = await readFile(__filename);
+      const d = Buffer.from("456");
+      await request(app.server)
+        .post("/")
+        .field("a", 123)
+        .field("b", __dirname)
+        .attach("c", __filename)
+        .field("d", d)
+        .expect(200)
+        .expect((res: any) => {
+          expect(res.body.a).to.equal("123");
+          expect(res.body.b).to.equal(__dirname);
+          expect(res.body.c).includes({
+            filename: path.basename(__filename),
+            size: c.length,
+          });
+          expect(res.body.c.buffer).to.deep.equal(JSON.parse(JSON.stringify(c)));
+          expect(res.body.d).include({ filename: "", size: d.length });
+          expect(res.body.d.buffer).to.deep.equal(JSON.parse(JSON.stringify(d)));
+        });
+    });
+
+    it("smallFileSize=100 文件存储于临时文件中", async function() {
+      const app = new Connect();
+      appInstances.push(app);
+      app.use("/", component.bodyParser.multipart({ smallFileSize: 100 }));
+      app.use("/", function(ctx) {
+        ctx.response.json({ ...ctx.request.body, ...ctx.request.files });
+      });
+      const c = await readFile(__filename);
+      const d = Buffer.from("456");
+      await request(app.server)
+        .post("/")
+        .field("a", 123)
+        .field("b", __dirname)
+        .attach("c", __filename)
+        .field("d", d)
+        .expect(200)
+        .expect(async (res: any) => {
+          expect(res.body.a).to.equal("123");
+          expect(res.body.b).to.equal(__dirname);
+          expect(res.body.c).includes({
+            filename: path.basename(__filename),
+            size: c.length,
+          });
+          expect(res.body.c.path).to.be.exist;
+          expect(await readFile(res.body.c.path)).to.deep.equal(c);
+          expect(res.body.d).include({ filename: "", size: d.length });
+          expect(res.body.d.buffer).to.deep.equal(JSON.parse(JSON.stringify(d)));
+        });
+    });
+
+    it("smallFileSize=0 通过 ctx.request.parseMultipart() 解析", async function() {
+      const app = new Connect();
+      appInstances.push(app);
+      app.use("/", async function(ctx) {
+        expect(ctx.request.body).to.deep.equal({});
+        expect(ctx.request.files).to.deep.equal({});
+        await ctx.request.parseMultipart({ smallFileSize: 0 });
+        ctx.response.json({ ...ctx.request.body, ...ctx.request.files });
+      });
+      const c = await readFile(__filename);
+      const d = Buffer.from("456");
+      let res: any;
+      await request(app.server)
+        .post("/")
+        .field("a", 123)
+        .field("b", __dirname)
+        .attach("c", __filename)
+        .field("d", d)
+        .expect(200)
+        .expect((r: any) => {
+          res = r;
+        });
+      expect(res.body.a).to.equal("123");
+      expect(res.body.b).to.equal(__dirname);
+      expect(res.body.c).includes({
+        filename: path.basename(__filename),
+        size: c.length,
+      });
+      expect(res.body.c.path).to.be.exist;
+      expect(await readFile(res.body.c.path)).to.deep.equal(c);
+      expect(res.body.d).include({ filename: "", size: d.length });
+      expect(res.body.d.path).to.be.exist;
+      expect(await readFile(res.body.d.path)).to.deep.equal(d);
+    });
   });
 });

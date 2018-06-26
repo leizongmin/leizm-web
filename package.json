@@ -41,6 +41,7 @@
   "homepage": "https://github.com/leizongmin/leizm-web#readme",
   "dependencies": {
     "@types/body-parser": "^1.17.0",
+    "@types/busboy": "^0.2.3",
     "@types/cookie": "^0.3.1",
     "@types/cookie-parser": "^1.4.1",
     "@types/cookie-signature": "^1.0.1",
@@ -50,6 +51,7 @@
     "@types/send": "^0.14.4",
     "@types/uuid": "^3.4.3",
     "body-parser": "^1.18.3",
+    "busboy": "^0.2.14",
     "cookie": "^0.3.1",
     "cookie-parser": "^1.4.3",
     "cookie-signature": "^1.1.0",
