@@ -46,7 +46,7 @@
     "@types/cookie-signature": "^1.0.1",
     "@types/crc": "^3.4.0",
     "@types/finalhandler": "0.0.32",
-    "@types/node": "^10.0.7",
+    "@types/node": "^10.3.6",
     "@types/send": "^0.14.4",
     "@types/uuid": "^3.4.3",
     "body-parser": "^1.18.3",
@@ -64,7 +64,7 @@
   "devDependencies": {
     "@types/chai": "^4.1.4",
     "@types/connect": "^3.4.32",
-    "@types/ioredis": "^3.2.9",
+    "@types/ioredis": "^3.2.10",
     "@types/mocha": "^5.2.3",
     "@types/redis": "^2.8.6",
     "@types/supertest": "^2.0.3",
@@ -75,10 +75,10 @@
     "ioredis": "^3.2.2",
     "mocha": "^5.2.0",
     "nyc": "^12.0.1",
-    "prettier": "^1.13.5",
+    "prettier": "^1.13.6",
     "redis": "^2.8.0",
     "supertest": "^3.1.0",
-    "ts-node": "^6.1.2",
+    "ts-node": "^6.2.0",
     "typedoc": "^0.11.1",
     "typescript": "^2.9.2"
   }
