@@ -59,6 +59,7 @@ export class Context<Q extends Request = Request, S extends Response = Response>
     this._request.inited();
     this._response = this.createResponse(res);
     this._response.inited();
+    this.response.setHeader("X-Powered-By", "@leizm/web");
     res.once("finish", () => this.emit("finish"));
     onHeaders(res, () => this.emit("writeHead"));
     this.inited();

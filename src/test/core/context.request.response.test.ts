@@ -135,7 +135,7 @@ describe("Response", function() {
         expect(ctx.response.getHeader("t111")).to.deep.equal([1, "hello", "a", "123"]);
         ctx.response.setHeader("t222", ["a", "b"]).appendHeader("t222", "c");
         expect(ctx.response.getHeader("t222")).to.deep.equal(["a", "b", "c"]);
-        expect(ctx.response.getHeaders()).to.deep.equal({
+        expect(ctx.response.getHeaders()).to.deep.include({
           aaa: "hello aaa",
           bbb: "hello bbb",
           ccc: "hello ccc",
@@ -150,7 +150,7 @@ describe("Response", function() {
         expect(ctx.response.getHeader("xxx")).to.equal(undefined);
       }
       ctx.response
-        .writeHead(500, {
+        .writeHead(404, {
           bbb: "xxx",
           ddd: "xxxx",
         })
@@ -159,12 +159,13 @@ describe("Response", function() {
     });
     request(app.server)
       .get("/hello")
-      .expect(500)
+      .expect("123456")
+      .expect(404)
       .expect("aaa", "hello aaa")
       .expect("bbb", "xxx")
       .expect("ccc", "hello ccc")
       .expect("ddd", "xxxx")
-      .expect("123456", done);
+      .end(done);
   });
 
   it("json() 和 html()", async function() {
