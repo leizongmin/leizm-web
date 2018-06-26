@@ -5,6 +5,7 @@
 [![node version][node-image]][node-url]
 [![npm download][download-image]][download-url]
 [![npm license][license-image]][download-url]
+[![DeepScan grade](https://deepscan.io/api/projects/2695/branches/18968/badge/grade.svg)](https://deepscan.io/dashboard#view=project&pid=2695&bid=18968)
 
 [npm-image]: https://img.shields.io/npm/v/@leizm/web.svg?style=flat-square
 [npm-url]: https://npmjs.org/package/@leizm/web
@@ -19,6 +20,7 @@
 [download-image]: https://img.shields.io/npm/dm/@leizm/web.svg?style=flat-square
 [download-url]: https://npmjs.org/package/@leizm/web
 [license-image]: https://img.shields.io/npm/l/@leizm/web.svg
+
 
 # @leizm/web
 
