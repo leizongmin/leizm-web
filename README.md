@@ -49,7 +49,7 @@
 * `session` 提供多存储引擎的 Session 支持：
   * `SessiionMemoryStore` 内存存储引擎
   * `SessiionRedisStore` Redis 存储引擎，通过传入 Redis 客户端实例实现存储，支持 [ioredis](https://www.npmjs.com/package/ioredis) 和 [redis](https://www.npmjs.com/package/redis) 模块
-  * `SimpleRedisClientOptions` 简单 Redis 客户端，可以不依赖第三方模块的情况下实现 Redis 存储
+  * `SimpleRedisClientOptions` 简单 Redis 客户端，可以不依赖第三方模块的情况下实现 Redis 存储，直接在 `SessionRedisStore` 初始化时指定 `{ host, port, db }` 来代替 `client` 参数即可
 
 详细使用说明可阅读 [Wiki](https://github.com/leizongmin/leizm-web/wiki)
 

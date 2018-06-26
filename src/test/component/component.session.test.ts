@@ -4,6 +4,7 @@
  */
 
 import { Connect, component } from "../../lib";
+import { SimpleRedisClient } from "../../lib/module";
 import * as request from "supertest";
 import { expect } from "chai";
 import * as Redis from "ioredis";
@@ -107,7 +108,7 @@ describe("component.session", function() {
       const app = new Connect();
       appInstances.push(app);
       app.use("/", component.cookieParser());
-      const client = new component.SimpleRedisClient();
+      const client = new SimpleRedisClient();
       const prefix = `test:sess:${Date.now()}:${Math.random()}:`;
       app.use(
         "/",

@@ -1,11 +1,11 @@
 /**
- * @leizm/web 中间件基础框架 - 内置中间件
+ * @leizm/web 中间件基础框架 - 内置模块
  * @author Zongmin Lei <leizongmin@gmail.com>
  */
 
 import { EventEmitter } from "events";
 import { createConnection, Socket } from "net";
-import { RedisCompatibleClient } from "./session.redis";
+import { RedisCompatibleClient } from "../component/session.redis";
 
 class RedisParser {
   /** 已初步解析出来的行 */

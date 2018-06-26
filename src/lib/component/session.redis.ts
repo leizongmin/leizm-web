@@ -10,7 +10,7 @@ import {
   DEFAULT_SESSION_SERIALIZE,
   DEFAULT_SESSION_UNSERIALIZE,
 } from "./session";
-import { SimpleRedisClientOptions, SimpleRedisClient } from "./simple.redis";
+import { SimpleRedisClientOptions, SimpleRedisClient } from "../module/simple.redis";
 
 /** 默认Redis Key前缀 */
 export const DEFAULT_REDIS_PREFIX = "sess:";

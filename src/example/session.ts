@@ -6,10 +6,11 @@
 import { Connect, component } from "../lib";
 import * as Redis from "ioredis";
 import { createClient } from "redis";
+import { SimpleRedisClient } from "../lib/module";
 
 const redis1 = new Redis();
 const redis2 = createClient();
-const redis3 = new component.SimpleRedisClient();
+const redis3 = new SimpleRedisClient();
 
 const app = new Connect();
 app.use("/", component.cookieParser(""));

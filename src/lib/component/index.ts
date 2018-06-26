@@ -13,5 +13,3 @@ export * from "./session.redis";
 
 import * as bodyParser from "./body";
 export { bodyParser };
-
-export * from "./simple.redis";
