@@ -6,19 +6,23 @@
 import { Server, IncomingMessage, ServerResponse } from "http";
 import * as finalhandler from "finalhandler";
 import { Core } from "./core";
-import { ListenOptions, ErrorReason } from "./define";
+import { ListenOptions, ErrorReason, KEY_CONNECT, KEY_SERVER } from "./define";
 import { Context } from "./context";
 import { Request } from "./request";
 import { Response } from "./response";
+import { TemplateEngineManager } from "./template";
 
 export class Connect<C extends Context = Context<Request, Response>> extends Core<C> {
   /** http.Server实例 */
-  protected _server?: Server;
+  public [KEY_SERVER]: Server;
+
+  /** 模板引擎管理器 */
+  public templateEngine: TemplateEngineManager = new TemplateEngineManager();
 
   /** 获取当前http.Server实例 */
   public get server() {
-    if (!this._server) this._server = new Server(this.handleRequest.bind(this));
-    return this._server;
+    if (!this[KEY_SERVER]) this[KEY_SERVER] = new Server(this.handleRequest.bind(this));
+    return this[KEY_SERVER];
   }
 
   /**
@@ -37,7 +41,7 @@ export class Connect<C extends Context = Context<Request, Response>> extends Cor
    * @param server http.Server实例
    */
   public attach(server: Server) {
-    this._server = server;
+    this[KEY_SERVER] = server;
     server.on("request", this.handleRequest.bind(this));
   }
 
@@ -46,8 +50,8 @@ export class Connect<C extends Context = Context<Request, Response>> extends Cor
    */
   public async close() {
     return new Promise((resolve, reject) => {
-      if (this._server) {
-        this._server.close(() => resolve());
+      if (this[KEY_SERVER]) {
+        this[KEY_SERVER]!.close(() => resolve());
       } else {
         resolve();
       }
@@ -62,13 +66,25 @@ export class Connect<C extends Context = Context<Request, Response>> extends Cor
    * @param done 未处理请求的回调函数
    */
   public handleRequest = (req: IncomingMessage, res: ServerResponse, done?: (err?: ErrorReason) => void) => {
-    this.handleRequestByRequestResponse(
-      req,
-      res,
+    done =
       done ||
-        function(err?: ErrorReason) {
-          return finalhandler(req, res)(err);
-        },
-    );
+      function(err?: ErrorReason) {
+        return finalhandler(req, res)(err);
+      };
+    // this.handleRequestByRequestResponse(req, res, done);
+    const ctx = this.createContext(req, res);
+    this.handleRequestByContext(ctx, done);
   };
+
+  /**
+   * 创建Context对象
+   *
+   * @param req 原始ServerRequest对象
+   * @param res 原始ServerResponse对象
+   */
+  protected createContext(req: IncomingMessage, res: ServerResponse): C {
+    const ctx = super.createContext(req, res);
+    ctx[KEY_CONNECT] = this as any;
+    return ctx;
+  }
 }

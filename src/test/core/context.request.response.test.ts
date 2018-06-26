@@ -10,6 +10,7 @@ import { Connect, fromClassicalHandle } from "../../lib";
 import * as request from "supertest";
 import * as cookieParser from "cookie-parser";
 import { sign as signCookie } from "cookie-signature";
+import * as simpleTemplate from "../../lib/module/simple.template";
 
 function readFile(file: string): Promise<Buffer> {
   return new Promise((resolve, reject) => {
@@ -280,6 +281,53 @@ describe("Response", function() {
         .expect("Location", "/a")
         .expect("ok", done);
     });
+  });
+
+  describe("render()", function() {
+    it("带后缀名", function(done) {
+      const app = new Connect();
+      app.templateEngine
+        .register(".simple", simpleTemplate.renderFile)
+        .setDefault(".simple")
+        .setRoot(path.resolve(ROOT_DIR, "test_data/template"));
+      app.use("/", function(ctx) {
+        ctx.response.render("test1.simple", { a: 123, b: 456 });
+      });
+      request(app.server)
+        .get("/")
+        .expect(200)
+        .expect("<p>a = 123</p>\n<p>b = 456</p>", done);
+    });
+  });
+
+  it("省略后缀名", function(done) {
+    const app = new Connect();
+    app.templateEngine
+      .register(".simple", simpleTemplate.renderFile)
+      .setDefault(".simple")
+      .setRoot(path.resolve(ROOT_DIR, "test_data/template"));
+    app.use("/", function(ctx) {
+      ctx.response.render("test1", { a: 123, b: 456 });
+    });
+    request(app.server)
+      .get("/")
+      .expect(200)
+      .expect("<p>a = 123</p>\n<p>b = 456</p>", done);
+  });
+
+  it("完整文件路径", function(done) {
+    const app = new Connect();
+    app.templateEngine
+      .register(".simple", simpleTemplate.renderFile)
+      .setDefault(".simple")
+      .setRoot(path.resolve(ROOT_DIR, "test_data/template"));
+    app.use("/", function(ctx) {
+      ctx.response.render(path.resolve("test_data/template/test1.simple"), { a: 123, b: 456 });
+    });
+    request(app.server)
+      .get("/")
+      .expect(200)
+      .expect("<p>a = 123</p>\n<p>b = 456</p>", done);
   });
 });
 

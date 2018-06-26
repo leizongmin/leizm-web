@@ -103,3 +103,23 @@ export interface CookieOptions extends cookie.CookieSerializeOptions {
   /** 是否签名 */
   signed?: boolean;
 }
+
+/** 模板引擎回调函数 */
+export type TemplateRenderFileCallback = (err: Error | null, data?: string) => void;
+
+/** 模板引擎渲染文件函数 */
+export type TemplateRenderFileFunction = (
+  filename: string,
+  data: TemplateRenderData,
+  callback: TemplateRenderFileCallback,
+) => void;
+
+/** 模板渲染数据 */
+export type TemplateRenderData = Record<string, any>;
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const KEY_REQUEST = Symbol("request instance");
+export const KEY_RESPONSE = Symbol("response instance");
+export const KEY_CONNECT = Symbol("parent connect instance");
+export const KEY_SERVER = Symbol("http.Server instance");

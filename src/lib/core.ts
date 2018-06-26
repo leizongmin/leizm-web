@@ -46,7 +46,7 @@ export class Core<C extends Context = Context<Request, Response>> {
    * @param req 原始ServerRequest对象
    * @param res 原始ServerResponse对象
    */
-  protected createContext(req: IncomingMessage, res: ServerResponse) {
+  protected createContext(req: IncomingMessage, res: ServerResponse): C {
     return new this.contextConstructor().init(req, res) as C;
   }
 

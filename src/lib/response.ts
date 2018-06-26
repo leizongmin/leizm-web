@@ -9,7 +9,7 @@ import { Context } from "./context";
 import { sign as signCookie } from "cookie-signature";
 import * as cookie from "cookie";
 import * as send from "send";
-import { CookieOptions } from "./define";
+import { CookieOptions, TemplateRenderData, KEY_CONNECT } from "./define";
 
 export class Response {
   constructor(public readonly res: ServerResponse, public readonly ctx: Context) {}
@@ -150,7 +150,7 @@ export class Response {
    * @param str 内容
    */
   public html(str: Buffer | string): void {
-    this.setHeader("Content-Type", "text/html");
+    this.setHeader("Content-Type", "text/html; charset=utf-8");
     this.end(str);
   }
 
@@ -221,5 +221,22 @@ export class Response {
       opts.path = "/";
     }
     this.appendHeader("Set-Cookie", cookie.serialize(name, String(val), opts));
+  }
+
+  /**
+   * 渲染模板
+   * @param name 模板名称
+   * @param data 模板数据
+   */
+  public async render(name: string, data: TemplateRenderData = {}): Promise<void> {
+    try {
+      const html = await this.ctx[KEY_CONNECT]!.templateEngine.render(name, data);
+      if (!this.getHeader("Content-Type")) {
+        this.setHeader("Content-Type", "text/html; charset=utf-8");
+      }
+      this.end(html);
+    } catch (err) {
+      this.ctx.next(err);
+    }
   }
 }

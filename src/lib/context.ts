@@ -7,7 +7,8 @@ import { IncomingMessage, ServerResponse } from "http";
 import { EventEmitter } from "events";
 import { Request } from "./request";
 import { Response } from "./response";
-import { NextFunction, ErrorReason, RequestConstructor, ResponseConstructor } from "./define";
+import { Connect } from "./connect";
+import { NextFunction, ErrorReason, RequestConstructor, ResponseConstructor, KEY_CONNECT } from "./define";
 import { SessionInstance } from "./component/session";
 const onHeaders = require("on-headers");
 
@@ -22,6 +23,9 @@ export class Context<Q extends Request = Request, S extends Response = Response>
   protected requestConstructor: RequestConstructor = Request;
   /** Response对象的构造函数 */
   protected responseConstructor: ResponseConstructor = Response;
+
+  /** 父 connect 实例 */
+  public [KEY_CONNECT]: Connect | undefined;
 
   /** Session对象 */
   public readonly session?: SessionInstance;
