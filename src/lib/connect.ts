@@ -6,7 +6,7 @@
 import { Server, IncomingMessage, ServerResponse } from "http";
 import * as finalhandler from "finalhandler";
 import { Core } from "./core";
-import { ListenOptions, ErrorReason, KEY_CONNECT, KEY_SERVER } from "./define";
+import { ListenOptions, ErrorReason, SYMBOL_CONNECT, SYMBOL_SERVER } from "./define";
 import { Context } from "./context";
 import { Request } from "./request";
 import { Response } from "./response";
@@ -14,15 +14,15 @@ import { TemplateEngineManager } from "./template";
 
 export class Connect<C extends Context = Context<Request, Response>> extends Core<C> {
   /** http.Server实例 */
-  public [KEY_SERVER]: Server;
+  public [SYMBOL_SERVER]: Server;
 
   /** 模板引擎管理器 */
   public templateEngine: TemplateEngineManager = new TemplateEngineManager();
 
   /** 获取当前http.Server实例 */
   public get server() {
-    if (!this[KEY_SERVER]) this[KEY_SERVER] = new Server(this.handleRequest.bind(this));
-    return this[KEY_SERVER];
+    if (!this[SYMBOL_SERVER]) this[SYMBOL_SERVER] = new Server(this.handleRequest.bind(this));
+    return this[SYMBOL_SERVER];
   }
 
   /**
@@ -41,7 +41,7 @@ export class Connect<C extends Context = Context<Request, Response>> extends Cor
    * @param server http.Server实例
    */
   public attach(server: Server) {
-    this[KEY_SERVER] = server;
+    this[SYMBOL_SERVER] = server;
     server.on("request", this.handleRequest.bind(this));
   }
 
@@ -50,8 +50,8 @@ export class Connect<C extends Context = Context<Request, Response>> extends Cor
    */
   public async close() {
     return new Promise((resolve, reject) => {
-      if (this[KEY_SERVER]) {
-        this[KEY_SERVER]!.close(() => resolve());
+      if (this[SYMBOL_SERVER]) {
+        this[SYMBOL_SERVER]!.close(() => resolve());
       } else {
         resolve();
       }
@@ -84,7 +84,7 @@ export class Connect<C extends Context = Context<Request, Response>> extends Cor
    */
   protected createContext(req: IncomingMessage, res: ServerResponse): C {
     const ctx = super.createContext(req, res);
-    ctx[KEY_CONNECT] = this as any;
+    ctx[SYMBOL_CONNECT] = this as any;
     return ctx;
   }
 }

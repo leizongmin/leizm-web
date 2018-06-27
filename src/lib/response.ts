@@ -9,7 +9,7 @@ import { Context } from "./context";
 import { sign as signCookie } from "cookie-signature";
 import * as cookie from "cookie";
 import * as send from "send";
-import { CookieOptions, TemplateRenderData, KEY_CONNECT } from "./define";
+import { CookieOptions, TemplateRenderData, SYMBOL_CONNECT } from "./define";
 
 export class Response {
   constructor(public readonly res: ServerResponse, public readonly ctx: Context) {}
@@ -230,7 +230,7 @@ export class Response {
    */
   public async render(name: string, data: TemplateRenderData = {}): Promise<void> {
     try {
-      const html = await this.ctx[KEY_CONNECT]!.templateEngine.render(name, data);
+      const html = await this.ctx[SYMBOL_CONNECT]!.templateEngine.render(name, data);
       if (!this.getHeader("Content-Type")) {
         this.setHeader("Content-Type", "text/html; charset=utf-8");
       }

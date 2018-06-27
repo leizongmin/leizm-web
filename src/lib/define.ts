@@ -119,7 +119,7 @@ export type TemplateRenderData = Record<string, any>;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export const KEY_REQUEST = Symbol("request instance");
-export const KEY_RESPONSE = Symbol("response instance");
-export const KEY_CONNECT = Symbol("parent connect instance");
-export const KEY_SERVER = Symbol("http.Server instance");
+export const SYMBOL_REQUEST = Symbol("request instance");
+export const SYMBOL_RESPONSE = Symbol("response instance");
+export const SYMBOL_CONNECT = Symbol("parent connect instance");
+export const SYMBOL_SERVER = Symbol("http.Server instance");

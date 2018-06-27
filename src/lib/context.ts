@@ -8,7 +8,7 @@ import { EventEmitter } from "events";
 import { Request } from "./request";
 import { Response } from "./response";
 import { Connect } from "./connect";
-import { NextFunction, ErrorReason, RequestConstructor, ResponseConstructor, KEY_CONNECT } from "./define";
+import { NextFunction, ErrorReason, RequestConstructor, ResponseConstructor, SYMBOL_CONNECT } from "./define";
 import { SessionInstance } from "./component/session";
 import onWriteHead from "./module/on.writehead";
 
@@ -25,7 +25,7 @@ export class Context<Q extends Request = Request, S extends Response = Response>
   protected responseConstructor: ResponseConstructor = Response;
 
   /** 父 connect 实例 */
-  public [KEY_CONNECT]: Connect | undefined;
+  public [SYMBOL_CONNECT]: Connect | undefined;
 
   /** Session对象 */
   public readonly session?: SessionInstance;
