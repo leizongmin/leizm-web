@@ -173,8 +173,10 @@ describe("component.body", function() {
       app.use("/", async function(ctx) {
         expect(ctx.request.body).to.deep.equal({});
         expect(ctx.request.files).to.deep.equal({});
-        await ctx.request.parseMultipart({ smallFileSize: 0 });
-        ctx.response.json({ ...ctx.request.body, ...ctx.request.files });
+        const { body, files } = await ctx.request.parseMultipart({ smallFileSize: 0 });
+        expect(body).to.equal(ctx.request.body);
+        expect(files).to.equal(ctx.request.files);
+        ctx.response.json({ ...body, ...files });
       });
       const c = await readFile(__filename);
       const d = Buffer.from("456");

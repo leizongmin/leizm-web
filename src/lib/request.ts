@@ -8,7 +8,7 @@ import { parse as parseUrl, Url } from "url";
 import { Headers, ServerRequestEx } from "./define";
 import { Context } from "./context";
 import { Socket } from "net";
-import { parseMultipart, MultipartParserOptions } from "./component/body";
+import { parseMultipart, MultipartParserOptions, FileField } from "./component/body";
 
 /**
  * @leizm/web 中间件基础框架
@@ -187,7 +187,13 @@ export class Request {
   }
 
   /** 解析multipart内容 */
-  public parseMultipart(options: MultipartParserOptions = {}): Promise<void> {
-    return parseMultipart(this.ctx, options);
+  public async parseMultipart(
+    options: MultipartParserOptions = {},
+  ): Promise<{
+    body: Record<string, any>;
+    files: Record<string, FileField>;
+  }> {
+    await parseMultipart(this.ctx, options);
+    return { body: this.body, files: this.files };
   }
 }
