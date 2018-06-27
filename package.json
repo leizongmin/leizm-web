@@ -16,7 +16,8 @@
     "compile": "npm run clean && tsc",
     "prepublish": "npm run test && npm run compile",
     "format": "prettier --write \"src/**/*.ts\"",
-    "docs": "typedoc --out ./docs --tsconfig tsconfig.typedoc.json"
+    "docs": "typedoc --out ./docs --tsconfig tsconfig.typedoc.json",
+    "update-wiki": "cd wiki && git pull && node update_index.js && git add . && git commit -m \"update\" && git push"
   },
   "nyc": {
     "extension": [
