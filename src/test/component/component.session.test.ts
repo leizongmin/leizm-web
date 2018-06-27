@@ -4,7 +4,7 @@
  */
 
 import { Connect, component } from "../../lib";
-import { SimpleRedisClient } from "../../lib/module";
+import { SimpleRedisClient } from "../../lib/module/simple.redis";
 import * as request from "supertest";
 import { expect } from "chai";
 import * as Redis from "ioredis";
