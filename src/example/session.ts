@@ -40,10 +40,10 @@ app.use("/", async ctx => {
   // console.log(ctx.session);
   console.log(ctx.request.cookies);
   console.log(ctx.request.signedCookies);
-  ctx.session!.data.c = ctx.session!.data.c || 0;
-  ctx.session!.data.c++;
-  // await ctx.session!.reload();
-  ctx.response.json(ctx.session!.data);
+  ctx.session.data.c = ctx.session.data.c || 0;
+  ctx.session.data.c++;
+  // await ctx.session.reload();
+  ctx.response.json(ctx.session.data);
 });
 
 app.listen({ port: 3000 }, () => console.log("listening..."));

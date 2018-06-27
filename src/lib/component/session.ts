@@ -4,7 +4,7 @@
  */
 
 import { Context } from "../context";
-import { MiddlewareHandle, CookieOptions } from "../define";
+import { MiddlewareHandle, CookieOptions, SYMBOL_SESSION } from "../define";
 import { SessiionMemoryStore } from "./session.memory";
 import * as uuid from "uuid";
 import { crc32 } from "crc";
@@ -22,7 +22,7 @@ export function session(options: SessionOptions = {}): MiddlewareHandle<Context>
   return async function(ctx: Context) {
     const currentSid: string = (isSigned ? ctx.request.signedCookies : ctx.request.cookies)[cookieName];
     const sid = currentSid || opts.genid(ctx);
-    const sess = ((ctx as any).session = new SessionInstance(ctx, sid, opts));
+    const sess = (ctx[SYMBOL_SESSION] = new SessionInstance(ctx, sid, opts));
     ctx.request.session = sess.data;
     if (currentSid) {
       // 旧的session，需要载入其数据

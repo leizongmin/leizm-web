@@ -31,9 +31,9 @@ describe("component.session", function() {
       app.use("/", component.cookieParser());
       app.use("/", component.session({ store: new component.SessiionMemoryStore(), maxAge: 1000 }));
       app.use("/", function(ctx) {
-        ctx.session!.data.counter = ctx.session!.data.counter || 0;
-        ctx.session!.data.counter++;
-        ctx.response.json(ctx.session!.data);
+        ctx.session.data.counter = ctx.session.data.counter || 0;
+        ctx.session.data.counter++;
+        ctx.response.json(ctx.session.data);
       });
       const agent = request.agent(app.server);
       await agent.get("/").expect(200, { counter: 1 });
@@ -60,9 +60,9 @@ describe("component.session", function() {
         }),
       );
       app.use("/", function(ctx) {
-        ctx.session!.data.counter = ctx.session!.data.counter || 0;
-        ctx.session!.data.counter++;
-        ctx.response.json(ctx.session!.data);
+        ctx.session.data.counter = ctx.session.data.counter || 0;
+        ctx.session.data.counter++;
+        ctx.response.json(ctx.session.data);
       });
       const agent = request.agent(app.server);
       await agent.get("/").expect(200, { counter: 1 });
@@ -89,9 +89,9 @@ describe("component.session", function() {
         }),
       );
       app.use("/", function(ctx) {
-        ctx.session!.data.counter = ctx.session!.data.counter || 0;
-        ctx.session!.data.counter++;
-        ctx.response.json(ctx.session!.data);
+        ctx.session.data.counter = ctx.session.data.counter || 0;
+        ctx.session.data.counter++;
+        ctx.response.json(ctx.session.data);
       });
       const agent = request.agent(app.server);
       await agent.get("/").expect(200, { counter: 1 });
@@ -118,9 +118,9 @@ describe("component.session", function() {
         }),
       );
       app.use("/", function(ctx) {
-        ctx.session!.data.counter = ctx.session!.data.counter || 0;
-        ctx.session!.data.counter++;
-        ctx.response.json(ctx.session!.data);
+        ctx.session.data.counter = ctx.session.data.counter || 0;
+        ctx.session.data.counter++;
+        ctx.response.json(ctx.session.data);
       });
       const agent = request.agent(app.server);
       await agent.get("/").expect(200, { counter: 1 });
@@ -146,9 +146,9 @@ describe("component.session", function() {
         }),
       );
       app.use("/", function(ctx) {
-        ctx.session!.data.counter = ctx.session!.data.counter || 0;
-        ctx.session!.data.counter++;
-        ctx.response.json(ctx.session!.data);
+        ctx.session.data.counter = ctx.session.data.counter || 0;
+        ctx.session.data.counter++;
+        ctx.response.json(ctx.session.data);
       });
       const agent = request.agent(app.server);
       await agent.get("/").expect(200, { counter: 1 });
@@ -169,17 +169,17 @@ describe("component.session", function() {
       app.use("/", component.cookieParser());
       app.use("/", component.session({ maxAge: 1000 }));
       app.use("/a", async function(ctx) {
-        ctx.session!.data.yes = false;
-        await ctx.session!.save();
-        ctx.response.json(ctx.session!.data);
+        ctx.session.data.yes = false;
+        await ctx.session.save();
+        ctx.response.json(ctx.session.data);
       });
       app.use("/b", async function(ctx) {
-        expect(ctx.session!.data).to.deep.equal({ yes: false });
-        ctx.session!.data.yes = true;
-        expect(ctx.session!.data).to.deep.equal({ yes: true });
-        await ctx.session!.reload();
-        expect(ctx.session!.data).to.deep.equal({ yes: false });
-        ctx.response.json(ctx.session!.data);
+        expect(ctx.session.data).to.deep.equal({ yes: false });
+        ctx.session.data.yes = true;
+        expect(ctx.session.data).to.deep.equal({ yes: true });
+        await ctx.session.reload();
+        expect(ctx.session.data).to.deep.equal({ yes: false });
+        ctx.response.json(ctx.session.data);
       });
       const agent = request.agent(app.server);
       await agent.get("/a").expect(200, { yes: false });
@@ -192,21 +192,21 @@ describe("component.session", function() {
       app.use("/", component.cookieParser());
       app.use("/", component.session({ maxAge: 1000 }));
       app.use("/a", async function(ctx) {
-        ctx.session!.data.yes = false;
-        await ctx.session!.save();
-        ctx.response.json(ctx.session!.data);
+        ctx.session.data.yes = false;
+        await ctx.session.save();
+        ctx.response.json(ctx.session.data);
       });
       app.use("/b", async function(ctx) {
-        expect(ctx.session!.data).to.deep.equal({ yes: false });
-        ctx.session!.data.yes = true;
-        expect(ctx.session!.data).to.deep.equal({ yes: true });
-        await ctx.session!.regenerate();
-        expect(ctx.session!.data).to.deep.equal({});
-        ctx.session!.data.no = true;
-        ctx.response.json(ctx.session!.data);
+        expect(ctx.session.data).to.deep.equal({ yes: false });
+        ctx.session.data.yes = true;
+        expect(ctx.session.data).to.deep.equal({ yes: true });
+        await ctx.session.regenerate();
+        expect(ctx.session.data).to.deep.equal({});
+        ctx.session.data.no = true;
+        ctx.response.json(ctx.session.data);
       });
       app.use("/c", async function(ctx) {
-        ctx.response.json(ctx.session!.data);
+        ctx.response.json(ctx.session.data);
       });
       const agent = request.agent(app.server);
       await agent.get("/a").expect(200, { yes: false });
@@ -220,19 +220,19 @@ describe("component.session", function() {
       app.use("/", component.cookieParser());
       app.use("/", component.session({ maxAge: 1000 }));
       app.use("/a", async function(ctx) {
-        ctx.session!.data.yes = false;
-        await ctx.session!.save();
-        ctx.response.json(ctx.session!.data);
+        ctx.session.data.yes = false;
+        await ctx.session.save();
+        ctx.response.json(ctx.session.data);
       });
       app.use("/b", async function(ctx) {
-        expect(ctx.session!.data).to.deep.equal({ yes: false });
-        await ctx.session!.destroy();
-        expect(ctx.session!.data).to.deep.equal({});
-        ctx.response.json(ctx.session!.data);
+        expect(ctx.session.data).to.deep.equal({ yes: false });
+        await ctx.session.destroy();
+        expect(ctx.session.data).to.deep.equal({});
+        ctx.response.json(ctx.session.data);
       });
       app.use("/c", async function(ctx) {
-        expect(ctx.session!.data).to.deep.equal({});
-        ctx.response.json(ctx.session!.data);
+        expect(ctx.session.data).to.deep.equal({});
+        ctx.response.json(ctx.session.data);
       });
       const agent = request.agent(app.server);
       await agent.get("/a").expect(200, { yes: false });
@@ -246,12 +246,12 @@ describe("component.session", function() {
       app.use("/", component.cookieParser());
       app.use("/", component.session({ maxAge: 2000 }));
       app.use("/a", async function(ctx) {
-        ctx.session!.data.yes = false;
-        await ctx.session!.save();
-        ctx.response.json(ctx.session!.data);
+        ctx.session.data.yes = false;
+        await ctx.session.save();
+        ctx.response.json(ctx.session.data);
       });
       app.use("/b", async function(ctx) {
-        ctx.response.json(ctx.session!.data);
+        ctx.response.json(ctx.session.data);
       });
       const agent = request.agent(app.server);
       await agent.get("/a").expect(200, { yes: false });
@@ -272,12 +272,12 @@ describe("component.session", function() {
       app.use("/", component.cookieParser());
       app.use("/", component.session({ maxAge: 1000, name: "hello" }));
       app.use("/a", async function(ctx) {
-        ctx.session!.data.yes = false;
-        ctx.response.json(ctx.session!.data);
+        ctx.session.data.yes = false;
+        ctx.response.json(ctx.session.data);
       });
       app.use("/b", async function(ctx) {
-        expect(ctx.session!.id).to.equal(ctx.request.cookies.hello);
-        ctx.response.json(ctx.session!.data);
+        expect(ctx.session.id).to.equal(ctx.request.cookies.hello);
+        ctx.response.json(ctx.session.data);
       });
       const agent = request.agent(app.server);
       await agent.get("/a").expect(200, { yes: false });
@@ -290,12 +290,12 @@ describe("component.session", function() {
       app.use("/", component.cookieParser("secret key"));
       app.use("/", component.session({ maxAge: 1000, name: "hello", cookie: { signed: true } }));
       app.use("/a", async function(ctx) {
-        ctx.session!.data.yes = false;
-        ctx.response.json(ctx.session!.data);
+        ctx.session.data.yes = false;
+        ctx.response.json(ctx.session.data);
       });
       app.use("/b", async function(ctx) {
-        expect(ctx.session!.id).to.equal(ctx.request.signedCookies.hello);
-        ctx.response.json(ctx.session!.data);
+        expect(ctx.session.id).to.equal(ctx.request.signedCookies.hello);
+        ctx.response.json(ctx.session.data);
       });
       const agent = request.agent(app.server);
       await agent.get("/a").expect(200, { yes: false });

@@ -8,7 +8,14 @@ import { EventEmitter } from "events";
 import { Request } from "./request";
 import { Response } from "./response";
 import { Connect } from "./connect";
-import { NextFunction, ErrorReason, RequestConstructor, ResponseConstructor, SYMBOL_CONNECT } from "./define";
+import {
+  NextFunction,
+  ErrorReason,
+  RequestConstructor,
+  ResponseConstructor,
+  SYMBOL_CONNECT,
+  SYMBOL_SESSION,
+} from "./define";
 import { SessionInstance } from "./component/session";
 import onWriteHead from "./module/on.writehead";
 
@@ -27,8 +34,13 @@ export class Context<Q extends Request = Request, S extends Response = Response>
   /** 父 connect 实例 */
   public [SYMBOL_CONNECT]: Connect | undefined;
 
+  /** 原始 Session对象 */
+  public [SYMBOL_SESSION]: SessionInstance;
   /** Session对象 */
-  public readonly session?: SessionInstance;
+  public get session(): SessionInstance {
+    if (this[SYMBOL_SESSION]) return this[SYMBOL_SESSION];
+    throw new Error(`ctx.session: please use component.session() middleware firstly`);
+  }
 
   /**
    * 创建Request对象
