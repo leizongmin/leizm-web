@@ -20,7 +20,6 @@
 [download-url]: https://npmjs.org/package/@leizm/web
 [license-image]: https://img.shields.io/npm/l/@leizm/web.svg
 
-
 # @leizm/web
 
 [![Greenkeeper badge](https://badges.greenkeeper.io/leizongmin/leizm-web.svg)](https://greenkeeper.io/)
