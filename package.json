@@ -48,7 +48,7 @@
     "@types/cookie-signature": "^1.0.1",
     "@types/crc": "^3.4.0",
     "@types/finalhandler": "0.0.32",
-    "@types/node": "^10.3.6",
+    "@types/node": "^10.5.0",
     "@types/send": "^0.14.4",
     "body-parser": "^1.18.3",
     "busboy": "^0.2.14",
