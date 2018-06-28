@@ -6,7 +6,7 @@
 import { Context } from "../context";
 import { MiddlewareHandle, CookieOptions, SYMBOL_SESSION } from "../define";
 import { SessiionMemoryStore } from "./session.memory";
-import * as uuid from "uuid";
+import { generateSessionId } from "../module/simple.random";
 import { crc32 } from "crc";
 
 /**
@@ -150,7 +150,7 @@ export function getDataHash(data: any): string {
 }
 
 /** 默认生成SessionId的函数 */
-export const DEFAULT_SESSION_GENID: GenerateSessionIdFunction = (ctx: Context) => uuid.v4().replace(/-/g, "");
+export const DEFAULT_SESSION_GENID: GenerateSessionIdFunction = (ctx: Context) => generateSessionId();
 
 /** 默认SessionId存储于Cookie的名称 */
 export const DEFAULT_SESSION_NAME = "web.sid";

@@ -11,7 +11,7 @@ import * as path from "path";
 import * as bodyParser from "body-parser";
 import { fromClassicalHandle } from "../utils";
 import * as Busboy from "busboy";
-import * as uuid from "uuid";
+import { randomString } from "../module/simple.random";
 
 export interface JsonParserOptions extends bodyParser.OptionsJson {}
 
@@ -122,7 +122,7 @@ export function parseMultipart(ctx: Context, options: MultipartParserOptions = {
             } else {
               buf.push(chunk);
               if (size > opts.smallFileSize) {
-                filePath = path.resolve(os.tmpdir(), `multipart-tmp-${uuid()}`);
+                filePath = path.resolve(os.tmpdir(), `multipart-tmp-${randomString(32)}`);
                 fileStream = fs.createWriteStream(filePath);
                 fileStream.on("error", err => reject(err));
                 fileStream.write(Buffer.concat(buf));

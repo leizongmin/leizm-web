@@ -50,7 +50,6 @@
     "@types/finalhandler": "0.0.32",
     "@types/node": "^10.3.6",
     "@types/send": "^0.14.4",
-    "@types/uuid": "^3.4.3",
     "body-parser": "^1.18.3",
     "busboy": "^0.2.14",
     "cookie": "^0.3.1",
@@ -60,8 +59,7 @@
     "finalhandler": "^1.1.1",
     "path-to-regexp": "^2.2.1",
     "send": "^0.16.2",
-    "serve-static": "^1.13.2",
-    "uuid": "^3.3.0"
+    "serve-static": "^1.13.2"
   },
   "devDependencies": {
     "@types/chai": "^4.1.4",
