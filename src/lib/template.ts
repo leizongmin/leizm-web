@@ -51,7 +51,7 @@ export class TemplateEngineManager {
   public render(name: string, data: TemplateRenderData = {}): Promise<string> {
     return new Promise((resolve, reject) => {
       let ext = path.extname(name);
-      let filename = path.resolve(this.root, name);
+      let fileName = path.resolve(this.root, name);
       let renderFile: TemplateRenderFileFunction;
       if (ext && this.engines.has(ext)) {
         renderFile = this.engines.get(ext)!;
@@ -59,11 +59,11 @@ export class TemplateEngineManager {
         assert(this.engines.has(this.defaultEngine), `未设置默认模板引擎，无法渲染模板类型 ${ext}`);
         if (!ext) {
           ext = this.defaultEngine;
-          filename += ext;
+          fileName += ext;
         }
         renderFile = this.engines.get(this.defaultEngine)!;
       }
-      renderFile(filename, data, (err, ret) => {
+      renderFile(fileName, data, (err, ret) => {
         if (err) return reject(err);
         resolve(ret);
       });

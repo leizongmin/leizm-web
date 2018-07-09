@@ -109,7 +109,7 @@ export type TemplateRenderFileCallback = (err: Error | null, data?: string) => v
 
 /** 模板引擎渲染文件函数 */
 export type TemplateRenderFileFunction = (
-  filename: string,
+  fileName: string,
   data: TemplateRenderData,
   callback: TemplateRenderFileCallback,
 ) => void;
