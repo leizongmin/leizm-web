@@ -9,6 +9,7 @@ import { Context } from "./context";
 import { sign as signCookie } from "cookie-signature";
 import * as cookie from "cookie";
 import * as send from "send";
+import * as mime from "mime";
 import { CookieOptions, TemplateRenderData, SYMBOL_CONNECT } from "./define";
 
 export class Response {
@@ -111,6 +112,19 @@ export class Response {
    */
   public writeHead(statusCode: number, headers: Record<string, string | string[] | number>): this {
     this.res.writeHead(statusCode, headers);
+    return this;
+  }
+
+  /**
+   * 根据文件名或文件后缀设置 Content-Type
+   *
+   * @param fileName
+   */
+  public type(fileName: string): this {
+    const type = mime.getType(fileName);
+    if (type) {
+      this.setHeader("Content-Type", type);
+    }
     return this;
   }
 

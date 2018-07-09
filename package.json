@@ -48,6 +48,7 @@
     "@types/cookie-signature": "^1.0.1",
     "@types/crc": "^3.4.0",
     "@types/finalhandler": "0.0.32",
+    "@types/mime": "^2.0.0",
     "@types/node": "^10.5.0",
     "@types/send": "^0.14.4",
     "body-parser": "^1.18.3",
@@ -57,6 +58,7 @@
     "cookie-signature": "^1.1.0",
     "crc": "^3.5.0",
     "finalhandler": "^1.1.1",
+    "mime": "^2.3.1",
     "path-to-regexp": "^2.2.1",
     "send": "^0.16.2",
     "serve-static": "^1.13.2"

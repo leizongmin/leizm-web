@@ -185,6 +185,25 @@ describe("Response", function() {
       .expect(200, "hello, world");
   });
 
+  it("type()", async function() {
+    const app = new Connect();
+    app.use("/jpg", function(ctx) {
+      ctx.response.type("jpg").end();
+    });
+    app.use("/png", function(ctx) {
+      ctx.response.type("png").end();
+    });
+
+    await request(app.server)
+      .get("/jpg")
+      .expect(200)
+      .expect("content-type", "image/jpeg");
+    await request(app.server)
+      .get("/png")
+      .expect(200)
+      .expect("content-type", "image/png");
+  });
+
   it("file()", async function() {
     const file1 = path.resolve(ROOT_DIR, "package.json");
     const file1data = (await readFile(file1)).toString();
