@@ -128,11 +128,11 @@ describe("component.body", function() {
           expect(res.body.a).to.equal("123");
           expect(res.body.b).to.equal(__dirname);
           expect(res.body.c).includes({
-            filename: path.basename(__filename),
+            originalName: path.basename(__filename),
             size: c.length,
           });
           expect(res.body.c.buffer).to.deep.equal(JSON.parse(JSON.stringify(c)));
-          expect(res.body.d).include({ filename: "", size: d.length });
+          expect(res.body.d).include({ originalName: "", size: d.length });
           expect(res.body.d.buffer).to.deep.equal(JSON.parse(JSON.stringify(d)));
         });
     });
@@ -157,12 +157,12 @@ describe("component.body", function() {
           expect(res.body.a).to.equal("123");
           expect(res.body.b).to.equal(__dirname);
           expect(res.body.c).includes({
-            filename: path.basename(__filename),
+            originalName: path.basename(__filename),
             size: c.length,
           });
           expect(res.body.c.path).to.be.exist;
           expect(await readFile(res.body.c.path)).to.deep.equal(c);
-          expect(res.body.d).include({ filename: "", size: d.length });
+          expect(res.body.d).include({ originalName: "", size: d.length });
           expect(res.body.d.buffer).to.deep.equal(JSON.parse(JSON.stringify(d)));
         });
     });
@@ -194,12 +194,12 @@ describe("component.body", function() {
       expect(res.body.a).to.equal("123");
       expect(res.body.b).to.equal(__dirname);
       expect(res.body.c).includes({
-        filename: path.basename(__filename),
+        originalName: path.basename(__filename),
         size: c.length,
       });
       expect(res.body.c.path).to.be.exist;
       expect(await readFile(res.body.c.path)).to.deep.equal(c);
-      expect(res.body.d).include({ filename: "", size: d.length });
+      expect(res.body.d).include({ originalName: "", size: d.length });
       expect(res.body.d.path).to.be.exist;
       expect(await readFile(res.body.d.path)).to.deep.equal(d);
     });

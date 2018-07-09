@@ -52,12 +52,12 @@ export const DEFAULT_MULTIPART_PARSER_OPTIONS: Required<MultipartParserOptions> 
 };
 
 export interface FileField {
-  /** 文件名 */
-  filename: string;
+  /** 原始文件名 */
+  originalName: string;
   /** 编码 */
   encoding: string;
   /** MIME 类型 */
-  mimetype: string;
+  mimeType: string;
   /** 文件大小 */
   size: number;
   /** 临时文件路径 */
@@ -108,7 +108,7 @@ export function parseMultipart(ctx: Context, options: MultipartParserOptions = {
     const files: Record<string, FileField> = {};
     const asyncTasks: Promise<void>[] = [];
 
-    busboy.on("file", (fieldname, file, filename, encoding, mimetype) => {
+    busboy.on("file", (fieldName, file, originalName, encoding, mimeType) => {
       asyncTasks.push(
         new Promise((resolve, reject) => {
           let buf: Buffer[] = [];
@@ -131,12 +131,17 @@ export function parseMultipart(ctx: Context, options: MultipartParserOptions = {
             }
           });
           file.on("end", () => {
-            files[fieldname] = { filename: filename || "", encoding: encoding || "", mimetype: mimetype || "", size };
+            files[fieldName] = {
+              originalName: originalName || "",
+              encoding: encoding || "",
+              mimeType: mimeType || "",
+              size,
+            };
             if (fileStream) {
               fileStream!.end(() => resolve());
-              files[fieldname].path = filePath;
+              files[fieldName].path = filePath;
             } else {
-              files[fieldname].buffer = Buffer.concat(buf);
+              files[fieldName].buffer = Buffer.concat(buf);
               resolve();
             }
           });
