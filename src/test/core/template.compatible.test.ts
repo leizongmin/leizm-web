@@ -37,7 +37,8 @@ describe("模板引擎兼容性", function() {
     app.templateEngine
       .register(".ejs", ejs.renderFile)
       .setDefault(".ejs")
-      .setRoot(path.resolve(ROOT_DIR, "test_data/template"));
+      .setRoot(path.resolve(ROOT_DIR, "test_data/template"))
+      .setLocals("type", "ejs");
     app.use("/", router);
     router.use("/", function(ctx) {
       ctx.response.render("test1", { a: 123, b: 456 });
@@ -45,7 +46,7 @@ describe("模板引擎兼容性", function() {
     request(app.server)
       .get("/")
       .expect(200)
-      .expect("<p>a = 123</p>\n<p>b = 456</p>", done);
+      .expect("ejs<p>a = 123</p>\n<p>b = 456</p>", done);
   });
 
   it("使用 pug 渲染", function(done) {
@@ -91,7 +92,8 @@ describe("模板引擎兼容性", function() {
       .register(".pug", pug.renderFile)
       .register(".nunjucks", nunjucks.render)
       .setDefault(".simple")
-      .setRoot(path.resolve(ROOT_DIR, "test_data/template"));
+      .setRoot(path.resolve(ROOT_DIR, "test_data/template"))
+      .setLocals("type", "mix");
     app.use("/", router);
     router.use("/simple", function(ctx) {
       ctx.response.render("test1", { a: 123, b: 456 });
@@ -112,7 +114,7 @@ describe("模板引擎兼容性", function() {
     await request(app.server)
       .get("/ejs")
       .expect(200)
-      .expect("<p>a = 123</p>\n<p>b = 456</p>");
+      .expect("mix<p>a = 123</p>\n<p>b = 456</p>");
     await request(app.server)
       .get("/pug")
       .expect(200)

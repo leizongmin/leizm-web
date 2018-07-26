@@ -12,6 +12,9 @@ export class TemplateEngineManager {
   protected defaultEngine: string = "";
   protected root: string = "./views";
 
+  /** 模板全局变量 */
+  public locals: Record<string, any> = {};
+
   /**
    * 设置模板根目录
    * @param dir
@@ -63,10 +66,20 @@ export class TemplateEngineManager {
         }
         renderFile = this.engines.get(this.defaultEngine)!;
       }
-      renderFile(fileName, data, (err, ret) => {
+      renderFile(fileName, { ...this.locals, ...data }, (err, ret) => {
         if (err) return reject(err);
         resolve(ret);
       });
     });
+  }
+
+  /**
+   * 设置模板全局变量
+   * @param name 名称
+   * @param value 值
+   */
+  public setLocals(name: string, value: any): this {
+    this.locals[name] = value;
+    return this;
   }
 }
