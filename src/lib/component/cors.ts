@@ -30,9 +30,9 @@ export const DEFAULT_CORS_OPTIONS: Required<CorsOptions> = {
   any: false,
   headers: {},
   maxAge: 0,
-  credentials: false,
-  allowHeaders: [],
-  allowMethods: [],
+  credentials: true,
+  allowHeaders: ["PUT", "POST", "GET", "HEAD", "DELETE", "OPTIONS", "TRACE"],
+  allowMethods: ["Origin", "X-Requested-With", "Content-Type", "Content-Length", "Accept", "Authorization", "Cookie"],
 };
 
 /**
