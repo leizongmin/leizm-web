@@ -7,7 +7,7 @@ import { Context } from "../context";
 import { MiddlewareHandle, CookieOptions, SYMBOL_SESSION } from "../define";
 import { SessiionMemoryStore } from "./session.memory";
 import { generateSessionId } from "../module/simple.random";
-import { crc32 } from "crc";
+import crc32 from "../module/crc32";
 
 /**
  * Session中间件
