@@ -17,6 +17,7 @@ function sleep(ms: number) {
 }
 
 describe("component.session", function() {
+  this.timeout(10000);
   const appInstances: Connect[] = [];
   after(async function() {
     for (const app of appInstances) {
@@ -85,7 +86,7 @@ describe("component.session", function() {
         "/",
         component.session({
           store: new component.SessiionRedisStore({ client, prefix }),
-          maxAge: 1000,
+          maxAge: 2000,
         }),
       );
       app.use("/", function(ctx) {
@@ -99,7 +100,7 @@ describe("component.session", function() {
       await agent.get("/").expect(200, { counter: 3 });
       await agent.get("/").expect(200, { counter: 4 });
       await agent.get("/").expect(200, { counter: 5 });
-      await sleep(1500);
+      await sleep(3000);
       await agent.get("/").expect(200, { counter: 1 });
       await agent.get("/").expect(200, { counter: 2 });
     });
@@ -114,7 +115,7 @@ describe("component.session", function() {
         "/",
         component.session({
           store: new component.SessiionRedisStore({ client, prefix }),
-          maxAge: 1000,
+          maxAge: 2000,
         }),
       );
       app.use("/", function(ctx) {
@@ -128,7 +129,7 @@ describe("component.session", function() {
       await agent.get("/").expect(200, { counter: 3 });
       await agent.get("/").expect(200, { counter: 4 });
       await agent.get("/").expect(200, { counter: 5 });
-      await sleep(1500);
+      await sleep(3000);
       await agent.get("/").expect(200, { counter: 1 });
       await agent.get("/").expect(200, { counter: 2 });
     });
@@ -142,7 +143,7 @@ describe("component.session", function() {
         "/",
         component.session({
           store: new component.SessiionRedisStore({ prefix }),
-          maxAge: 1000,
+          maxAge: 2000,
         }),
       );
       app.use("/", function(ctx) {
@@ -156,7 +157,7 @@ describe("component.session", function() {
       await agent.get("/").expect(200, { counter: 3 });
       await agent.get("/").expect(200, { counter: 4 });
       await agent.get("/").expect(200, { counter: 5 });
-      await sleep(1500);
+      await sleep(3000);
       await agent.get("/").expect(200, { counter: 1 });
       await agent.get("/").expect(200, { counter: 2 });
     });
@@ -167,7 +168,7 @@ describe("component.session", function() {
       const app = new Connect();
       appInstances.push(app);
       app.use("/", component.cookieParser());
-      app.use("/", component.session({ maxAge: 1000 }));
+      app.use("/", component.session({ maxAge: 2000 }));
       app.use("/a", async function(ctx) {
         ctx.session.data.yes = false;
         await ctx.session.save();
@@ -190,7 +191,7 @@ describe("component.session", function() {
       const app = new Connect();
       appInstances.push(app);
       app.use("/", component.cookieParser());
-      app.use("/", component.session({ maxAge: 1000 }));
+      app.use("/", component.session({ maxAge: 2000 }));
       app.use("/a", async function(ctx) {
         ctx.session.data.yes = false;
         await ctx.session.save();
@@ -218,7 +219,7 @@ describe("component.session", function() {
       const app = new Connect();
       appInstances.push(app);
       app.use("/", component.cookieParser());
-      app.use("/", component.session({ maxAge: 1000 }));
+      app.use("/", component.session({ maxAge: 2000 }));
       app.use("/a", async function(ctx) {
         ctx.session.data.yes = false;
         await ctx.session.save();
@@ -270,7 +271,7 @@ describe("component.session", function() {
       const app = new Connect();
       appInstances.push(app);
       app.use("/", component.cookieParser());
-      app.use("/", component.session({ maxAge: 1000, name: "hello" }));
+      app.use("/", component.session({ maxAge: 2000, name: "hello" }));
       app.use("/a", async function(ctx) {
         ctx.session.data.yes = false;
         ctx.response.json(ctx.session.data);
@@ -288,7 +289,7 @@ describe("component.session", function() {
       const app = new Connect();
       appInstances.push(app);
       app.use("/", component.cookieParser("secret key"));
-      app.use("/", component.session({ maxAge: 1000, name: "hello", cookie: { signed: true } }));
+      app.use("/", component.session({ maxAge: 2000, name: "hello", cookie: { signed: true } }));
       app.use("/a", async function(ctx) {
         ctx.session.data.yes = false;
         ctx.response.json(ctx.session.data);
