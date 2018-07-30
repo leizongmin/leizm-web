@@ -101,7 +101,7 @@ export class TemplateEngineManager {
    */
   public initEjs(ext: string = ".html"): this {
     try {
-      const ejs = require("ejs");
+      const ejs = requireProjectModule("ejs");
       this.register(ext, ejs.renderFile).setDefault(ext, true);
       return this;
     } catch (err) {
@@ -118,7 +118,7 @@ export class TemplateEngineManager {
    */
   public initPug(ext: string = ".pug"): this {
     try {
-      const pug = require("pug");
+      const pug = requireProjectModule("pug");
       this.register(ext, pug.renderFile).setDefault(ext, true);
       return this;
     } catch (err) {
@@ -135,7 +135,7 @@ export class TemplateEngineManager {
    */
   public initNunjucks(ext: string = ".html"): this {
     try {
-      const nunjucks = require("nunjucks");
+      const nunjucks = requireProjectModule("nunjucks");
       this.register(ext, nunjucks.render).setDefault(ext, true);
       return this;
     } catch (err) {
@@ -147,4 +147,22 @@ export class TemplateEngineManager {
       throw err;
     }
   }
+}
+
+/**
+ * 加载当前项目运行目录下的指定模块
+ * @param id 模块名称
+ */
+function requireProjectModule(id: string): any {
+  const paths = Array.from(
+    new Set(
+      (new Error().stack || "")
+        .split(/\n/)
+        .map(v => v.match(/\((.*)\:\d+\:\d+\)/))
+        .filter(v => v)
+        .map(v => path.dirname(v![1])),
+    ),
+  );
+  const entry = require.resolve(id, { paths: [process.cwd(), ...paths] });
+  return require(entry);
 }
