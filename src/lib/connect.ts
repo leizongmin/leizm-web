@@ -6,6 +6,7 @@
 import { Server, IncomingMessage, ServerResponse } from "http";
 import * as finalhandler from "finalhandler";
 import { Core } from "./core";
+import { Router } from "./router";
 import { ListenOptions, ErrorReason, SYMBOL_CONNECT, SYMBOL_SERVER } from "./define";
 import { Context } from "./context";
 import { Request } from "./request";
@@ -13,11 +14,23 @@ import { Response } from "./response";
 import { TemplateEngineManager } from "./template";
 
 export class Connect<C extends Context = Context<Request, Response>> extends Core<C> {
+  /** 默认Router实例，第一次使用时创建并use() */
+  protected defaultRouter?: Router<C>;
+
   /** http.Server实例 */
   public [SYMBOL_SERVER]: Server;
 
   /** 模板引擎管理器 */
   public templateEngine: TemplateEngineManager = new TemplateEngineManager();
+
+  /** 获取默认Router */
+  public get router(): Router<C> {
+    if (!this.defaultRouter) {
+      this.defaultRouter = new Router();
+      this.use("/", this.defaultRouter);
+    }
+    return this.defaultRouter;
+  }
 
   /** 获取当前http.Server实例 */
   public get server() {

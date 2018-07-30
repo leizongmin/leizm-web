@@ -457,8 +457,26 @@ describe("Connect", function() {
     });
     await request(app.server)
       .get("/abc/123/xx?hello=world")
-      // .expect(200)
+      .expect(200)
       .expect("it works");
     expect(status).to.deep.equal({ a: true, b: true, c: true });
+  });
+
+  it("默认 Router", async function() {
+    const app = new Connect();
+    appInstances.push(app);
+    let isOk = false;
+    app.use("/", function(ctx) {
+      isOk = true;
+      ctx.next();
+    });
+    app.router.get("/hello", function(ctx) {
+      expect(isOk).to.equal(true);
+      ctx.response.json({ ok: true });
+    });
+    await request(app.server)
+      .get("/hello")
+      .expect(200)
+      .expect({ ok: true });
   });
 });
