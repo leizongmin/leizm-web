@@ -13,6 +13,8 @@ import {
   ContextConstructor,
   ParsedRoutePathResult,
   RegExpOptions,
+  SYMBOL_PUSH_NEXT_HANDLE,
+  SYMBOL_POP_NEXT_HANDLE,
 } from "./define";
 import {
   testRoutePath,
@@ -197,7 +199,7 @@ export class Core<C extends Context = Context<Request, Response>> {
         ctx.emit("error", err);
       }
       if (!handle) {
-        ctx.popNextHandle();
+        ctx[SYMBOL_POP_NEXT_HANDLE]();
         return done(err || null);
       }
       if (!testRoutePath(ctx.request.path, handle.route)) {
@@ -207,7 +209,7 @@ export class Core<C extends Context = Context<Request, Response>> {
       execMiddlewareHandle(handle.handle, ctx, err, next);
     };
 
-    ctx.pushNextHandle(next);
+    ctx[SYMBOL_PUSH_NEXT_HANDLE](next);
     ctx.next();
   }
 }

@@ -15,6 +15,8 @@ import {
   ResponseConstructor,
   SYMBOL_CONNECT,
   SYMBOL_SESSION,
+  SYMBOL_PUSH_NEXT_HANDLE,
+  SYMBOL_POP_NEXT_HANDLE,
 } from "./define";
 import { SessionInstance } from "./component/session";
 import onWriteHead from "./module/on.writehead";
@@ -115,14 +117,14 @@ export class Context<Q extends Request = Request, S extends Response = Response>
    *
    * @param next 回调函数
    */
-  public pushNextHandle(next: NextFunction) {
+  public [SYMBOL_PUSH_NEXT_HANDLE](next: NextFunction) {
     this.nextHandleStack.push(next);
   }
 
   /**
    * next函数出栈
    */
-  public popNextHandle(): NextFunction | void {
+  public [SYMBOL_POP_NEXT_HANDLE](): NextFunction | void {
     return this.nextHandleStack.pop();
   }
 

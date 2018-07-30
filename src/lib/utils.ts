@@ -13,6 +13,7 @@ import {
   RegExpKey,
   ParsedRoutePathResult,
   ContextConstructor,
+  SYMBOL_PUSH_NEXT_HANDLE,
 } from "./define";
 import { Context } from "./context";
 import { IncomingMessage, ServerResponse } from "http";
@@ -128,7 +129,7 @@ export function toClassicalHandle(
   return function(req: IncomingMessage, res: ServerResponse, next: (err: ErrorReason) => void) {
     const ctx = new contextConstructor().init(req, res);
     if (typeof next !== "function") next = finalhandler(req, res);
-    ctx.pushNextHandle(next);
+    ctx[SYMBOL_PUSH_NEXT_HANDLE](next);
     const ret = fn(ctx) as any;
     if (isPromise(ret)) {
       (ret as Promise<any>).catch(next);
