@@ -68,11 +68,11 @@ import * as web from "@leizm/web";
 
 // 创建app实例
 const app = new web.Connect();
-// 快速初始化ejs模板，需要手动安装ejs模块
+// 快速初始化 ejs 模板，需要手动安装 ejs 模块
 app.templateEngine.initEjs();
 
 app.router.get("/a", async function(ctx) {
-  // 渲染模板
+  // 渲染模板，模板文件为 views/index.html
   ctx.response.render("index", { msg: "hello, world" });
 });
 
