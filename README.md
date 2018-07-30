@@ -61,6 +61,30 @@
 npm i @leizm/web -S
 ```
 
+## Hello, world
+
+```typescript
+import * as web from "@leizm/web";
+
+// 创建app实例
+const app = new web.Connect();
+// 快速初始化ejs模板，需要手动安装ejs模块
+app.templateEngine.initEjs();
+
+app.router.get("/a", async function(ctx) {
+  // 渲染模板
+  ctx.response.render("index", { msg: "hello, world" });
+});
+
+app.router.get("/b", async function(ctx) {
+  // 返回JSON
+  ctx.response.json({ msg: "hello, world" });
+});
+
+// 监听端口
+app.listen({ port: 3000 });
+```
+
 ## 基本使用方法
 
 ```typescript
