@@ -11,6 +11,7 @@ import * as cookie from "cookie";
 import * as send from "send";
 import * as mime from "mime";
 import { CookieOptions, TemplateRenderData, SYMBOL_CONNECT } from "./define";
+import { nofigyDeprecated } from "./utils";
 
 export class Response {
   constructor(public readonly res: ServerResponse, public readonly ctx: Context) {}
@@ -22,11 +23,21 @@ export class Response {
   public inited() {}
 
   /**
-   * 设置响应状态码
+   * 设置响应状态码（弃用，请使用 status 代替）
    *
    * @param statusCode 响应状态码
    */
   public setStatus(statusCode: number): this {
+    nofigyDeprecated("response.setStatus(code)", "response.status(code)", "3.0.0");
+    return this.status(statusCode);
+  }
+
+  /**
+   * 设置响应状态码
+   *
+   * @param statusCode 响应状态码
+   */
+  public status(statusCode: number): this {
     this.res.statusCode = statusCode;
     return this;
   }
@@ -183,13 +194,33 @@ export class Response {
   }
 
   /**
-   * HTTP 302 临时重定向
+   * HTTP 302 临时重定向（弃用，请使用 redirectTemporary 代替）
    * @param url 网址
    * @param content 内容
    */
   public temporaryRedirect(url: string, content: string = ""): void {
+    nofigyDeprecated("response.temporaryRedirect()", "response.redirectTemporary()", "3.0.0");
+    return this.redirectTemporary(url, content);
+  }
+
+  /**
+   * HTTP 302 临时重定向
+   * @param url 网址
+   * @param content 内容
+   */
+  public redirectTemporary(url: string, content: string = ""): void {
     this.writeHead(302, { Location: url });
     this.end(content);
+  }
+
+  /**
+   * HTTP 301 永久重定向（弃用，请使用 redirectPermanent 代替）
+   * @param url 网址
+   * @param content 内容
+   */
+  public permanentRedirect(url: string, content: string = ""): void {
+    nofigyDeprecated("response.permanentRedirect()", "response.redirectPermanent()", "3.0.0");
+    return this.redirectPermanent(url, content);
   }
 
   /**
@@ -197,7 +228,7 @@ export class Response {
    * @param url 网址
    * @param content 内容
    */
-  public permanentRedirect(url: string, content: string = ""): void {
+  public redirectPermanent(url: string, content: string = ""): void {
     this.writeHead(301, { Location: url });
     this.end(content);
   }

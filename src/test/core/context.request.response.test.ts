@@ -120,7 +120,7 @@ describe("Response", function() {
     const app = new Connect();
     app.use("/", function(ctx) {
       {
-        ctx.response.setStatus(100);
+        ctx.response.status(100);
         expect(ctx.response.res.statusCode).to.equal(100);
       }
       ctx.response.setHeader("aaa", "hello aaa").setHeaders({
@@ -277,11 +277,11 @@ describe("Response", function() {
     });
   });
 
-  describe("xxxRedirect()", function() {
+  describe("redirectXXX()", function() {
     it("临时重定向", function(done) {
       const app = new Connect();
       app.use("/", function(ctx) {
-        ctx.response.temporaryRedirect("/a", "ok");
+        ctx.response.redirectTemporary("/a", "ok");
       });
       request(app.server)
         .get("/")
@@ -293,7 +293,7 @@ describe("Response", function() {
     it("永久重定向", function(done) {
       const app = new Connect();
       app.use("/", function(ctx) {
-        ctx.response.permanentRedirect("/a", "ok");
+        ctx.response.redirectPermanent("/a", "ok");
       });
       request(app.server)
         .get("/")
