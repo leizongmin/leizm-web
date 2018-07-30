@@ -14,7 +14,7 @@ import * as nunjucks from "nunjucks";
 const ROOT_DIR = path.resolve(__dirname, "../../..");
 
 describe("模板引擎兼容性", function() {
-  it("在 Router 中使用", function(done) {
+  it("使用 simple 渲染", function(done) {
     const app = new Connect();
     const router = new Router();
     app.templateEngine
@@ -31,12 +31,43 @@ describe("模板引擎兼容性", function() {
       .expect("<p>a = 123</p>\n<p>b = 456</p>", done);
   });
 
+  it("使用 simple 渲染 - initSimple()", function(done) {
+    const app = new Connect();
+    const router = new Router();
+    app.templateEngine.initSimple(".simple").setRoot(path.resolve(ROOT_DIR, "test_data/template"));
+    app.use("/", router);
+    router.use("/", function(ctx) {
+      ctx.response.render("test1", { a: 123, b: 456 });
+    });
+    request(app.server)
+      .get("/")
+      .expect(200)
+      .expect("<p>a = 123</p>\n<p>b = 456</p>", done);
+  });
+
   it("使用 ejs 渲染", function(done) {
     const app = new Connect();
     const router = new Router();
     app.templateEngine
       .register(".ejs", ejs.renderFile)
       .setDefault(".ejs")
+      .setRoot(path.resolve(ROOT_DIR, "test_data/template"))
+      .setLocals("type", "ejs");
+    app.use("/", router);
+    router.use("/", function(ctx) {
+      ctx.response.render("test1", { a: 123, b: 456 });
+    });
+    request(app.server)
+      .get("/")
+      .expect(200)
+      .expect("ejs<p>a = 123</p>\n<p>b = 456</p>", done);
+  });
+
+  it("使用 ejs 渲染 - initEjs()", function(done) {
+    const app = new Connect();
+    const router = new Router();
+    app.templateEngine
+      .initEjs(".ejs")
       .setRoot(path.resolve(ROOT_DIR, "test_data/template"))
       .setLocals("type", "ejs");
     app.use("/", router);
@@ -66,6 +97,20 @@ describe("模板引擎兼容性", function() {
       .expect("<p>a = 123</p><p>b = 456</p>", done);
   });
 
+  it("使用 pug 渲染 - initPug()", function(done) {
+    const app = new Connect();
+    const router = new Router();
+    app.templateEngine.initPug(".pug").setRoot(path.resolve(ROOT_DIR, "test_data/template"));
+    app.use("/", router);
+    router.use("/", function(ctx) {
+      ctx.response.render("test1", { a: 123, b: 456 });
+    });
+    request(app.server)
+      .get("/")
+      .expect(200)
+      .expect("<p>a = 123</p><p>b = 456</p>", done);
+  });
+
   it("使用 nunjucks 渲染", function(done) {
     const app = new Connect();
     const router = new Router();
@@ -83,15 +128,28 @@ describe("模板引擎兼容性", function() {
       .expect("<p>a = 123</p>\n<p>b = 456</p>", done);
   });
 
+  it("使用 nunjucks 渲染 - initNunjucks", function(done) {
+    const app = new Connect();
+    const router = new Router();
+    app.templateEngine.initNunjucks(".nunjucks").setRoot(path.resolve(ROOT_DIR, "test_data/template"));
+    app.use("/", router);
+    router.use("/", function(ctx) {
+      ctx.response.render("test1", { a: 123, b: 456 });
+    });
+    request(app.server)
+      .get("/")
+      .expect(200)
+      .expect("<p>a = 123</p>\n<p>b = 456</p>", done);
+  });
+
   it("多个模板引擎混合", async function() {
     const app = new Connect();
     const router = new Router();
     app.templateEngine
-      .register(".simple", simpleTemplate.renderFile)
-      .register(".ejs", ejs.renderFile)
-      .register(".pug", pug.renderFile)
-      .register(".nunjucks", nunjucks.render)
-      .setDefault(".simple")
+      .initSimple(".simple")
+      .initEjs(".ejs")
+      .initPug(".pug")
+      .initNunjucks(".nunjucks")
       .setRoot(path.resolve(ROOT_DIR, "test_data/template"))
       .setLocals("type", "mix");
     app.use("/", router);

@@ -6,6 +6,7 @@
 import * as path from "path";
 import * as assert from "assert";
 import { TemplateRenderData, TemplateRenderFileFunction } from "./define";
+import * as simpleTemplate from "./module/simple.template";
 
 export class TemplateEngineManager {
   protected engines: Map<string, TemplateRenderFileFunction> = new Map();
@@ -38,10 +39,12 @@ export class TemplateEngineManager {
   /**
    * 设置默认渲染引擎
    * @param ext 模板扩展名
+   * @param ignoreIfExists 如果已经设置了默认模板引擎则忽略
    */
-  public setDefault(ext: string): this {
+  public setDefault(ext: string, ignoreIfExists: boolean = false): this {
     if (ext[0] !== ".") ext = "." + ext;
     assert(this.engines.has(ext), `模板引擎 ${ext} 未注册`);
+    if (this.defaultEngine && ignoreIfExists) return this;
     this.defaultEngine = ext;
     return this;
   }
@@ -81,5 +84,67 @@ export class TemplateEngineManager {
   public setLocals(name: string, value: any): this {
     this.locals[name] = value;
     return this;
+  }
+
+  /**
+   * 初始化自动简单模板引擎
+   * @param ext 模板扩展名
+   */
+  public initSimple(ext: string = ".html"): this {
+    this.register(ext, simpleTemplate.renderFile).setDefault(ext, true);
+    return this;
+  }
+
+  /**
+   * 初始化EJS模板引擎
+   * @param ext 模板扩展名
+   */
+  public initEjs(ext: string = ".html"): this {
+    try {
+      const ejs = require("ejs");
+      this.register(ext, ejs.renderFile).setDefault(ext, true);
+      return this;
+    } catch (err) {
+      if (err.code === "MODULE_NOT_FOUND") {
+        throw new Error(`initEjs: 找不到 ejs 模块！请先执行 npm install ejs --save 安装。${err.message}`);
+      }
+      throw err;
+    }
+  }
+
+  /**
+   * 初始化Pug模板引擎
+   * @param ext 模板扩展名
+   */
+  public initPug(ext: string = ".pug"): this {
+    try {
+      const pug = require("pug");
+      this.register(ext, pug.renderFile).setDefault(ext, true);
+      return this;
+    } catch (err) {
+      if (err.code === "MODULE_NOT_FOUND") {
+        throw new Error(`initPug: 找不到 pug 模块！请先执行 npm install pug --save 安装。${err.message}`);
+      }
+      throw err;
+    }
+  }
+
+  /**
+   * 初始化Nunjucks模板引擎
+   * @param ext 模板扩展名
+   */
+  public initNunjucks(ext: string = ".html"): this {
+    try {
+      const nunjucks = require("nunjucks");
+      this.register(ext, nunjucks.render).setDefault(ext, true);
+      return this;
+    } catch (err) {
+      if (err.code === "MODULE_NOT_FOUND") {
+        throw new Error(
+          `initNunjucks: 找不到 nunjucks 模块！请先执行 npm install nunjucks --save 安装。${err.message}`,
+        );
+      }
+      throw err;
+    }
   }
 }
