@@ -23,6 +23,35 @@ export class Response {
   public inited() {}
 
   /**
+   * 响应状态码
+   */
+  get statusCode(): number {
+    this.res.statusMessage;
+    return this.res.statusCode;
+  }
+
+  /**
+   * 响应状态消息
+   */
+  get statusMessage(): string {
+    return this.res.statusMessage;
+  }
+
+  /**
+   * 响应头是否已发送
+   */
+  get headersSent(): boolean {
+    return this.res.headersSent;
+  }
+
+  /**
+   * 是否已响应完成
+   */
+  get finished(): boolean {
+    return this.res.finished;
+  }
+
+  /**
    * 设置响应状态码（弃用，请使用 status 代替）
    *
    * @param statusCode 响应状态码
