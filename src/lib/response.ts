@@ -26,7 +26,6 @@ export class Response {
    * 响应状态码
    */
   get statusCode(): number {
-    this.res.statusMessage;
     return this.res.statusCode;
   }
 
