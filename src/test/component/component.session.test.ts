@@ -3,7 +3,7 @@
  * @author Zongmin Lei <leizongmin@gmail.com>
  */
 
-import { Connect, component } from "../../lib";
+import { Application, component } from "../../lib";
 import { SimpleRedisClient } from "../../lib/module/simple.redis";
 import * as request from "supertest";
 import { expect } from "chai";
@@ -18,7 +18,7 @@ function sleep(ms: number) {
 
 describe("component.session", function() {
   this.timeout(10000);
-  const appInstances: Connect[] = [];
+  const appInstances: Application[] = [];
   after(async function() {
     for (const app of appInstances) {
       await app.close();
@@ -27,7 +27,7 @@ describe("component.session", function() {
 
   describe("多存储引擎", function() {
     it("SessionMemoryStore", async function() {
-      const app = new Connect();
+      const app = new Application();
       appInstances.push(app);
       app.use("/", component.cookieParser());
       app.use("/", component.session({ store: new component.SessiionMemoryStore(), maxAge: 1000 }));
@@ -48,7 +48,7 @@ describe("component.session", function() {
     });
 
     it("SessionRedisStore 基于 ioredis 模块", async function() {
-      const app = new Connect();
+      const app = new Application();
       appInstances.push(app);
       app.use("/", component.cookieParser());
       const client = new Redis();
@@ -77,7 +77,7 @@ describe("component.session", function() {
     });
 
     it("SessionRedisStore 基于 redis 模块", async function() {
-      const app = new Connect();
+      const app = new Application();
       appInstances.push(app);
       app.use("/", component.cookieParser());
       const client = createClient();
@@ -106,7 +106,7 @@ describe("component.session", function() {
     });
 
     it("SessionRedisStore 基于内置 SimpleRedisClient 模块", async function() {
-      const app = new Connect();
+      const app = new Application();
       appInstances.push(app);
       app.use("/", component.cookieParser());
       const client = new SimpleRedisClient();
@@ -135,7 +135,7 @@ describe("component.session", function() {
     });
 
     it("SessionRedisStore 不指定 Redis 客户端，使用内置 SimpleRedisClient 模块", async function() {
-      const app = new Connect();
+      const app = new Application();
       appInstances.push(app);
       app.use("/", component.cookieParser());
       const prefix = `test:sess:${Date.now()}:${Math.random()}:`;
@@ -165,7 +165,7 @@ describe("component.session", function() {
 
   describe("session操作相关方法", function() {
     it("session.reload()", async function() {
-      const app = new Connect();
+      const app = new Application();
       appInstances.push(app);
       app.use("/", component.cookieParser());
       app.use("/", component.session({ maxAge: 2000 }));
@@ -188,7 +188,7 @@ describe("component.session", function() {
     });
 
     it("session.regenerate()", async function() {
-      const app = new Connect();
+      const app = new Application();
       appInstances.push(app);
       app.use("/", component.cookieParser());
       app.use("/", component.session({ maxAge: 2000 }));
@@ -216,7 +216,7 @@ describe("component.session", function() {
     });
 
     it("session.destroy()", async function() {
-      const app = new Connect();
+      const app = new Application();
       appInstances.push(app);
       app.use("/", component.cookieParser());
       app.use("/", component.session({ maxAge: 2000 }));
@@ -242,7 +242,7 @@ describe("component.session", function() {
     });
 
     it("session.touch()", async function() {
-      const app = new Connect();
+      const app = new Application();
       appInstances.push(app);
       app.use("/", component.cookieParser());
       app.use("/", component.session({ maxAge: 2000 }));
@@ -268,7 +268,7 @@ describe("component.session", function() {
 
   describe("其他选项", function() {
     it("自定义Cookie名称", async function() {
-      const app = new Connect();
+      const app = new Application();
       appInstances.push(app);
       app.use("/", component.cookieParser());
       app.use("/", component.session({ maxAge: 2000, name: "hello" }));
@@ -286,7 +286,7 @@ describe("component.session", function() {
     });
 
     it("自定义Cookie选项：{ signed: true }", async function() {
-      const app = new Connect();
+      const app = new Application();
       appInstances.push(app);
       app.use("/", component.cookieParser("secret key"));
       app.use("/", component.session({ maxAge: 2000, name: "hello", cookie: { signed: true } }));

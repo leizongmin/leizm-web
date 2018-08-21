@@ -7,7 +7,7 @@ import { IncomingMessage, ServerResponse } from "http";
 import { EventEmitter } from "events";
 import { Request } from "./request";
 import { Response } from "./response";
-import { Connect } from "./connect";
+import { Application } from "./application";
 import {
   NextFunction,
   ErrorReason,
@@ -34,7 +34,7 @@ export class Context<Q extends Request = Request, S extends Response = Response>
   protected responseConstructor: ResponseConstructor = Response;
 
   /** 父 connect 实例 */
-  public [SYMBOL_CONNECT]: Connect | undefined;
+  public [SYMBOL_CONNECT]: Application | undefined;
 
   /** 原始 Session对象 */
   public [SYMBOL_SESSION]: SessionInstance;

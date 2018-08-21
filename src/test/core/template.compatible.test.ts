@@ -4,7 +4,7 @@
  */
 
 import * as path from "path";
-import { Connect, Router } from "../../lib";
+import { Application, Router } from "../../lib";
 import * as simpleTemplate from "../../lib/module/simple.template";
 import * as request from "supertest";
 import * as ejs from "ejs";
@@ -15,7 +15,7 @@ const ROOT_DIR = path.resolve(__dirname, "../../..");
 
 describe("模板引擎兼容性", function() {
   it("使用 simple 渲染", function(done) {
-    const app = new Connect();
+    const app = new Application();
     const router = new Router();
     app.templateEngine
       .register(".simple", simpleTemplate.renderFile)
@@ -32,7 +32,7 @@ describe("模板引擎兼容性", function() {
   });
 
   it("使用 simple 渲染 - initSimple()", function(done) {
-    const app = new Connect();
+    const app = new Application();
     const router = new Router();
     app.templateEngine.initSimple(".simple").setRoot(path.resolve(ROOT_DIR, "test_data/template"));
     app.use("/", router);
@@ -46,7 +46,7 @@ describe("模板引擎兼容性", function() {
   });
 
   it("使用 ejs 渲染", function(done) {
-    const app = new Connect();
+    const app = new Application();
     const router = new Router();
     app.templateEngine
       .register(".ejs", ejs.renderFile)
@@ -64,7 +64,7 @@ describe("模板引擎兼容性", function() {
   });
 
   it("使用 ejs 渲染 - initEjs()", function(done) {
-    const app = new Connect();
+    const app = new Application();
     const router = new Router();
     app.templateEngine
       .initEjs(".ejs")
@@ -81,7 +81,7 @@ describe("模板引擎兼容性", function() {
   });
 
   it("使用 pug 渲染", function(done) {
-    const app = new Connect();
+    const app = new Application();
     const router = new Router();
     app.templateEngine
       .register(".pug", pug.renderFile)
@@ -98,7 +98,7 @@ describe("模板引擎兼容性", function() {
   });
 
   it("使用 pug 渲染 - initPug()", function(done) {
-    const app = new Connect();
+    const app = new Application();
     const router = new Router();
     app.templateEngine.initPug(".pug").setRoot(path.resolve(ROOT_DIR, "test_data/template"));
     app.use("/", router);
@@ -112,7 +112,7 @@ describe("模板引擎兼容性", function() {
   });
 
   it("使用 nunjucks 渲染", function(done) {
-    const app = new Connect();
+    const app = new Application();
     const router = new Router();
     app.templateEngine
       .register(".nunjucks", nunjucks.render)
@@ -129,7 +129,7 @@ describe("模板引擎兼容性", function() {
   });
 
   it("使用 nunjucks 渲染 - initNunjucks", function(done) {
-    const app = new Connect();
+    const app = new Application();
     const router = new Router();
     app.templateEngine.initNunjucks(".nunjucks").setRoot(path.resolve(ROOT_DIR, "test_data/template"));
     app.use("/", router);
@@ -143,7 +143,7 @@ describe("模板引擎兼容性", function() {
   });
 
   it("多个模板引擎混合", async function() {
-    const app = new Connect();
+    const app = new Application();
     const router = new Router();
     app.templateEngine
       .initSimple(".simple")

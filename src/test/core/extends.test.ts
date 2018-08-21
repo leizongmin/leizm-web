@@ -6,7 +6,7 @@
 import { expect } from "chai";
 import * as request from "supertest";
 import * as bodyParser from "body-parser";
-import { Connect, Router, Context, Request, Response, fromClassicalHandle } from "../../lib";
+import { Application, Router, Context, Request, Response, fromClassicalHandle } from "../../lib";
 
 ////////////////////////////////////////////////////////////////////////
 // 扩展的 Request 对象
@@ -45,8 +45,8 @@ class MyContext extends Context<MyRequest, MyResponse> {
   }
 }
 
-// 扩展 Connect 对象
-class MyConnect extends Connect<MyContext> {
+// 扩展 Application 对象
+class MyApplication extends Application<MyContext> {
   protected contextConstructor = MyContext;
 }
 
@@ -57,8 +57,8 @@ class MyRouter extends Router<MyContext> {
 ////////////////////////////////////////////////////////////////////////
 
 describe("可扩展性", function() {
-  it("支持扩展 Connect", function(done) {
-    const app = new MyConnect();
+  it("支持扩展 Application", function(done) {
+    const app = new MyApplication();
     app.use("/", fromClassicalHandle(bodyParser.json() as any));
     app.use("/", function(ctx) {
       expect(ctx.getHello("aa")).to.equal("hello aa");
@@ -76,7 +76,7 @@ describe("可扩展性", function() {
   });
 
   it("支持扩展 Router", function(done) {
-    const app = new MyConnect();
+    const app = new MyApplication();
     const router = new MyRouter();
     app.use("/", fromClassicalHandle(bodyParser.json() as any));
     router.post("/", function(ctx) {

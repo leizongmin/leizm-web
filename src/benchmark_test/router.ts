@@ -3,9 +3,9 @@
  * @author Zongmin Lei <leizongmin@gmail.com>
  */
 
-import { Connect, Router } from "../lib";
+import { Application, Router } from "../lib";
 
-const app = new Connect();
+const app = new Application();
 const router = new Router();
 router.get("/params/:a", function(ctx) {
   ctx.response.end(`params: ${ctx.request.params.a}`);

@@ -6,7 +6,7 @@
 import * as fs from "fs";
 import * as path from "path";
 import { expect } from "chai";
-import { Connect, fromClassicalHandle } from "../../lib";
+import { Application, fromClassicalHandle } from "../../lib";
 import * as request from "supertest";
 import * as cookieParser from "cookie-parser";
 import { sign as signCookie } from "cookie-signature";
@@ -25,7 +25,7 @@ const ROOT_DIR = path.resolve(__dirname, "../../..");
 
 describe("Request", function() {
   it("正确解析 query, url, path, search, httpVersion 等基本信息", function(done) {
-    const app = new Connect();
+    const app = new Application();
     app.use("/", function(ctx) {
       expect(ctx.request.query).to.deep.equal({
         a: "123",
@@ -45,7 +45,7 @@ describe("Request", function() {
   });
 
   it("正确获取 params 信息", function(done) {
-    const app = new Connect();
+    const app = new Application();
     app.use("/:a/:b/ccc", function(ctx) {
       expect(ctx.request.hasParams()).to.equal(true);
       expect(ctx.request.params).to.deep.equal({
@@ -61,7 +61,7 @@ describe("Request", function() {
   });
 
   it("正确获取 headers, getHeader", function(done) {
-    const app = new Connect();
+    const app = new Application();
     app.use("/", function(ctx) {
       expect(ctx.request.headers)
         .property("user-agent")
@@ -76,7 +76,7 @@ describe("Request", function() {
   });
 
   it("可以设置、获取、判断 body, files, cookies, session 等可选数据", function(done) {
-    const app = new Connect();
+    const app = new Application();
     app.use("/", function(ctx) {
       {
         expect(ctx.request.body).to.deep.equal({});
@@ -117,7 +117,7 @@ describe("Request", function() {
 
 describe("Response", function() {
   it("正确响应 setStatus, setHeader, setHeaders, writeHead, write, end", function(done) {
-    const app = new Connect();
+    const app = new Application();
     app.use("/", function(ctx) {
       {
         ctx.response.status(100);
@@ -169,7 +169,7 @@ describe("Response", function() {
   });
 
   it("json() 和 html()", async function() {
-    const app = new Connect();
+    const app = new Application();
     app.use("/json", function(ctx) {
       ctx.response.json({ a: 123, b: 456 });
     });
@@ -186,7 +186,7 @@ describe("Response", function() {
   });
 
   it("type()", async function() {
-    const app = new Connect();
+    const app = new Application();
     app.use("/jpg", function(ctx) {
       ctx.response.type("jpg").end();
     });
@@ -209,7 +209,7 @@ describe("Response", function() {
     const file1data = (await readFile(file1)).toString();
     const file2 = path.resolve(ROOT_DIR, "README.md");
     const file2data = (await readFile(file2)).toString();
-    const app = new Connect();
+    const app = new Application();
     app.use("/file1", function(ctx) {
       ctx.response.file(file1);
     });
@@ -228,7 +228,7 @@ describe("Response", function() {
 
   describe("cookie()", function() {
     it("解析一般的Cookie", function(done) {
-      const app = new Connect();
+      const app = new Application();
       app.use("/", fromClassicalHandle(cookieParser("test") as any));
       app.use("/", function(ctx) {
         expect(ctx.request.cookies).to.deep.equal({
@@ -248,7 +248,7 @@ describe("Response", function() {
     });
 
     it("解析签名的Cookie", function(done) {
-      const app = new Connect();
+      const app = new Application();
       app.use("/", fromClassicalHandle(cookieParser("test") as any));
       app.use("/", function(ctx) {
         // console.log(ctx.request.cookies, ctx.request.signedCookies);
@@ -279,7 +279,7 @@ describe("Response", function() {
 
   describe("redirectXXX()", function() {
     it("临时重定向", function(done) {
-      const app = new Connect();
+      const app = new Application();
       app.use("/", function(ctx) {
         ctx.response.redirectTemporary("/a", "ok");
       });
@@ -291,7 +291,7 @@ describe("Response", function() {
     });
 
     it("永久重定向", function(done) {
-      const app = new Connect();
+      const app = new Application();
       app.use("/", function(ctx) {
         ctx.response.redirectPermanent("/a", "ok");
       });
@@ -305,7 +305,7 @@ describe("Response", function() {
 
   describe("render()", function() {
     it("带后缀名", function(done) {
-      const app = new Connect();
+      const app = new Application();
       app.templateEngine
         .register(".simple", simpleTemplate.renderFile)
         .setDefault(".simple")
@@ -321,7 +321,7 @@ describe("Response", function() {
   });
 
   it("省略后缀名", function(done) {
-    const app = new Connect();
+    const app = new Application();
     app.templateEngine
       .register(".simple", simpleTemplate.renderFile)
       .setDefault(".simple")
@@ -336,7 +336,7 @@ describe("Response", function() {
   });
 
   it("完整文件路径", function(done) {
-    const app = new Connect();
+    const app = new Application();
     app.templateEngine
       .register(".simple", simpleTemplate.renderFile)
       .setDefault(".simple")
@@ -353,7 +353,7 @@ describe("Response", function() {
 
 describe("Context", function() {
   it("ctx.request.ctx 和 ctx.response.ctx", function(done) {
-    const app = new Connect();
+    const app = new Application();
     app.use("/", function(ctx) {
       expect(ctx.request.ctx).to.equal(ctx);
       expect(ctx.response.ctx).to.equal(ctx);
@@ -366,7 +366,7 @@ describe("Context", function() {
   });
 
   it("支持 ctx.onFinsh()", function(done) {
-    const app = new Connect();
+    const app = new Application();
     let isFinish = false;
     app.use("/", function(ctx) {
       ctx.onFinish(() => (isFinish = true));
@@ -385,7 +385,7 @@ describe("Context", function() {
   });
 
   it("支持 ctx.onError() -- throw new Error", function(done) {
-    const app = new Connect();
+    const app = new Application();
     let isError = false;
     app.use("/", function(ctx) {
       ctx.onError(err => {
@@ -407,7 +407,7 @@ describe("Context", function() {
   });
 
   it("支持 ctx.onError() -- ctx.next(new Error())", function(done) {
-    const app = new Connect();
+    const app = new Application();
     let isError = false;
     app.use("/", function(ctx) {
       ctx.onError(err => {

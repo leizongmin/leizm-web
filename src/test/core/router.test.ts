@@ -4,14 +4,14 @@
  */
 
 import { expect } from "chai";
-import { Connect, Router, Context, ErrorReason } from "../../lib";
+import { Application, Router, Context, ErrorReason } from "../../lib";
 import * as request from "supertest";
 
 const METHODS = ["get", "head", "post", "put", "delete", "connect", "options", "trace", "patch"];
 
 describe("Router", function() {
-  it("可以在 Connect.use 中直接使用", function(done) {
-    const app = new Connect();
+  it("可以在 Application.use 中直接使用", function(done) {
+    const app = new Application();
     const router = new Router();
     router.post("/ok", function(ctx) {
       ctx.response.end("yes");
@@ -25,7 +25,7 @@ describe("Router", function() {
 
   it("可以通过 Router.use 嵌套 Router", function(done) {
     const status: any = {};
-    const app = new Connect();
+    const app = new Application();
     const router = new Router();
     const router2 = new Router();
     router2.post("/haha", function(ctx) {
@@ -53,7 +53,7 @@ describe("Router", function() {
   });
 
   it("可拦截出错信息，并响应200", function(done) {
-    const app = new Connect();
+    const app = new Application();
     const router = new Router();
     router.get(
       "/xx",
@@ -79,7 +79,7 @@ describe("Router", function() {
   });
 
   it("all 响应所有请求", async function() {
-    const app = new Connect();
+    const app = new Application();
     const router = new Router();
     router.get("/", function(ctx) {
       ctx.response.end("不应该执行到此处");
@@ -98,7 +98,7 @@ describe("Router", function() {
   });
 
   it("注册各种请求方法并正确处理请求", async function() {
-    const app = new Connect();
+    const app = new Application();
     const router = new Router();
     function generateHandle(msg: string) {
       return function(ctx: Context) {
@@ -127,7 +127,7 @@ describe("Router", function() {
   });
 
   it("注册各种请求方法并正确处理出错的请求 (async function)", async function() {
-    const app = new Connect();
+    const app = new Application();
     const router = new Router();
     function generateHandle(msg: string) {
       return function(ctx: Context) {
@@ -160,7 +160,7 @@ describe("Router", function() {
   });
 
   it("use() 的中间件始终在 get()、post() 等方法前面", async function() {
-    const app = new Connect();
+    const app = new Application();
     const router = new Router();
     const numbers: number[] = [];
     router.post("/ok", function(ctx) {

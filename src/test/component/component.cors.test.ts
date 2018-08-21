@@ -3,13 +3,13 @@
  * @author Zongmin Lei <leizongmin@gmail.com>
  */
 
-import { Connect, component } from "../../lib";
+import { Application, component } from "../../lib";
 import * as request from "supertest";
 import { expect } from "chai";
 import { ClientResponse } from "http";
 
 describe("component.cors", function() {
-  const appInstances: Connect[] = [];
+  const appInstances: Application[] = [];
   after(async function() {
     for (const app of appInstances) {
       await app.close();
@@ -18,7 +18,7 @@ describe("component.cors", function() {
 
   describe("any = true", function() {
     it("http", async function() {
-      const app = new Connect();
+      const app = new Application();
       appInstances.push(app);
       app.use("/", component.cors({ any: true }));
       app.use("/", function(ctx) {
@@ -32,7 +32,7 @@ describe("component.cors", function() {
     });
 
     it("https", async function() {
-      const app = new Connect();
+      const app = new Application();
       appInstances.push(app);
       app.use("/", component.cors({ any: true }));
       app.use("/", function(ctx) {
@@ -48,7 +48,7 @@ describe("component.cors", function() {
 
   describe("domain = list", function() {
     it("in list", async function() {
-      const app = new Connect();
+      const app = new Application();
       appInstances.push(app);
       app.use("/", component.cors({ domain: ["example.com"] }));
       app.use("/", function(ctx) {
@@ -62,7 +62,7 @@ describe("component.cors", function() {
     });
 
     it("not in list", async function() {
-      const app = new Connect();
+      const app = new Application();
       appInstances.push(app);
       app.use("/", component.cors({ domain: ["example.com"] }));
       app.use("/", function(ctx) {
@@ -80,7 +80,7 @@ describe("component.cors", function() {
 
   describe("其他选项", function() {
     it("credentials", async function() {
-      const app = new Connect();
+      const app = new Application();
       appInstances.push(app);
       app.use("/", component.cors({ any: true, credentials: true }));
       app.use("/", function(ctx) {
@@ -95,7 +95,7 @@ describe("component.cors", function() {
     });
 
     it("maxAge", async function() {
-      const app = new Connect();
+      const app = new Application();
       appInstances.push(app);
       app.use("/", component.cors({ any: true, maxAge: 100 }));
       app.use("/", function(ctx) {
@@ -110,7 +110,7 @@ describe("component.cors", function() {
     });
 
     it("allowHeaders", async function() {
-      const app = new Connect();
+      const app = new Application();
       appInstances.push(app);
       app.use("/", component.cors({ any: true, allowHeaders: ["A", "B"] }));
       app.use("/", function(ctx) {
@@ -125,7 +125,7 @@ describe("component.cors", function() {
     });
 
     it("allowMethods", async function() {
-      const app = new Connect();
+      const app = new Application();
       appInstances.push(app);
       app.use("/", component.cors({ any: true, allowMethods: ["A", "B"] }));
       app.use("/", function(ctx) {
@@ -140,7 +140,7 @@ describe("component.cors", function() {
     });
 
     it("headers", async function() {
-      const app = new Connect();
+      const app = new Application();
       appInstances.push(app);
       app.use("/", component.cors({ any: true, headers: { A: "12345", B: "67890" } }));
       app.use("/", function(ctx) {

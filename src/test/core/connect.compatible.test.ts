@@ -7,7 +7,7 @@ import { expect } from "chai";
 import * as path from "path";
 import * as fs from "fs";
 import { IncomingMessage, ServerResponse } from "http";
-import { Connect, fromClassicalHandle, Router, toClassicalHandle } from "../../lib";
+import { Application, fromClassicalHandle, Router, toClassicalHandle } from "../../lib";
 import * as request from "supertest";
 import * as connect from "connect";
 import * as bodyParser from "body-parser";
@@ -28,7 +28,7 @@ export function readFile(file: string) {
 const ROOT_DIR = path.resolve(__dirname, "../../..");
 
 describe("兼容 connect 模块", function() {
-  const appInstances: Connect[] = [];
+  const appInstances: Application[] = [];
   after(async function() {
     for (const app of appInstances) {
       await app.close();
@@ -37,7 +37,7 @@ describe("兼容 connect 模块", function() {
 
   it("作为 connect 的中间件", async function() {
     const app = connect();
-    const app2 = new Connect();
+    const app2 = new Application();
     appInstances.push(app2);
     app.use(bodyParser.json() as any);
     let isCalled = false;
@@ -68,7 +68,7 @@ describe("兼容 connect 模块", function() {
 
   it("转换 connect app 为中间件", async function() {
     const app = connect();
-    const app2 = new Connect();
+    const app2 = new Application();
     appInstances.push(app2);
     app.use(bodyParser.json() as any);
     let isCalled = false;
@@ -99,7 +99,7 @@ describe("兼容 connect 模块", function() {
 
   it("Router 作为 connect 中间件", async function() {
     const app = connect();
-    const app2 = new Connect();
+    const app2 = new Application();
     const router = new Router();
     app2.use("/", router);
     app.use(app2.handleRequest);
@@ -120,9 +120,9 @@ describe("兼容 connect 模块", function() {
   });
 
   it("兼容 serve-static 模块", async function() {
-    const app = new Connect();
+    const app = new Application();
     appInstances.push(app);
-    const app2 = new Connect();
+    const app2 = new Application();
     app.use("/public", fromClassicalHandle(serveStatic(ROOT_DIR) as any));
     app.use("/a", app2);
     app2.use("/static", fromClassicalHandle(serveStatic(ROOT_DIR) as any));

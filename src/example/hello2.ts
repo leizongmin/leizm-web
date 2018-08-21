@@ -1,6 +1,6 @@
 import * as web from "../lib";
 
-const app = new web.Application();
+const app = new web.Connect();
 app.templateEngine.initEjs();
 
 app.router.get("/", async function(ctx) {

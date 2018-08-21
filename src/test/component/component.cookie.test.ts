@@ -1,11 +1,11 @@
 import { expect } from "chai";
-import { Connect, component } from "../../lib";
+import { Application, component } from "../../lib";
 import * as request from "supertest";
 import { sign as signCookie } from "cookie-signature";
 
 describe("component.cookie", function() {
   it("解析一般的Cookie", function(done) {
-    const app = new Connect();
+    const app = new Application();
     app.use("/", component.cookieParser("test"));
     app.use("/", function(ctx) {
       expect(ctx.request.cookies).to.deep.equal({
@@ -25,7 +25,7 @@ describe("component.cookie", function() {
   });
 
   it("解析签名的Cookie", function(done) {
-    const app = new Connect();
+    const app = new Application();
     app.use("/", component.cookieParser("test"));
     app.use("/", function(ctx) {
       // console.log(ctx.request.cookies, ctx.request.signedCookies);

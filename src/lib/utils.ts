@@ -233,11 +233,19 @@ const notifiedDeprecatedMap: Record<string, number> = {};
  * @param since 开始完全弃用的版本
  */
 export function notifyDeprecated(old: string, current: string, since: string): void {
-  const msg = `[deprecated] @leizm/web模块：${old}已更改为${current}，旧的使用方法将会在v${since}版本之后弃用，请及时更新您的代码。`;
+  const msg = `[deprecated] @leizm/web模块：${old} 已更改为 ${current}，旧的使用方法将会在 v${since} 版本之后弃用，请及时更新您的代码。`;
   if (notifiedDeprecatedMap[msg]) {
-    notifiedDeprecatedMap[msg] = 1;
-    console.error(msg);
-  } else {
     notifiedDeprecatedMap[msg]++;
+  } else {
+    notifiedDeprecatedMap[msg] = 1;
+    console.error(colorRed(msg));
   }
+}
+
+/**
+ * 返回红色ansi文本
+ * @param str
+ */
+export function colorRed(str: string): string {
+  return `\u001b[31m${str}\u001b[39m`;
 }

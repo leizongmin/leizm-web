@@ -67,7 +67,7 @@ npm i @leizm/web -S
 import * as web from "@leizm/web";
 
 // 创建app实例
-const app = new web.Connect();
+const app = new web.Application();
 // 快速初始化 ejs 模板，需要手动安装 ejs 模块
 app.templateEngine.initEjs();
 
@@ -88,9 +88,9 @@ app.listen({ port: 3000 });
 ## 基本使用方法
 
 ```typescript
-import { Connect, Router, component } from "@leizm/web";
+import { Application, Router, component } from "@leizm/web";
 
-const app = new Connect();
+const app = new Application();
 const router = new Router();
 
 // 使用内置中间件
@@ -131,7 +131,7 @@ app.listen({ port: 3000 }, () => {
 
 扩展 Request 与 Response 对象的方法：[参考单元测试程序](https://github.com/leizongmin/leizm-web/blob/master/src/test/extends.test.ts)
 
-模板文件 `web.ts`（自己的项目中引用此文件中的 `Connect` 和 `Router`，而不是来自 `@leizm/web` 的）：
+模板文件 `web.ts`（自己的项目中引用此文件中的 `Application` 和 `Router`，而不是来自 `@leizm/web` 的）：
 
 ```typescript
 import * as base from "@leizm/web";
@@ -139,7 +139,7 @@ export * from "@leizm/web";
 
 export type MiddlewareHandle = (ctx: Context, err?: base.ErrorReason) => Promise<void> | void;
 
-export class Connect extends base.Connect<Context> {
+export class Application extends base.Application<Context> {
   protected contextConstructor = Context;
 }
 

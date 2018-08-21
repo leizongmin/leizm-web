@@ -3,7 +3,7 @@
  * @author Zongmin Lei <leizongmin@gmail.com>
  */
 
-import { Connect, fromClassicalHandle, Router } from "../lib";
+import { Application, fromClassicalHandle, Router } from "../lib";
 
 function sleep(ms = 1000) {
   return new Promise((resolve, reject) => {
@@ -11,7 +11,7 @@ function sleep(ms = 1000) {
   });
 }
 
-const app = new Connect();
+const app = new Application();
 app.use(
   "/sleep",
   function(ctx) {

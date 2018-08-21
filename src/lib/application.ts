@@ -12,8 +12,9 @@ import { Context } from "./context";
 import { Request } from "./request";
 import { Response } from "./response";
 import { TemplateEngineManager } from "./template";
+import { notifyDeprecated } from "./utils";
 
-export class Connect<C extends Context = Context<Request, Response>> extends Core<C> {
+export class Application<C extends Context = Context<Request, Response>> extends Core<C> {
   /** 默认Router实例，第一次使用时创建并use() */
   protected defaultRouter?: Router<C>;
 
@@ -99,5 +100,12 @@ export class Connect<C extends Context = Context<Request, Response>> extends Cor
     const ctx = super.createContext(req, res);
     ctx[SYMBOL_CONNECT] = this as any;
     return ctx;
+  }
+}
+
+export class Connect<C extends Context = Context<Request, Response>> extends Application<C> {
+  constructor() {
+    super();
+    notifyDeprecated("new Connect()", "new Application()", "3.0.0");
   }
 }

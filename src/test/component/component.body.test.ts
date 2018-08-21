@@ -3,7 +3,7 @@
  * @author Zongmin Lei <leizongmin@gmail.com>
  */
 
-import { Connect, component } from "../../lib";
+import { Application, component } from "../../lib";
 import * as request from "supertest";
 import { expect } from "chai";
 import * as fs from "fs";
@@ -21,7 +21,7 @@ function readFile(file: string): Promise<Buffer> {
 // const ROOT_DIR = path.resolve(__dirname, "../../..");
 
 describe("component.body", function() {
-  const appInstances: Connect[] = [];
+  const appInstances: Application[] = [];
   after(async function() {
     for (const app of appInstances) {
       await app.close();
@@ -29,7 +29,7 @@ describe("component.body", function() {
   });
 
   it("json", async function() {
-    const app = new Connect();
+    const app = new Application();
     appInstances.push(app);
     app.use("/", component.bodyParser.json());
     app.use("/", function(ctx) {
@@ -52,7 +52,7 @@ describe("component.body", function() {
   });
 
   it("urlencoded", async function() {
-    const app = new Connect();
+    const app = new Application();
     appInstances.push(app);
     app.use("/", component.bodyParser.urlencoded({ extended: false }));
     app.use("/", function(ctx) {
@@ -76,7 +76,7 @@ describe("component.body", function() {
   });
 
   it("text", async function() {
-    const app = new Connect();
+    const app = new Application();
     appInstances.push(app);
     app.use("/", component.bodyParser.text());
     app.use("/", function(ctx) {
@@ -92,7 +92,7 @@ describe("component.body", function() {
   });
 
   it("raw", async function() {
-    const app = new Connect();
+    const app = new Application();
     appInstances.push(app);
     app.use("/", component.bodyParser.raw());
     app.use("/", function(ctx) {
@@ -109,7 +109,7 @@ describe("component.body", function() {
 
   describe("multipart", function() {
     it("smallFileSize=Infinity 文件存储于内存中", async function() {
-      const app = new Connect();
+      const app = new Application();
       appInstances.push(app);
       app.use("/", component.bodyParser.multipart({ smallFileSize: Infinity }));
       app.use("/", function(ctx) {
@@ -138,7 +138,7 @@ describe("component.body", function() {
     });
 
     it("smallFileSize=100 文件存储于临时文件中", async function() {
-      const app = new Connect();
+      const app = new Application();
       appInstances.push(app);
       app.use("/", component.bodyParser.multipart({ smallFileSize: 100 }));
       app.use("/", function(ctx) {
@@ -168,7 +168,7 @@ describe("component.body", function() {
     });
 
     it("smallFileSize=0 通过 ctx.request.parseMultipart() 解析", async function() {
-      const app = new Connect();
+      const app = new Application();
       appInstances.push(app);
       app.use("/", async function(ctx) {
         expect(ctx.request.body).to.deep.equal({});

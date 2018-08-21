@@ -3,9 +3,9 @@
  * @author Zongmin Lei <leizongmin@gmail.com>
  */
 
-import { Connect } from "../lib";
+import { Application } from "../lib";
 
-const app = new Connect();
+const app = new Application();
 app.use("/params/:a", function(ctx) {
   ctx.response.end(`params: ${ctx.request.params.a}`);
 });

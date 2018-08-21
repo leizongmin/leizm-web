@@ -3,7 +3,7 @@
  * @author Zongmin Lei <leizongmin@gmail.com>
  */
 
-import { Connect, component } from "../lib";
+import { Application, component } from "../lib";
 import * as Redis from "ioredis";
 import { createClient } from "redis";
 import { SimpleRedisClient } from "../lib/module/simple.redis";
@@ -12,7 +12,7 @@ const redis1 = new Redis();
 const redis2 = createClient();
 const redis3 = new SimpleRedisClient();
 
-const app = new Connect();
+const app = new Application();
 app.use("/", component.cookieParser(""));
 app.use(
   "/a",

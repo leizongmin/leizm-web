@@ -1,6 +1,6 @@
 import * as fs from "fs";
 import * as path from "path";
-import { Connect, component } from "../../lib";
+import { Application, component } from "../../lib";
 import * as request from "supertest";
 
 function readFile(file: string): Promise<Buffer> {
@@ -20,7 +20,7 @@ describe("component.static", function() {
     const file1data = (await readFile(file1)).toString();
     const file2 = path.resolve(ROOT_DIR, "README.md");
     const file2data = (await readFile(file2)).toString();
-    const app = new Connect();
+    const app = new Application();
     app.use("/", component.serveStatic(ROOT_DIR));
     await request(app.server)
       .get("/package.json")
@@ -37,7 +37,7 @@ describe("component.static", function() {
     const file1data = (await readFile(file1)).toString();
     const file2 = path.resolve(ROOT_DIR, "README.md");
     const file2data = (await readFile(file2)).toString();
-    const app = new Connect();
+    const app = new Application();
     app.use("/public", component.serveStatic(ROOT_DIR));
     await request(app.server)
       .get("/public/package.json")
@@ -54,7 +54,7 @@ describe("component.static", function() {
     const file1data = (await readFile(file1)).toString();
     const file2 = path.resolve(ROOT_DIR, "README.md");
     const file2data = (await readFile(file2)).toString();
-    const app = new Connect();
+    const app = new Application();
     app.use("/public/assets", component.serveStatic(ROOT_DIR));
     await request(app.server)
       .get("/public/assets/package.json")
