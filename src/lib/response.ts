@@ -11,7 +11,7 @@ import * as cookie from "cookie";
 import * as send from "send";
 import * as mime from "mime";
 import { CookieOptions, TemplateRenderData, SYMBOL_CONNECT } from "./define";
-import { nofigyDeprecated } from "./utils";
+import { notifyDeprecated } from "./utils";
 
 export class Response {
   constructor(public readonly res: ServerResponse, public readonly ctx: Context) {}
@@ -56,7 +56,7 @@ export class Response {
    * @param statusCode 响应状态码
    */
   public setStatus(statusCode: number): this {
-    nofigyDeprecated("response.setStatus(code)", "response.status(code)", "3.0.0");
+    notifyDeprecated("response.setStatus(code)", "response.status(code)", "3.0.0");
     return this.status(statusCode);
   }
 
@@ -227,7 +227,7 @@ export class Response {
    * @param content 内容
    */
   public temporaryRedirect(url: string, content: string = ""): void {
-    nofigyDeprecated("response.temporaryRedirect()", "response.redirectTemporary()", "3.0.0");
+    notifyDeprecated("response.temporaryRedirect()", "response.redirectTemporary()", "3.0.0");
     return this.redirectTemporary(url, content);
   }
 
@@ -247,7 +247,7 @@ export class Response {
    * @param content 内容
    */
   public permanentRedirect(url: string, content: string = ""): void {
-    nofigyDeprecated("response.permanentRedirect()", "response.redirectPermanent()", "3.0.0");
+    notifyDeprecated("response.permanentRedirect()", "response.redirectPermanent()", "3.0.0");
     return this.redirectPermanent(url, content);
   }
 

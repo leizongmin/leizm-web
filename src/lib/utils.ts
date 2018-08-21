@@ -224,17 +224,20 @@ export function execMiddlewareHandle<C>(
   });
 }
 
+const notifiedDeprecatedMap: Record<string, number> = {};
+
 /**
  * 提示接口更改
  * @param old 旧方法
  * @param current 新方法
  * @param since 开始完全弃用的版本
  */
-export function nofigyDeprecated(old: string, current: string, since: string): void {
-  console.error(
-    `[deprecated] @leizm/web模块：%s已更改为%s，旧的使用方法将会在v%s版本之后弃用，请及时更新您的代码。`,
-    old,
-    current,
-    since,
-  );
+export function notifyDeprecated(old: string, current: string, since: string): void {
+  const msg = `[deprecated] @leizm/web模块：${old}已更改为${current}，旧的使用方法将会在v${since}版本之后弃用，请及时更新您的代码。`;
+  if (notifiedDeprecatedMap[msg]) {
+    notifiedDeprecatedMap[msg] = 1;
+    console.error(msg);
+  } else {
+    notifiedDeprecatedMap[msg]++;
+  }
 }
