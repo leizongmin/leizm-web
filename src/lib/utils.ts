@@ -17,7 +17,7 @@ import {
 } from "./define";
 import { Context } from "./context";
 import { IncomingMessage, ServerResponse } from "http";
-import * as finalhandler from "finalhandler";
+import finalhandler from "./finalhandler";
 
 /**
  * 判断是否为Promise对象

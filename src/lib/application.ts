@@ -4,7 +4,7 @@
  */
 
 import { Server, IncomingMessage, ServerResponse } from "http";
-import * as finalhandler from "finalhandler";
+import finalhandler from "./finalhandler";
 import { Core } from "./core";
 import { Router } from "./router";
 import { ListenOptions, ErrorReason, SYMBOL_CONNECT, SYMBOL_SERVER } from "./define";
