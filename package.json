@@ -1,0 +1,22 @@
+{
+  "name": "@leizm/web-gh-pages",
+  "version": "1.0.0",
+  "description": "请访问 https://web.leizm.com",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/leizongmin/leizm-web.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/leizongmin/leizm-web/issues"
+  },
+  "homepage": "https://github.com/leizongmin/leizm-web#readme",
+  "devDependencies": {
+    "gitbook-cli": "^2.3.2"
+  }
+}
