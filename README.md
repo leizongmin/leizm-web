@@ -1,2 +1,1 @@
-# leizm-connect
-精简的 Web 中间件框架
+请访问 https://web.leizm.com
