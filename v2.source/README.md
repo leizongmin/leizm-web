@@ -6,13 +6,15 @@
 
 - Koa 框架的洋葱模型给理解代码和调试带来不必要的复杂性
 - Express 的中间件格式过于”灵活“，不适合使用 TypeScript 编写的项目
+- Express 不支持 async function
 - Koa 和 Express 没有原生支持 TypeScript
 - Koa 和 Express 作为一个基础 Web 框架，依赖模块过多
+- 由于历史原因，Koa 和 Express 为了兼容老版本的 Node.js，有些地方的代码写的比较啰嗦
 - 作为一个基础 Web 框架，除了中间件机制之外，还应该包含静态文件服务、Body 解析、Session 等基础模块
 
 所以，基于以上考虑，我决定按照自己的想法，从头实现一个”完美“的框架：
 
-- 原生支持 TypeScript
+- 原生支持 TypeScript 和 async function
 - 更规范的 API 接口设计
 - 基于流水线式的中间件机制
 - 尽量少的模块依赖

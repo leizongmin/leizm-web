@@ -1,5 +1,9 @@
 # 编写第一个程序
 
+## 运行环境
+
+Node.js v8.9 或更高版本。
+
 ## 初始化项目
 
 首先让我们创建一个新项目来编写第一个程序，比如 `study_web`：
@@ -48,5 +52,11 @@ node src/app.js
 
 -----
 
-如果是的话，说明它已经正常工作了。
+如果是的话，说明它已经正常工作了。接下来我们详细看看每一行代码的含义：
 
+- `new web.Application()` 创建一个 Application 实例，这样我们就可以在此实例上引入各种中间件，监听端口等
+- `app.use(path, handler)` 表示引入一个中间件，注册的路径是 `path`（比如：`"/hello"`)，`handler` 是中间件的处理函数，其格式为 `function (ctx: web.Context) {}`
+- `ctx.response.html(str)` 表示输出一段 HTML
+- `app.listen({ port })` 表示监听指定的端口
+
+需要注意到是，`app.use(path, handler)` 中的 `path` 参数是不可省略的（即使注册的路径是 `/`）。 `handler` 函数可以写成 `async function` 方式。
