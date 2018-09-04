@@ -51,6 +51,51 @@ describe("component.body", function() {
       });
   });
 
+  describe("fast json parser", function() {
+    it("json", async function() {
+      const app = new Application();
+      appInstances.push(app);
+      app.use("/", component.jsonParser());
+      app.use("/", function(ctx) {
+        ctx.response.setHeader("content-type", "application/json");
+        ctx.response.end(JSON.stringify(ctx.request.body));
+      });
+      await request(app.server)
+        .post("/")
+        .send({
+          a: 111,
+          b: 222,
+          c: 333,
+        })
+        .expect(200)
+        .expect({
+          a: 111,
+          b: 222,
+          c: 333,
+        });
+    });
+
+    it("out of limit", async function() {
+      const app = new Application();
+      appInstances.push(app);
+      app.use("/", component.jsonParser({ limit: 1024 }));
+      app.use("/", function(ctx) {
+        ctx.response.setHeader("content-type", "application/json");
+        ctx.response.end(JSON.stringify(ctx.request.body));
+      });
+      const data = {
+        a: "a".repeat(1024),
+        b: "b".repeat(1024),
+        c: "c".repeat(1024),
+      };
+      await request(app.server)
+        .post("/")
+        .send(data)
+        .expect(500)
+        .expect(/out of max body size limit/);
+    });
+  });
+
   it("urlencoded", async function() {
     const app = new Application();
     appInstances.push(app);
