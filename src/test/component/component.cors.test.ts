@@ -6,7 +6,7 @@
 import { Application, component } from "../../lib";
 import * as request from "supertest";
 import { expect } from "chai";
-import { ClientResponse } from "http";
+import { IncomingMessage } from "http";
 
 describe("component.cors", function() {
   const appInstances: Application[] = [];
@@ -71,7 +71,7 @@ describe("component.cors", function() {
       await request(app.server)
         .get("/test")
         .set("Origin", "http://ucdok.com")
-        .expect((res: ClientResponse) => {
+        .expect((res: IncomingMessage) => {
           expect(res.headers).to.not.have.property("access-control-allow-origin");
         })
         .expect(200, "OK");

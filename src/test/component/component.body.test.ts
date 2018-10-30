@@ -108,15 +108,15 @@ describe("component.body", function() {
       .post("/")
       .set("content-type", "application/x-www-form-urlencoded")
       .send({
-        a: 111,
-        b: 222,
-        c: 333,
+        a: "111",
+        b: "222",
+        c: "333",
       })
       .expect(200)
       .expect({
-        a: 111,
-        b: 222,
-        c: 333,
+        a: "111",
+        b: "222",
+        c: "333",
       });
   });
 
