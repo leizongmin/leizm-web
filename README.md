@@ -90,13 +90,13 @@ app.listen({ port: 3000 });
 ## 基本使用方法
 
 ```typescript
-import { Application, Router, component } from "@leizm/web";
+import * as web from "@leizm/web";
 
-const app = new Application();
-const router = new Router();
+const app = new web.Application();
+const router = new web.Router();
 
 // 使用内置中间件
-app.use("/", component.cookieParser());
+app.use("/", web.component.cookieParser());
 
 // 基本的中间件
 app.use("/", function(ctx) {
