@@ -229,13 +229,12 @@ export class Core<C extends Context = Context<Request, Response>> {
         return next(err);
       }
       if (handle.raw) {
+        // 如果有匹配到路由则更新，没有匹配到则保留上一个
         let path = handle.raw.path;
         if (this.path) {
           path = this.path + path;
         }
         ctx[SYMBOL_RAW_ROUTE_INFO] = { method: handle.raw.method, path };
-      } else {
-        ctx[SYMBOL_RAW_ROUTE_INFO] = null;
       }
       ctx.request.params = getRouteParams(ctx.request.path, handle.route);
       execMiddlewareHandle(handle.handle, ctx, err, next);

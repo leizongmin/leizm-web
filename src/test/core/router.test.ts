@@ -214,6 +214,12 @@ describe("Router", function() {
     });
     app.use("/", router);
     app.use("/test", router2);
+    app.use("/", function(ctx, err) {
+      expect(err).instanceof(Error);
+      expect((err as any).message).to.equal("xxxx");
+      histories.push(ctx.route);
+      ctx.response.json(ctx.route);
+    });
     router2.use("/test3", router3);
 
     router.post("/ok", function(ctx) {
@@ -225,6 +231,11 @@ describe("Router", function() {
       const route = { method: "GET", path: "/say/:msg" };
       expect(ctx.route).to.deep.equal(route);
       ctx.response.json(ctx.route);
+    });
+    router.get("/error/:msg", function(ctx) {
+      const route = { method: "GET", path: "/error/:msg" };
+      expect(ctx.route).to.deep.equal(route);
+      ctx.next(new Error(ctx.request.params.msg));
     });
 
     router2.all("/user/:user_id/reply/:info", function(ctx) {
@@ -259,12 +270,18 @@ describe("Router", function() {
       .delete("/test/test3/hahaha/abc")
       .expect(200)
       .expect({ method: "ALL", path: "/test/test3/hahaha/:name" });
+    await request(app.server)
+      .get("/error/xxxx")
+      .expect(200)
+      .expect({ method: "GET", path: "/error/:msg" });
     expect(histories).to.deep.equal([
       { method: "POST", path: "/ok" },
       { method: "GET", path: "/say/hello" },
       { method: "GET", path: "/say/hi" },
       { method: "DELETE", path: "/test/user/123/reply/abc" },
       { method: "DELETE", path: "/test/test3/hahaha/abc" },
+      { method: "GET", path: "/error/xxxx" },
+      { method: "GET", path: "/error/:msg" },
     ]);
   });
 });
