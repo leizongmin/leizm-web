@@ -10,6 +10,8 @@
   "scripts": {
     "test": "npm run format && mocha --require ts-node/register --exit \"src/test/**/*.ts\"",
     "test-file": "mocha --require ts-node/register --exit",
+    "test-core": "mocha --require ts-node/register --exit \"src/test/core/**/*.ts\"",
+    "test-component": "mocha --require ts-node/register --exit \"src/test/component/**/*.ts\"",
     "test-cov": "nyc --reporter=lcov mocha --require ts-node/register --exit \"src/test/**/*.ts\" && nyc report",
     "coveralls": "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js",
     "clean": "rm -rf dist",

@@ -85,7 +85,6 @@ export class Application<C extends Context = Context<Request, Response>> extends
       function(err?: ErrorReason) {
         return finalhandler(req, res)(err);
       };
-    // this.handleRequestByRequestResponse(req, res, done);
     const ctx = this.createContext(req, res);
     this.handleRequestByContext(ctx, done);
   };

@@ -22,6 +22,14 @@ export interface ParsedRoutePathResult {
   keys: RegExpKey[];
 }
 
+/** 原始路由信息 */
+export interface RawRouteInfo {
+  /** 请求方法 */
+  method: string;
+  /** 路径 */
+  path: string;
+}
+
 /** 中间件处理函数 */
 export interface MiddlewareHandle<C> {
   (ctx: C, err?: ErrorReason): Promise<void> | void;
@@ -41,6 +49,8 @@ export interface Middleware<C> {
   handle: MiddlewareHandle<C>;
   /** 是否排在末尾 */
   atEnd: boolean;
+  /** 原始路由信息 */
+  raw?: RawRouteInfo;
 }
 
 /** next回调函数 */
@@ -126,3 +136,4 @@ export const SYMBOL_SERVER = Symbol("http.Server instance");
 export const SYMBOL_SESSION = Symbol("context session instance");
 export const SYMBOL_PUSH_NEXT_HANDLE = Symbol("context.pushNextHandle");
 export const SYMBOL_POP_NEXT_HANDLE = Symbol("context.popNextHandle");
+export const SYMBOL_RAW_ROUTE_INFO = Symbol("context.rawRouteInfo");

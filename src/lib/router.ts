@@ -18,7 +18,7 @@ export class Router<C extends Context = Context<Request, Response>> extends Core
    * @param handles 处理函数
    */
   public all(route: string | RegExp, ...handles: MiddlewareHandle<C>[]) {
-    this.addToEnd(this.parseRoutePath(false, route), ...handles);
+    this.addToEnd({ method: "ALL", path: route.toString() }, this.parseRoutePath(false, route), ...handles);
   }
 
   /**
@@ -29,6 +29,7 @@ export class Router<C extends Context = Context<Request, Response>> extends Core
    */
   public get(route: string | RegExp, ...handles: MiddlewareHandle<C>[]) {
     this.addToEnd(
+      { method: "GET", path: route.toString() },
       this.parseRoutePath(false, route),
       ...handles.map(item => wrapMiddlewareHandleWithMethod("GET", item)),
     );
@@ -42,6 +43,7 @@ export class Router<C extends Context = Context<Request, Response>> extends Core
    */
   public head(route: string | RegExp, ...handles: MiddlewareHandle<C>[]) {
     this.addToEnd(
+      { method: "HEAD", path: route.toString() },
       this.parseRoutePath(false, route),
       ...handles.map(item => wrapMiddlewareHandleWithMethod("HEAD", item)),
     );
@@ -55,6 +57,7 @@ export class Router<C extends Context = Context<Request, Response>> extends Core
    */
   public post(route: string | RegExp, ...handles: MiddlewareHandle<C>[]) {
     this.addToEnd(
+      { method: "POST", path: route.toString() },
       this.parseRoutePath(false, route),
       ...handles.map(item => wrapMiddlewareHandleWithMethod("POST", item)),
     );
@@ -68,6 +71,7 @@ export class Router<C extends Context = Context<Request, Response>> extends Core
    */
   public put(route: string | RegExp, ...handles: MiddlewareHandle<C>[]) {
     this.addToEnd(
+      { method: "PUT", path: route.toString() },
       this.parseRoutePath(false, route),
       ...handles.map(item => wrapMiddlewareHandleWithMethod("PUT", item)),
     );
@@ -81,6 +85,7 @@ export class Router<C extends Context = Context<Request, Response>> extends Core
    */
   public delete(route: string | RegExp, ...handles: MiddlewareHandle<C>[]) {
     this.addToEnd(
+      { method: "DELETE", path: route.toString() },
       this.parseRoutePath(false, route),
       ...handles.map(item => wrapMiddlewareHandleWithMethod("DELETE", item)),
     );
@@ -94,6 +99,7 @@ export class Router<C extends Context = Context<Request, Response>> extends Core
    */
   public connect(route: string | RegExp, ...handles: MiddlewareHandle<C>[]) {
     this.addToEnd(
+      { method: "CONNECT", path: route.toString() },
       this.parseRoutePath(false, route),
       ...handles.map(item => wrapMiddlewareHandleWithMethod("CONNECT", item)),
     );
@@ -107,6 +113,7 @@ export class Router<C extends Context = Context<Request, Response>> extends Core
    */
   public options(route: string | RegExp, ...handles: MiddlewareHandle<C>[]) {
     this.addToEnd(
+      { method: "OPTIONS", path: route.toString() },
       this.parseRoutePath(false, route),
       ...handles.map(item => wrapMiddlewareHandleWithMethod("OPTIONS", item)),
     );
@@ -120,6 +127,7 @@ export class Router<C extends Context = Context<Request, Response>> extends Core
    */
   public trace(route: string | RegExp, ...handles: MiddlewareHandle<C>[]) {
     this.addToEnd(
+      { method: "TRACE", path: route.toString() },
       this.parseRoutePath(false, route),
       ...handles.map(item => wrapMiddlewareHandleWithMethod("TRACE", item)),
     );
@@ -133,6 +141,7 @@ export class Router<C extends Context = Context<Request, Response>> extends Core
    */
   public patch(route: string | RegExp, ...handles: MiddlewareHandle<C>[]) {
     this.addToEnd(
+      { method: "PATCH", path: route.toString() },
       this.parseRoutePath(false, route),
       ...handles.map(item => wrapMiddlewareHandleWithMethod("PATCH", item)),
     );

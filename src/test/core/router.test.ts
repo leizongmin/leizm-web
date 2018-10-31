@@ -200,4 +200,71 @@ describe("Router", function() {
       .expect("home");
     expect(numbers).to.deep.equal([123, 456, 123, 456, 123, 456]);
   });
+
+  it("ctx.route 获得原始路由信息", async function() {
+    const app = new Application();
+    const router = new Router();
+    const router2 = new Router();
+    const router3 = new Router();
+    const histories: any[] = [];
+    app.use("/", function(ctx) {
+      // console.log(ctx.route);
+      histories.push(ctx.route);
+      ctx.next();
+    });
+    app.use("/", router);
+    app.use("/test", router2);
+    router2.use("/test3", router3);
+
+    router.post("/ok", function(ctx) {
+      const route = { method: "POST", path: "/ok" };
+      expect(ctx.route).to.deep.equal(route);
+      ctx.response.json(ctx.route);
+    });
+    router.get("/say/:msg", function(ctx) {
+      const route = { method: "GET", path: "/say/:msg" };
+      expect(ctx.route).to.deep.equal(route);
+      ctx.response.json(ctx.route);
+    });
+
+    router2.all("/user/:user_id/reply/:info", function(ctx) {
+      const route = { method: "ALL", path: "/test/user/:user_id/reply/:info" };
+      expect(ctx.route).to.deep.equal(route);
+      ctx.response.json(ctx.route);
+    });
+
+    router3.all("/hahaha/:name", function(ctx) {
+      const route = { method: "ALL", path: "/test/test3/hahaha/:name" };
+      expect(ctx.route).to.deep.equal(route);
+      ctx.response.json(ctx.route);
+    });
+
+    await request(app.server)
+      .post("/ok")
+      .expect(200)
+      .expect({ method: "POST", path: "/ok" });
+    await request(app.server)
+      .get("/say/hello")
+      .expect(200)
+      .expect({ method: "GET", path: "/say/:msg" });
+    await request(app.server)
+      .get("/say/hi")
+      .expect(200)
+      .expect({ method: "GET", path: "/say/:msg" });
+    await request(app.server)
+      .delete("/test/user/123/reply/abc")
+      .expect(200)
+      .expect({ method: "ALL", path: "/test/user/:user_id/reply/:info" });
+    await request(app.server)
+      .delete("/test/test3/hahaha/abc")
+      .expect(200)
+      .expect({ method: "ALL", path: "/test/test3/hahaha/:name" });
+    expect(histories).to.deep.equal([
+      { method: "POST", path: "/ok" },
+      { method: "GET", path: "/say/hello" },
+      { method: "GET", path: "/say/hi" },
+      { method: "DELETE", path: "/test/user/123/reply/abc" },
+      { method: "DELETE", path: "/test/test3/hahaha/abc" },
+    ]);
+  });
 });

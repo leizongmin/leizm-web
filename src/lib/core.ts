@@ -6,6 +6,7 @@
 import { IncomingMessage, ServerResponse } from "http";
 import { Context } from "./context";
 import {
+  RawRouteInfo,
   Middleware,
   MiddlewareHandle,
   ErrorReason,
@@ -15,6 +16,7 @@ import {
   RegExpOptions,
   SYMBOL_PUSH_NEXT_HANDLE,
   SYMBOL_POP_NEXT_HANDLE,
+  SYMBOL_RAW_ROUTE_INFO,
 } from "./define";
 import {
   testRoutePath,
@@ -41,6 +43,21 @@ export class Core<C extends Context = Context<Request, Response>> {
   };
   /** use()当前中间件时的路由规则 */
   protected route?: ParsedRoutePathResult;
+  /** use()当前中间件时的字符串路径 */
+  protected originalPath: string = "";
+
+  protected get path() {
+    return this.originalPath;
+  }
+
+  protected set path(s: string) {
+    if (s) {
+      if (s.slice(-1) === "/") {
+        s = s.slice(0, -1);
+      }
+      this.originalPath = s;
+    }
+  }
 
   /**
    * 创建Context对象
@@ -104,6 +121,10 @@ export class Core<C extends Context = Context<Request, Response>> {
       parsedRoute,
       ...handles.map(item => {
         if (item instanceof Core) {
+          item.path = route.toString();
+          if (this.path) {
+            item.path = this.path + item.path;
+          }
           item.route = parsedRoute;
           return item.toMiddleware();
         }
@@ -139,16 +160,18 @@ export class Core<C extends Context = Context<Request, Response>> {
   /**
    * 添加中间件到末尾
    *
+   * @param raw 原始路由信息
    * @param route 路由
    * @param handles 中间件对象或处理函数
    */
-  protected addToEnd(route: ParsedRoutePathResult | undefined, ...handles: MiddlewareHandle<C>[]) {
+  protected addToEnd(raw: RawRouteInfo, route: ParsedRoutePathResult | undefined, ...handles: MiddlewareHandle<C>[]) {
     for (const handle of handles) {
       const item: Middleware<C> = {
         route,
         handle,
         handleError: isMiddlewareErrorHandle(handle),
         atEnd: true,
+        raw,
       };
       this.stack.push(item);
     }
@@ -204,6 +227,15 @@ export class Core<C extends Context = Context<Request, Response>> {
       }
       if (!testRoutePath(ctx.request.path, handle.route)) {
         return next(err);
+      }
+      if (handle.raw) {
+        let path = handle.raw.path;
+        if (this.path) {
+          path = this.path + path;
+        }
+        ctx[SYMBOL_RAW_ROUTE_INFO] = { method: handle.raw.method, path };
+      } else {
+        ctx[SYMBOL_RAW_ROUTE_INFO] = null;
       }
       ctx.request.params = getRouteParams(ctx.request.path, handle.route);
       execMiddlewareHandle(handle.handle, ctx, err, next);

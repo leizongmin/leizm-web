@@ -9,6 +9,7 @@ import { Request } from "./request";
 import { Response } from "./response";
 import { Application } from "./application";
 import {
+  RawRouteInfo,
   NextFunction,
   ErrorReason,
   RequestConstructor,
@@ -17,6 +18,7 @@ import {
   SYMBOL_SESSION,
   SYMBOL_PUSH_NEXT_HANDLE,
   SYMBOL_POP_NEXT_HANDLE,
+  SYMBOL_RAW_ROUTE_INFO,
 } from "./define";
 import { SessionInstance } from "./component/session";
 import onWriteHead from "./module/on.writehead";
@@ -43,6 +45,9 @@ export class Context<Q extends Request = Request, S extends Response = Response>
     if (this[SYMBOL_SESSION]) return this[SYMBOL_SESSION];
     throw new Error(`ctx.session: please use component.session() middleware firstly`);
   }
+
+  /** 原始路由信息 */
+  public [SYMBOL_RAW_ROUTE_INFO]: RawRouteInfo | null;
 
   /**
    * 创建Request对象
@@ -85,6 +90,16 @@ export class Context<Q extends Request = Request, S extends Response = Response>
    * 一般用于自定义扩展 Context 时，在此方法中加上自己的祝时候完成的代码
    */
   public inited() {}
+
+  /**
+   * 获得路由信息
+   */
+  public get route(): RawRouteInfo {
+    if (this[SYMBOL_RAW_ROUTE_INFO]) {
+      return this[SYMBOL_RAW_ROUTE_INFO]!;
+    }
+    return { method: this.request.method || "", path: this.request.path };
+  }
 
   /**
    * 获取Request对象
