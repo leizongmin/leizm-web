@@ -49,6 +49,7 @@
   * `multipart` 解析 multipart/form-data ，基于模块 [busboy](https://www.npmjs.com/package/busboy)
 * `cookieParser` 解析 Cookie，基于模块 [cookie-parser](https://www.npmjs.com/package/cookie-parser)
 * `serveStatic` 静态文件服务，基于模块 [serve-static](https://www.npmjs.com/package/serve-static)
+* `favicon` Favicon中间件，使用方法类似于 [serve-favicon](https://github.com/expressjs/serve-favicon)
 * `cors` 设置 CORS
 * `session` 提供多存储引擎的 Session 支持：
   * `SessiionMemoryStore` 内存存储引擎
