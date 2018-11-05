@@ -49,6 +49,9 @@ export class Context<Q extends Request = Request, S extends Response = Response>
   /** 原始路由信息 */
   public [SYMBOL_RAW_ROUTE_INFO]: RawRouteInfo | null;
 
+  /** 其他可任意挂载在Context上的数据 */
+  public data: Record<string | number | symbol, any> = {};
+
   /**
    * 创建Request对象
    *
