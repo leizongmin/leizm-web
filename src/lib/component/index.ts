@@ -5,6 +5,7 @@
 
 export * from "./cookie";
 export * from "./static";
+export * from "./favicon";
 export * from "./cors";
 
 export * from "./session";
