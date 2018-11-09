@@ -149,23 +149,6 @@ export class SimpleRedisClient extends EventEmitter implements RedisCompatibleCl
       ...DEFAULT_REDIS_OPTIONS,
       ...options,
     };
-
-    // this._connect();
-
-    if (this.options.password) {
-      this.command(["AUTH", this.options.password], err => {
-        if (err) {
-          this.emit("error", new Error(`auth failed: ${err.message}`));
-        }
-      });
-    }
-    if (this.options.db > 0) {
-      this.command(["SELECT", this.options.db], err => {
-        if (err) {
-          this.emit("error", new Error(`select database failed: ${err.message}`));
-        }
-      });
-    }
   }
 
   public get connected() {
@@ -200,15 +183,31 @@ export class SimpleRedisClient extends EventEmitter implements RedisCompatibleCl
       this._isConnected = true;
       this._isConnecting = false;
       this.emit("connect");
+      if (this.options.password) {
+        this.preCommand(["AUTH", this.options.password], err => {
+          if (err) {
+            this.emit("error", new Error(`auth failed: ${err.message}`));
+          }
+        });
+      }
+      if (this.options.db > 0) {
+        this.preCommand(["SELECT", this.options.db], err => {
+          if (err) {
+            this.emit("error", new Error(`select database failed: ${err.message}`));
+          }
+        });
+      }
       this._sendBuffers.forEach(data => this.socket!.write(data));
       this._sendBuffers = [];
     });
     this._isConnecting = true;
     this.socket.on("error", err => {
+      this._isConnecting = false;
       this.emit("error", err);
     });
 
     this.socket.on("close", () => {
+      this._isConnecting = false;
       delete this.socket;
       // 处理未完成的任务和回调
       const callbacks = this._callbacks.slice();
@@ -244,6 +243,14 @@ export class SimpleRedisClient extends EventEmitter implements RedisCompatibleCl
     });
   }
 
+  protected preCommand(cmd: Array<string | number | boolean>, callback: (err: Error | null, ret: any) => void) {
+    this._callbacks.push(callback);
+    const data = `${cmd.map(stringify).join(" ")}\r\n`;
+    if (this.socket) {
+      this.socket.write(data);
+    }
+  }
+
   /**
    * 关闭连接
    */
@@ -270,3 +277,12 @@ export class SimpleRedisClient extends EventEmitter implements RedisCompatibleCl
 function stringify(v: string | number | boolean): string {
   return JSON.stringify(v);
 }
+
+// const conn = new SimpleRedisClient({ db: 5 });
+// setInterval(() => {
+//   console.log(conn);
+//   conn.command(["set", "abc", Date.now()], (err, ret) => {
+//     console.log(err, ret);
+//   });
+// }, 2000);
+// conn.on("error", err => console.log("redis error", err));
