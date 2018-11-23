@@ -34,7 +34,17 @@
     "url": "git+https://github.com/leizongmin/leizm-web.git"
   },
   "keywords": [
-    "connect", "express", "koa", "restify", "micro", "http", "rawnode", "hapi", "feathers", "sails", "restful"
+    "connect",
+    "express",
+    "koa",
+    "restify",
+    "micro",
+    "http",
+    "rawnode",
+    "hapi",
+    "feathers",
+    "sails",
+    "restful"
   ],
   "author": "Zongmin Lei <leizongmin@gmail.com>",
   "license": "MIT",
