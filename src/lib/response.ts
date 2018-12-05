@@ -175,7 +175,7 @@ export class Response {
    * @param callback 回调函数
    */
   public write(data: string | Buffer | Uint8Array, encoding?: string, callback?: () => void): boolean {
-    return this.res.write.apply(this.res, arguments);
+    return this.res.write.apply(this.res, arguments as any);
   }
 
   /**
@@ -185,8 +185,8 @@ export class Response {
    * @param encoding 字符编码
    * @param callback 回调函数
    */
-  public end(data?: string | Buffer | Uint8Array, encoding?: string, callback?: () => void): boolean {
-    return this.res.end.apply(this.res, arguments);
+  public end(data?: string | Buffer | Uint8Array, encoding?: string, callback?: () => void): void {
+    return this.res.end.apply(this.res, arguments as any);
   }
 
   /**
