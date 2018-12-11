@@ -16,3 +16,5 @@ import * as bodyParser from "./body";
 export { bodyParser };
 
 export * from "./json.parser";
+
+export * from "./proxy";

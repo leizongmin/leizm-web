@@ -22,6 +22,7 @@ import {
 } from "./define";
 import { SessionInstance } from "./component/session";
 import onWriteHead from "./module/on.writehead";
+import { proxyRequest, ProxyTarget, parseProxyTarget } from "./module/proxy.request";
 
 export class Context<Q extends Request = Request, S extends Response = Response> extends EventEmitter {
   /** 原始ServerRequest对象 */
@@ -171,5 +172,30 @@ export class Context<Q extends Request = Request, S extends Response = Response>
    */
   public onWriteHead(callback: () => void) {
     this.on("writeHead", callback);
+  }
+
+  /**
+   * 代理请求
+   *
+   * @param target
+   */
+  public async proxy(target: string | ProxyTarget) {
+    return proxyRequest(this.request.req, this.response.res, target);
+  }
+
+  /**
+   * 代理请求
+   *
+   * @param url 目标地址
+   * @param removeHeaderNames 需要删除的原始请求头列表
+   */
+  public async proxyWithHeaders(url: string, removeHeaderNames: string[] = ["host"]) {
+    const target = parseProxyTarget(url);
+    const originalHeaders = { ...this.request.headers };
+    for (const n of removeHeaderNames) {
+      delete originalHeaders[n];
+    }
+    target.headers = originalHeaders;
+    return proxyRequest(this.request.req, this.response.res, target);
   }
 }
