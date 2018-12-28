@@ -6,9 +6,9 @@
 import { Context } from "../context";
 import { MiddlewareHandle } from "../define";
 import { fromClassicalHandle } from "../utils";
-import * as originServeStatic from "serve-static";
+import { serveStatic as originServeStatic, IServeStaticOptions } from "@modernjs/send";
 
-export interface ServeStaticOptions extends originServeStatic.ServeStaticOptions {}
+export interface ServeStaticOptions extends IServeStaticOptions {}
 
 export function serveStatic(root: string, options: ServeStaticOptions = {}): MiddlewareHandle<Context> {
   return fromClassicalHandle(originServeStatic(root, options) as any);

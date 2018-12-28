@@ -8,8 +8,8 @@ import { ServerResponse } from "http";
 import { Context } from "./context";
 import { sign as signCookie } from "cookie-signature";
 import * as cookie from "cookie";
-import * as send from "send";
-import * as mime from "mime";
+import { send, ISendOptions } from "@modernjs/send";
+import { mime } from "@modernjs/send";
 import { CookieOptions, TemplateRenderData, SYMBOL_CONNECT } from "./define";
 import { notifyDeprecated } from "./utils";
 
@@ -212,7 +212,7 @@ export class Response {
    * @param file 文件名
    * @param options
    */
-  public file(file: string, options?: send.SendOptions) {
+  public file(file: string, options: ISendOptions = {}) {
     send(this.ctx.request.req, path.resolve(file), options)
       .on("error", err => {
         this.res.statusCode = err.status || 500;

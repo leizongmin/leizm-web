@@ -6,9 +6,9 @@
 import * as path from "path";
 import { Context } from "../context";
 import { MiddlewareHandle } from "../define";
-import * as send from "send";
+import { ISendOptions } from "@modernjs/send";
 
-export function favicon(filePath: string, options?: send.SendOptions): MiddlewareHandle<Context> {
+export function favicon(filePath: string, options?: ISendOptions): MiddlewareHandle<Context> {
   filePath = path.resolve(filePath);
   return function(ctx: Context) {
     if (ctx.request.path === "/favicon.ico") {

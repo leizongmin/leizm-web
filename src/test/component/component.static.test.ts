@@ -24,11 +24,11 @@ describe("component.static", function() {
     app.use("/", component.serveStatic(ROOT_DIR));
     await request(app.server)
       .get("/package.json")
-      .expect("content-type", "application/json; charset=UTF-8")
+      .expect("content-type", "application/json")
       .expect(200, file1data);
     await request(app.server)
       .get("/README.md")
-      .expect("content-type", "text/markdown; charset=UTF-8")
+      .expect("content-type", "text/markdown")
       .expect(200, file2data);
   });
 
@@ -42,11 +42,11 @@ describe("component.static", function() {
     await request(app.server)
       .get("/public/package.json")
       .expect(200, file1data)
-      .expect("content-type", "application/json; charset=UTF-8");
+      .expect("content-type", "application/json");
     await request(app.server)
       .get("/public/README.md")
       .expect(200, file2data)
-      .expect("content-type", "text/markdown; charset=UTF-8");
+      .expect("content-type", "text/markdown");
   });
 
   it("作为三级子路径", async function() {
@@ -59,10 +59,10 @@ describe("component.static", function() {
     await request(app.server)
       .get("/public/assets/package.json")
       .expect(200, file1data)
-      .expect("content-type", "application/json; charset=UTF-8");
+      .expect("content-type", "application/json");
     await request(app.server)
       .get("/public/assets/README.md")
       .expect(200, file2data)
-      .expect("content-type", "text/markdown; charset=UTF-8");
+      .expect("content-type", "text/markdown");
   });
 });

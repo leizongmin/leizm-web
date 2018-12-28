@@ -218,11 +218,11 @@ describe("Response", function() {
     });
     await request(app.server)
       .get("/file1")
-      .expect("content-type", "application/json; charset=UTF-8")
+      .expect("content-type", "application/json")
       .expect(200, file1data);
     await request(app.server)
       .get("/file2")
-      .expect("content-type", "text/markdown; charset=UTF-8")
+      .expect("content-type", "text/markdown")
       .expect(200, file2data);
   });
 

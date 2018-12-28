@@ -24,7 +24,7 @@ describe("component.favicon", function() {
     app.use("/", component.favicon(file));
     await request(app.server)
       .get("/favicon.ico")
-      .expect("content-type", "image/x-icon")
+      .expect("content-type", "image/vnd.microsoft.icon")
       .expect(200)
       .expect(res => {
         expect(res.body).to.deep.equal(filedata);

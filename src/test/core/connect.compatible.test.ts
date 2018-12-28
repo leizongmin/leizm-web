@@ -11,7 +11,7 @@ import { Application, fromClassicalHandle, Router, toClassicalHandle } from "../
 import * as request from "supertest";
 import * as connect from "connect";
 import * as bodyParser from "body-parser";
-import * as serveStatic from "serve-static";
+import { serveStatic } from "@modernjs/send";
 
 export function readFile(file: string) {
   return new Promise((resolve, reject) => {
