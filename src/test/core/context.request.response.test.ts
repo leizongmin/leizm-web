@@ -8,8 +8,7 @@ import * as path from "path";
 import { expect } from "chai";
 import { Application, fromClassicalHandle } from "../../lib";
 import * as request from "supertest";
-import * as cookieParser from "cookie-parser";
-import { sign as signCookie } from "cookie-signature";
+import { cookieParser, sign as signCookie } from "@modernjs/cookie";
 import * as simpleTemplate from "../../lib/module/simple.template";
 
 function readFile(file: string): Promise<Buffer> {

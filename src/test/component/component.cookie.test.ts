@@ -1,7 +1,7 @@
 import { expect } from "chai";
 import { Application, component } from "../../lib";
 import * as request from "supertest";
-import { sign as signCookie } from "cookie-signature";
+import { sign as signCookie } from "@modernjs/cookie";
 
 describe("component.cookie", function() {
   it("解析一般的Cookie", function(done) {

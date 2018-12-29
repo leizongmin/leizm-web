@@ -53,19 +53,16 @@
   },
   "homepage": "https://github.com/leizongmin/leizm-web#readme",
   "dependencies": {
+    "@modernjs/cookie": "^1.0.1",
     "@modernjs/send": "^1.0.1",
     "@types/body-parser": "^1.17.0",
     "@types/busboy": "^0.2.3",
-    "@types/cookie": "^0.3.2",
-    "@types/cookie-parser": "^1.4.1",
-    "@types/cookie-signature": "^1.0.1",
-    "@types/node": "^10.12.12",
     "body-parser": "^1.18.3",
     "busboy": "^0.2.14",
-    "cookie": "^0.3.1",
-    "cookie-parser": "^1.4.3",
-    "cookie-signature": "^1.1.0",
     "path-to-regexp": "^2.4.0"
+  },
+  "peerDependencies": {
+    "@types/node": "^10.12.12"
   },
   "devDependencies": {
     "@types/chai": "^4.1.7",

@@ -6,8 +6,7 @@
 import * as path from "path";
 import { ServerResponse } from "http";
 import { Context } from "./context";
-import { sign as signCookie } from "cookie-signature";
-import * as cookie from "cookie";
+import * as cookie from "@modernjs/cookie";
 import { send, ISendOptions } from "@modernjs/send";
 import { mime } from "@modernjs/send";
 import { CookieOptions, TemplateRenderData, SYMBOL_CONNECT } from "./define";
@@ -284,7 +283,7 @@ export class Response {
     }
     let val = typeof value === "object" ? "j:" + JSON.stringify(value) : String(value);
     if (opts.signed) {
-      val = "s:" + signCookie(val, secret);
+      val = "s:" + cookie.sign(val, secret);
     }
     if ("maxAge" in opts && opts.maxAge) {
       opts.expires = new Date(Date.now() + opts.maxAge);

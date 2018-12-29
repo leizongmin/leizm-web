@@ -9,7 +9,7 @@ import { Response } from "./response";
 import { Context } from "./context";
 import { Key as RegExpKey } from "path-to-regexp";
 export { RegExpOptions, Key as RegExpKey } from "path-to-regexp";
-import * as cookie from "cookie";
+import * as cookie from "@modernjs/cookie";
 
 /** 出错原因 */
 export type ErrorReason = undefined | null | string | Error | Record<any, any>;
@@ -109,7 +109,7 @@ export interface ServerRequestEx extends IncomingMessage {
 }
 
 /** 设置Cookie选项 */
-export interface CookieOptions extends cookie.CookieSerializeOptions {
+export interface CookieOptions extends cookie.ICookieSerializeOptions {
   /** 是否签名 */
   signed?: boolean;
 }
