@@ -55,7 +55,7 @@ describe("component.body", function() {
     it("json", async function() {
       const app = new Application();
       appInstances.push(app);
-      app.use("/", component.jsonParser());
+      app.use("/", component.bodyParser.json());
       app.use("/", function(ctx) {
         ctx.response.setHeader("content-type", "application/json");
         ctx.response.end(JSON.stringify(ctx.request.body));
@@ -78,7 +78,7 @@ describe("component.body", function() {
     it("out of limit", async function() {
       const app = new Application();
       appInstances.push(app);
-      app.use("/", component.jsonParser({ limit: 1024 }));
+      app.use("/", component.bodyParser.json({ limit: 1024 }));
       app.use("/", function(ctx) {
         ctx.response.setHeader("content-type", "application/json");
         ctx.response.end(JSON.stringify(ctx.request.body));
@@ -91,7 +91,7 @@ describe("component.body", function() {
       await request(app.server)
         .post("/")
         .send(data)
-        .expect(500)
+        .expect(413)
         .expect(/out of max body size limit/);
     });
   });

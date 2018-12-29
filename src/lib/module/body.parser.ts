@@ -37,7 +37,7 @@ export function readAllBody(
     function checkLength() {
       if (length > limit) {
         isBreak = true;
-        return resolve({ status: 413, error: new Error(`body length out of limit`) });
+        return resolve({ status: 413, error: new Error(`out of max body size limit`) });
       }
     }
   });

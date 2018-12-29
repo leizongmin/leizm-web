@@ -59,7 +59,9 @@ export interface FileField {
 }
 
 export interface BodyParserOptions {
-  /** body大小限制 */
+  /**
+   * 允许的最大body字节，当超过此值时将停止解析，并返回错误
+   */
   limit?: number;
 }
 
@@ -68,10 +70,11 @@ export const DEFAULT_BODY_PARSER_OPTIONS: Required<BodyParserOptions> = {
 };
 
 function wrapBodyParser(
-  options: Required<BodyParserOptions>,
+  options: BodyParserOptions,
   contentType: string,
   decoder: (data: Buffer) => any,
 ): MiddlewareHandle<Context> {
+  const opts = { ...DEFAULT_BODY_PARSER_OPTIONS, ...options };
   return async function(ctx: Context) {
     const t = String(ctx.request.headers["content-type"]).toLowerCase();
     if (t === contentType || t.indexOf(contentType + ";") === 0) {
@@ -81,13 +84,13 @@ function wrapBodyParser(
         ctx.response.html(`<h1>${error.message}</h1>`);
         return;
       }
-      if (length && Number(length) > options.limit) {
+      if (length && Number(length) > opts.limit) {
         ctx.response.status(413);
-        ctx.response.html(`<pre>body length out of limit</pre>`);
+        ctx.response.html(`<pre>out of max body size limit</pre>`);
         return;
       }
       try {
-        const { status, error, data } = await readAllBody(stream!, options.limit);
+        const { status, error, data } = await readAllBody(stream!, opts.limit);
         if (error) {
           ctx.response.status(status || 400);
           ctx.response.html(`<h1>${error.message}</h1>`);
@@ -106,23 +109,19 @@ function wrapBodyParser(
 }
 
 export function json(options: BodyParserOptions = {}) {
-  return wrapBodyParser({ ...options, ...DEFAULT_BODY_PARSER_OPTIONS }, "application/json", data =>
-    JSON.parse(data.toString()),
-  );
+  return wrapBodyParser(options, "application/json", data => JSON.parse(data.toString()));
 }
 
 export function text(options: BodyParserOptions = {}) {
-  return wrapBodyParser({ ...options, ...DEFAULT_BODY_PARSER_OPTIONS }, "text/plain", data => data.toString());
+  return wrapBodyParser(options, "text/plain", data => data.toString());
 }
 
 export function urlencoded(options: BodyParserOptions = {}) {
-  return wrapBodyParser({ ...options, ...DEFAULT_BODY_PARSER_OPTIONS }, "application/x-www-form-urlencoded", data =>
-    querystring.parse(data.toString()),
-  );
+  return wrapBodyParser(options, "application/x-www-form-urlencoded", data => querystring.parse(data.toString()));
 }
 
 export function raw(options: BodyParserOptions = {}) {
-  return wrapBodyParser({ ...options, ...DEFAULT_BODY_PARSER_OPTIONS }, "application/octet-stream", data => data);
+  return wrapBodyParser(options, "application/octet-stream", data => data);
 }
 
 export function multipart(options: MultipartParserOptions = {}): MiddlewareHandle<Context> {
