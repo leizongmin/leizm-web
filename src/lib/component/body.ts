@@ -8,18 +8,10 @@ import { MiddlewareHandle } from "../define";
 import * as os from "os";
 import * as fs from "fs";
 import * as path from "path";
-import * as bodyParser from "body-parser";
-import { fromClassicalHandle } from "../utils";
+import * as querystring from "querystring";
 import * as Busboy from "busboy";
 import { randomString } from "../module/simple.random";
-
-export interface JsonParserOptions extends bodyParser.OptionsJson {}
-
-export interface TextParserOptions extends bodyParser.OptionsText {}
-
-export interface UrlencodedParserOptions extends bodyParser.OptionsUrlencoded {}
-
-export interface RawParserOptions extends bodyParser.Options {}
+import { getContentStream, readAllBody } from "../module/body.parser";
 
 export interface MultipartParserOptions {
   /** 字段名称长度，默认 100 */
@@ -66,24 +58,71 @@ export interface FileField {
   buffer?: Buffer;
 }
 
-export function json(options: JsonParserOptions = {}): MiddlewareHandle<Context> {
-  const fn = bodyParser.json(options);
-  return fromClassicalHandle(fn);
+export interface BodyParserOptions {
+  /** body大小限制 */
+  limit?: number;
 }
 
-export function text(options: TextParserOptions = {}): MiddlewareHandle<Context> {
-  const fn = bodyParser.text(options);
-  return fromClassicalHandle(fn);
+export const DEFAULT_BODY_PARSER_OPTIONS: Required<BodyParserOptions> = {
+  limit: 100 * 1024,
+};
+
+function wrapBodyParser(
+  options: Required<BodyParserOptions>,
+  contentType: string,
+  decoder: (data: Buffer) => any,
+): MiddlewareHandle<Context> {
+  return async function(ctx: Context) {
+    const t = String(ctx.request.headers["content-type"]).toLowerCase();
+    if (t === contentType || t.indexOf(contentType + ";") === 0) {
+      const { status, error, length, stream } = getContentStream(ctx.request.req);
+      if (error) {
+        ctx.response.status(status || 400);
+        ctx.response.html(`<h1>${error.message}</h1>`);
+        return;
+      }
+      if (length && Number(length) > options.limit) {
+        ctx.response.status(413);
+        ctx.response.html(`<pre>body length out of limit</pre>`);
+        return;
+      }
+      try {
+        const { status, error, data } = await readAllBody(stream!, options.limit);
+        if (error) {
+          ctx.response.status(status || 400);
+          ctx.response.html(`<h1>${error.message}</h1>`);
+        } else {
+          ctx.request.body = decoder(data!);
+          ctx.next();
+        }
+      } catch (err) {
+        ctx.response.status(status || 400);
+        ctx.response.html(`<h1>${err.message}</h1>`);
+      }
+    } else {
+      ctx.next();
+    }
+  };
 }
 
-export function urlencoded(options: UrlencodedParserOptions = {}): MiddlewareHandle<Context> {
-  const fn = bodyParser.urlencoded(options);
-  return fromClassicalHandle(fn);
+export function json(options: BodyParserOptions = {}) {
+  return wrapBodyParser({ ...options, ...DEFAULT_BODY_PARSER_OPTIONS }, "application/json", data =>
+    JSON.parse(data.toString()),
+  );
 }
 
-export function raw(options: RawParserOptions = {}): MiddlewareHandle<Context> {
-  const fn = bodyParser.raw(options);
-  return fromClassicalHandle(fn);
+export function text(options: BodyParserOptions = {}) {
+  return wrapBodyParser({ ...options, ...DEFAULT_BODY_PARSER_OPTIONS }, "text/plain", data => data.toString());
+}
+
+export function urlencoded(options: BodyParserOptions = {}) {
+  return wrapBodyParser({ ...options, ...DEFAULT_BODY_PARSER_OPTIONS }, "application/x-www-form-urlencoded", data =>
+    querystring.parse(data.toString()),
+  );
+}
+
+export function raw(options: BodyParserOptions = {}) {
+  return wrapBodyParser({ ...options, ...DEFAULT_BODY_PARSER_OPTIONS }, "application/octet-stream", data => data);
 }
 
 export function multipart(options: MultipartParserOptions = {}): MiddlewareHandle<Context> {

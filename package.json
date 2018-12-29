@@ -55,9 +55,7 @@
   "dependencies": {
     "@modernjs/cookie": "^1.0.1",
     "@modernjs/send": "^1.0.1",
-    "@types/body-parser": "^1.17.0",
     "@types/busboy": "^0.2.3",
-    "body-parser": "^1.18.3",
     "busboy": "^0.2.14",
     "path-to-regexp": "^2.4.0"
   },
@@ -65,6 +63,7 @@
     "@types/node": "^10.12.12"
   },
   "devDependencies": {
+    "@types/body-parser": "^1.17.0",
     "@types/chai": "^4.1.7",
     "@types/connect": "^3.4.32",
     "@types/ejs": "^2.6.1",
@@ -74,6 +73,7 @@
     "@types/pug": "^2.0.4",
     "@types/redis": "^2.8.10",
     "@types/supertest": "^2.0.7",
+    "body-parser": "^1.18.3",
     "chai": "^4.2.0",
     "connect": "^3.6.6",
     "coveralls": "^3.0.2",

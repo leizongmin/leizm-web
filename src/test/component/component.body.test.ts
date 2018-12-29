@@ -99,7 +99,7 @@ describe("component.body", function() {
   it("urlencoded", async function() {
     const app = new Application();
     appInstances.push(app);
-    app.use("/", component.bodyParser.urlencoded({ extended: false }));
+    app.use("/", component.bodyParser.urlencoded({}));
     app.use("/", function(ctx) {
       ctx.response.setHeader("content-type", "application/json");
       ctx.response.end(JSON.stringify(ctx.request.body));
