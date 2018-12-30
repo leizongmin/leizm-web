@@ -16,7 +16,7 @@
     "coveralls": "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js",
     "clean": "rm -rf dist",
     "compile": "npm run clean && tsc",
-    "prepublish": "npm run test && npm run compile",
+    "prepublishOnly": "npm run test && npm run compile",
     "format": "prettier --write \"src/**/*.ts\"",
     "docs": "typedoc --out ./docs --tsconfig tsconfig.typedoc.json",
     "update-wiki": "cd wiki && git pull && node update_index.js && git add . && git commit -m \"update\" && git push"
@@ -54,9 +54,8 @@
   "homepage": "https://github.com/leizongmin/leizm-web#readme",
   "dependencies": {
     "@modernjs/cookie": "^1.0.1",
+    "@modernjs/multipart": "^1.0.2",
     "@modernjs/send": "^1.0.1",
-    "@types/busboy": "^0.2.3",
-    "busboy": "^0.2.14",
     "path-to-regexp": "^2.4.0"
   },
   "peerDependencies": {
@@ -69,6 +68,7 @@
     "@types/ejs": "^2.6.1",
     "@types/ioredis": "^4.0.4",
     "@types/mocha": "^5.2.5",
+    "@types/node": "^10.12.12",
     "@types/nunjucks": "^3.1.0",
     "@types/pug": "^2.0.4",
     "@types/redis": "^2.8.10",

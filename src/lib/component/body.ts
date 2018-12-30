@@ -9,7 +9,7 @@ import * as os from "os";
 import * as fs from "fs";
 import * as path from "path";
 import * as querystring from "querystring";
-import * as Busboy from "busboy";
+import { Busboy } from "@modernjs/multipart";
 import { randomString } from "../module/simple.random";
 import { getContentStream, readAllBody } from "../module/body.parser";
 
