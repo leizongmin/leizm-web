@@ -1,6 +1,6 @@
 {
   "name": "@leizm/web",
-  "version": "3.0.0-pre3",
+  "version": "3.0.0-pre4",
   "description": "现代的 Web 中间件基础框架，完美支持 TypeScript，构建可维护的大型 Web 项目。",
   "main": "dist/lib/index.js",
   "typings": "dist/lib/index.d.ts",
@@ -54,7 +54,7 @@
   "homepage": "https://github.com/leizongmin/leizm-web#readme",
   "dependencies": {
     "@modernjs/cookie": "^1.0.1",
-    "@modernjs/multipart": "^1.0.2",
+    "@modernjs/multipart": "^1.0.3",
     "@modernjs/send": "^1.0.1",
     "path-to-regexp": "^2.4.0"
   },
