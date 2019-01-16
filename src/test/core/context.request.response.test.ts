@@ -302,6 +302,28 @@ describe("Response", function() {
     });
   });
 
+  describe("gzip()", function() {
+    it("gzip", async function() {
+      const app = new Application();
+      app.use("/a", function(ctx) {
+        ctx.response.gzip("今天的天气真好", "text/plain");
+      });
+      app.use("/b", function(ctx) {
+        ctx.response.gzip(Buffer.from("今天的天气真好"), "text/plain");
+      });
+      await request(app.server)
+        .get("/a")
+        .expect("Content-Encoding", "gzip")
+        .expect("Content-Type", "text/plain")
+        .expect(200, "今天的天气真好");
+      await request(app.server)
+        .get("/b")
+        .expect("Content-Encoding", "gzip")
+        .expect("Content-Type", "text/plain")
+        .expect(200, "今天的天气真好");
+    });
+  });
+
   describe("render()", function() {
     it("带后缀名", function(done) {
       const app = new Application();
