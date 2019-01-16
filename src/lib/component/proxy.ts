@@ -3,6 +3,7 @@
  * @author Zongmin Lei <leizongmin@gmail.com>
  */
 
+import * as path from "path";
 import { Context } from "../context";
 import { MiddlewareHandle } from "../define";
 import { proxyRequest, ProxyTarget, parseProxyTarget } from "../module/proxy.request";
@@ -35,7 +36,7 @@ export function proxy(options: ProxyOptions): MiddlewareHandle<Context> {
     }
     const target: ProxyTarget = {
       ...baseTarget,
-      path: baseTarget.path + ctx.request.url,
+      path: path.join(baseTarget.path, ctx.request.url),
       headers: { ...originalHeaders, ...baseTarget.headers },
     };
     proxyRequest(ctx.request.req, ctx.response.res, target).catch(err => {
