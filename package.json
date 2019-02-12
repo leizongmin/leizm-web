@@ -68,7 +68,7 @@
     "@types/ejs": "^2.6.1",
     "@types/ioredis": "^4.0.4",
     "@types/mocha": "^5.2.5",
-    "@types/node": "^10.12.12",
+    "@types/node": "^11.9.0",
     "@types/nunjucks": "^3.1.0",
     "@types/pug": "^2.0.4",
     "@types/redis": "^2.8.10",
