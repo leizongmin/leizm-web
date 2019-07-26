@@ -87,7 +87,7 @@
     "redis": "^2.8.0",
     "supertest": "^3.3.0",
     "ts-node": "^7.0.1",
-    "typedoc": "^0.14.0",
+    "typedoc": "^0.15.0",
     "typescript": "^3.2.2"
   }
 }
