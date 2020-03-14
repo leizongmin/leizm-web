@@ -8,7 +8,7 @@ import { Request } from "./request";
 import { Response } from "./response";
 import { Context } from "./context";
 import { Key as RegExpKey } from "path-to-regexp";
-export { RegExpOptions, Key as RegExpKey } from "path-to-regexp";
+export { Key as RegExpKey, TokensToRegexpOptions as RegExpOptions } from "path-to-regexp";
 import * as cookie from "cookie";
 
 /** 出错原因 */

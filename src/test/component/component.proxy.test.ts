@@ -16,7 +16,7 @@ describe("component.proxy", function() {
   before(function(done) {
     remoteApp.listen({ port: 0 }, () => {
       const addr = remoteApp.server.address();
-      remoteHost = typeof addr === "string" ? addr : "127.0.0.1:" + addr.port;
+      remoteHost = typeof addr === "string" ? addr : "127.0.0.1:" + ((addr && addr.port) || 80);
       remoteUrl = "http://" + remoteHost;
       appInstances.push(remoteApp);
       done();

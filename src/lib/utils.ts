@@ -3,7 +3,7 @@
  * @author Zongmin Lei <leizongmin@gmail.com>
  */
 
-import * as pathToRegExp from "path-to-regexp";
+import { pathToRegexp as pathToRegExp } from "path-to-regexp";
 import {
   MiddlewareHandle,
   ClassicalMiddlewareHandle,
