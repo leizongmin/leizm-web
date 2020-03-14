@@ -13,7 +13,7 @@ import * as connect from "connect";
 import * as bodyParser from "body-parser";
 import * as serveStatic from "serve-static";
 
-export function readFile(file: string) {
+export function readFile(file: string): Promise<string> {
   return new Promise((resolve, reject) => {
     fs.readFile(file, (err, ret) => {
       if (err) {
