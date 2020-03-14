@@ -148,8 +148,8 @@ export function parseMultipart(ctx: Context, options: MultipartParserOptions = {
         }),
       );
     });
-    busboy.on("field", (fieldname, val, fieldnameTruncated, valTruncated) => {
-      fields[fieldname] = val;
+    busboy.on("field", (fieldName, val, fieldNameTruncated, valTruncated) => {
+      fields[fieldName] = val;
     });
     busboy.on("finish", () => {
       Promise.all(asyncTasks)
