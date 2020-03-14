@@ -215,7 +215,7 @@ export class Response extends base.Response {
 ```text
 MIT License
 
-Copyright (c) 2017-2018 老雷 <leizongmin@gmail.com>
+Copyright (c) 2017-2020 老雷 <leizongmin@gmail.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
