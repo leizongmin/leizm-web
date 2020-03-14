@@ -12,6 +12,8 @@ import * as send from "send";
 import * as mime from "mime";
 import { CookieOptions, TemplateRenderData, SYMBOL_CONNECT } from "./define";
 import { notifyDeprecated } from "./utils";
+import { Readable } from "stream";
+import { responseGzip } from "./module/response.gzip";
 
 export class Response {
   constructor(public readonly res: ServerResponse, public readonly ctx: Context) {}
@@ -311,5 +313,14 @@ export class Response {
     } catch (err) {
       this.ctx.next(err);
     }
+  }
+
+  /**
+   * 响应压缩的内容
+   * @param data
+   * @param contentType
+   */
+  public async gzip(data: string | Buffer | Readable, contentType?: string) {
+    responseGzip(this.ctx.request.req, this.res, data, contentType);
   }
 }

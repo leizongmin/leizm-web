@@ -115,7 +115,7 @@ export class Core<C extends Context = Context<Request, Response>> {
    * @param route 路由规则
    * @param handles 中间件对象或处理函数
    */
-  public use(route: string | RegExp, ...handles: Array<MiddlewareHandle<C> | Core<C>>) {
+  public use(route: string | RegExp, ...handles: Array<MiddlewareHandle<C> | Core<C>>): this {
     const parsedRoute = this.parseRoutePath(true, route);
     this.add(
       parsedRoute,
@@ -132,6 +132,7 @@ export class Core<C extends Context = Context<Request, Response>> {
         return item;
       }),
     );
+    return this;
   }
 
   /**
