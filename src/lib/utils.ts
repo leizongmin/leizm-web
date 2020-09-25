@@ -96,7 +96,7 @@ export function getRouteMatchPath(pathname: string, route: ParsedRoutePathResult
  * @param fn 处理函数
  */
 export function fromClassicalHandle<C extends Context>(fn: ClassicalMiddlewareHandle): MiddlewareHandle<C> {
-  const handle: MiddlewareHandle<C> = function(ctx: C) {
+  const handle: MiddlewareHandle<C> = function (ctx: C) {
     let removedPath = "";
     if (handle.route) {
       removedPath = getRouteMatchPath(ctx.request.path, handle.route);
@@ -126,7 +126,7 @@ export function toClassicalHandle(
   fn: MiddlewareHandle<Context>,
   contextConstructor: ContextConstructor = Context,
 ): ClassicalMiddlewareHandle {
-  return function(req: IncomingMessage, res: ServerResponse, next: (err: ErrorReason) => void) {
+  return function (req: IncomingMessage, res: ServerResponse, next: (err: ErrorReason) => void) {
     const ctx = new contextConstructor().init(req, res);
     if (typeof next !== "function") next = finalhandler(req, res);
     ctx[SYMBOL_PUSH_NEXT_HANDLE](next);
@@ -143,7 +143,7 @@ export function toClassicalHandle(
  * @param fn 处理函数
  */
 export function fromClassicalErrorHandle<C extends Context>(fn: ClassicalMiddlewareErrorHandle): MiddlewareHandle<C> {
-  const handle: MiddlewareHandle<C> = function(ctx: Context, err?: ErrorReason) {
+  const handle: MiddlewareHandle<C> = function (ctx: Context, err?: ErrorReason) {
     let removedPath = "";
     if (handle.route) {
       removedPath = getRouteMatchPath(ctx.request.path, handle.route);
@@ -185,14 +185,14 @@ export function wrapMiddlewareHandleWithMethod<C extends Context>(
 ): MiddlewareHandle<C> {
   function handleRequest(ctx: C, err?: ErrorReason) {
     if (ctx.request.method !== method) return ctx.next(err);
-    execMiddlewareHandle(handle, ctx, err, err2 => ctx.next(err2));
+    execMiddlewareHandle(handle, ctx, err, (err2) => ctx.next(err2));
   }
   if (isMiddlewareErrorHandle(handle)) {
-    return function(ctx: C, err?: ErrorReason) {
+    return function (ctx: C, err?: ErrorReason) {
       handleRequest(ctx, err);
     };
   }
-  return function(ctx: C) {
+  return function (ctx: C) {
     handleRequest(ctx);
   };
 }
@@ -211,7 +211,7 @@ export function execMiddlewareHandle<C>(
   err: ErrorReason,
   onError: (err: ErrorReason) => void,
 ) {
-  process.nextTick(function() {
+  process.nextTick(function () {
     let p: Promise<void> | void;
     try {
       p = handle(ctx, err);

@@ -11,7 +11,7 @@ export interface CookieParserOptions extends originCookieParser.CookieParseOptio
 
 export function cookieParser(secret?: string, options: CookieParserOptions = {}): MiddlewareHandle<Context> {
   const handler = originCookieParser(secret, options);
-  return function(ctx: Context) {
+  return function (ctx: Context) {
     handler(ctx.request.req as any, ctx.response.res as any, (err?: Error) => ctx.next(err));
   };
 }

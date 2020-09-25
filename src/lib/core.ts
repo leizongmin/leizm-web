@@ -90,7 +90,7 @@ export class Core<C extends Context = Context<Request, Response>> {
    */
   public toMiddleware() {
     const self = this;
-    return function(ctx: C) {
+    return function (ctx: C) {
       let removedPath = "";
       if (self.route) {
         removedPath = getRouteMatchPath(ctx.request.path, self.route);
@@ -99,7 +99,7 @@ export class Core<C extends Context = Context<Request, Response>> {
           ctx.request.path = ctx.request.path.slice(removedPath.length);
         }
       }
-      self.handleRequestByContext(ctx, function(err) {
+      self.handleRequestByContext(ctx, function (err) {
         if (removedPath) {
           ctx.request.url = removedPath + ctx.request.url;
           ctx.request.path = removedPath + ctx.request.path;
@@ -119,7 +119,7 @@ export class Core<C extends Context = Context<Request, Response>> {
     const parsedRoute = this.parseRoutePath(true, route);
     this.add(
       parsedRoute,
-      ...handles.map(item => {
+      ...handles.map((item) => {
         if (item instanceof Core) {
           item.path = route.toString();
           if (this.path) {
@@ -149,7 +149,7 @@ export class Core<C extends Context = Context<Request, Response>> {
         handleError: isMiddlewareErrorHandle(handle),
         atEnd: false,
       };
-      const i = this.stack.findIndex(v => v.atEnd);
+      const i = this.stack.findIndex((v) => v.atEnd);
       if (i === -1) {
         this.stack.push(item);
       } else {
@@ -216,7 +216,7 @@ export class Core<C extends Context = Context<Request, Response>> {
       return handle;
     };
 
-    const next: NextFunction = err => {
+    const next: NextFunction = (err) => {
       const handle = err ? getNextErrorHandle() : getNextHandle();
       err = err || null;
       if (err && ctx.listenerCount("error") > 0) {

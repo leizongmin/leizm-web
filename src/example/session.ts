@@ -36,7 +36,7 @@ app.use(
   }),
 );
 
-app.use("/", async ctx => {
+app.use("/", async (ctx) => {
   // console.log(ctx.session);
   console.log(ctx.request.cookies);
   console.log(ctx.request.signedCookies);

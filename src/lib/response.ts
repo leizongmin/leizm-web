@@ -216,7 +216,7 @@ export class Response {
    */
   public file(file: string, options?: send.SendOptions) {
     send(this.ctx.request.req, path.resolve(file), options)
-      .on("error", err => {
+      .on("error", (err) => {
         this.res.statusCode = err.status || 500;
         this.res.end(err.message);
       })

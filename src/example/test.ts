@@ -14,11 +14,11 @@ function sleep(ms = 1000) {
 const app = new Application();
 app.use(
   "/sleep",
-  function(ctx) {
+  function (ctx) {
     console.log(ctx.request.method, ctx.request.url);
     ctx.next();
   },
-  async function(ctx) {
+  async function (ctx) {
     console.log(ctx.request.query, ctx.request.hasBody(), ctx.request.body);
     await sleep(1000);
     ctx.next();
@@ -26,18 +26,18 @@ app.use(
 );
 app.use(
   "/",
-  fromClassicalHandle(function(req, res, next) {
+  fromClassicalHandle(function (req, res, next) {
     console.log(req.headers);
     next();
   }),
 );
 
 const router = new Router();
-router.use("/", function(ctx) {
+router.use("/", function (ctx) {
   console.log("router", ctx.request.method, ctx.request.url);
   ctx.next();
 });
-router.get("/hello/:a/:b", function(ctx) {
+router.get("/hello/:a/:b", function (ctx) {
   ctx.response.setHeader("content-type", "application/json");
   ctx.response.end(JSON.stringify(ctx.request.params));
 });

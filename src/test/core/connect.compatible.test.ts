@@ -27,26 +27,26 @@ export function readFile(file: string): Promise<string> {
 
 const ROOT_DIR = path.resolve(__dirname, "../../..");
 
-describe("兼容 connect 模块", function() {
+describe("兼容 connect 模块", function () {
   const appInstances: Application[] = [];
-  after(async function() {
+  after(async function () {
     for (const app of appInstances) {
       await app.close();
     }
   });
 
-  it("作为 connect 的中间件", async function() {
+  it("作为 connect 的中间件", async function () {
     const app = connect();
     const app2 = new Application();
     appInstances.push(app2);
     app.use(bodyParser.json() as any);
     let isCalled = false;
-    app.use(function(req: IncomingMessage, res: ServerResponse, next: Function) {
+    app.use(function (req: IncomingMessage, res: ServerResponse, next: Function) {
       isCalled = true;
       next();
     });
     app.use(app2.handleRequest);
-    app2.use("/", function(ctx) {
+    app2.use("/", function (ctx) {
       ctx.response.setHeader("content-type", "application/json");
       ctx.response.end(JSON.stringify(ctx.request.body));
     });
@@ -66,18 +66,18 @@ describe("兼容 connect 模块", function() {
     expect(isCalled).to.equal(true);
   });
 
-  it("转换 connect app 为中间件", async function() {
+  it("转换 connect app 为中间件", async function () {
     const app = connect();
     const app2 = new Application();
     appInstances.push(app2);
     app.use(bodyParser.json() as any);
     let isCalled = false;
-    app.use(function(req: IncomingMessage, res: ServerResponse, next: Function) {
+    app.use(function (req: IncomingMessage, res: ServerResponse, next: Function) {
       isCalled = true;
       next();
     });
     app2.use("/", fromClassicalHandle(app));
-    app2.use("/", function(ctx) {
+    app2.use("/", function (ctx) {
       ctx.response.setHeader("content-type", "application/json");
       ctx.response.end(JSON.stringify(ctx.request.body));
     });
@@ -97,29 +97,23 @@ describe("兼容 connect 模块", function() {
     expect(isCalled).to.equal(true);
   });
 
-  it("Router 作为 connect 中间件", async function() {
+  it("Router 作为 connect 中间件", async function () {
     const app = connect();
     const app2 = new Application();
     const router = new Router();
     app2.use("/", router);
     app.use(app2.handleRequest);
-    router.get("/a", function(ctx) {
+    router.get("/a", function (ctx) {
       ctx.response.end("this is a");
     });
-    router.post("/b", function(ctx) {
+    router.post("/b", function (ctx) {
       ctx.response.end("this is b");
     });
-    await request(app2.server)
-      .get("/a")
-      .expect(200)
-      .expect("this is a");
-    await request(app2.server)
-      .post("/b")
-      .expect(200)
-      .expect("this is b");
+    await request(app2.server).get("/a").expect(200).expect("this is a");
+    await request(app2.server).post("/b").expect(200).expect("this is b");
   });
 
-  it("兼容 serve-static 模块", async function() {
+  it("兼容 serve-static 模块", async function () {
     const app = new Application();
     appInstances.push(app);
     const app2 = new Application();
@@ -136,35 +130,29 @@ describe("兼容 connect 模块", function() {
       .expect(await readFile(path.resolve(ROOT_DIR, "package.json")));
   });
 
-  it("@leizm/web 格式的中间件作为 connect 中间件", async function() {
+  it("@leizm/web 格式的中间件作为 connect 中间件", async function () {
     const app = connect();
     let counter = 0;
     app.use(
-      toClassicalHandle(function(ctx) {
+      toClassicalHandle(function (ctx) {
         counter++;
         ctx.next();
       }),
     );
     app.use(
       "/a",
-      toClassicalHandle(function(ctx) {
+      toClassicalHandle(function (ctx) {
         ctx.response.end("this is a");
       }),
     );
     app.use(
       "/b",
-      toClassicalHandle(function(ctx) {
+      toClassicalHandle(function (ctx) {
         ctx.response.end("this is b");
       }),
     );
-    await request(app)
-      .get("/a")
-      .expect(200)
-      .expect("this is a");
-    await request(app)
-      .post("/b")
-      .expect(200)
-      .expect("this is b");
+    await request(app).get("/a").expect(200).expect("this is a");
+    await request(app).post("/b").expect(200).expect("this is b");
     expect(counter).to.equal(2);
   });
 });

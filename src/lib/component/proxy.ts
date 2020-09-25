@@ -29,7 +29,7 @@ export const DEFAULT_PROXY_REMOVE_HEADER_NAMES = ["host"];
 export function proxy(options: ProxyOptions): MiddlewareHandle<Context> {
   const baseTarget = typeof options.target === "string" ? parseProxyTarget(options.target) : { ...options.target };
   const removeHeaderNames = options.removeHeaderNames || DEFAULT_PROXY_REMOVE_HEADER_NAMES;
-  return function(ctx: Context) {
+  return function (ctx: Context) {
     const originalHeaders = { ...ctx.request.headers };
     for (const n of removeHeaderNames) {
       delete originalHeaders[n];
@@ -39,7 +39,7 @@ export function proxy(options: ProxyOptions): MiddlewareHandle<Context> {
       path: path.join(baseTarget.path, ctx.request.url),
       headers: { ...originalHeaders, ...baseTarget.headers },
     };
-    proxyRequest(ctx.request.req, ctx.response.res, target).catch(err => {
+    proxyRequest(ctx.request.req, ctx.response.res, target).catch((err) => {
       ctx.next(err);
     });
   };

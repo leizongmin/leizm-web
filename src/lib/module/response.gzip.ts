@@ -49,7 +49,7 @@ export function responseGzip(
   } else {
     data.pipe(zlibStream);
   }
-  zlibStream.on("error", err => {
+  zlibStream.on("error", (err) => {
     res.writeHead(500, { "Content-Type": "text/plain" });
     res.end(`ctx.response.gzip(): ${err.message}`);
   });

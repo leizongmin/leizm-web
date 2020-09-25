@@ -87,7 +87,7 @@ export function raw(options: RawParserOptions = {}): MiddlewareHandle<Context> {
 }
 
 export function multipart(options: MultipartParserOptions = {}): MiddlewareHandle<Context> {
-  return async function(ctx: Context) {
+  return async function (ctx: Context) {
     await parseMultipart(ctx, options);
     ctx.next();
   };
@@ -124,7 +124,7 @@ export function parseMultipart(ctx: Context, options: MultipartParserOptions = {
               if (size > opts.smallFileSize) {
                 filePath = path.resolve(os.tmpdir(), `multipart-tmp-${randomString(32)}`);
                 fileStream = fs.createWriteStream(filePath);
-                fileStream.on("error", err => reject(err));
+                fileStream.on("error", (err) => reject(err));
                 fileStream.write(Buffer.concat(buf));
                 buf = [];
               }

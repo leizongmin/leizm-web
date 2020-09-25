@@ -7,7 +7,7 @@ import * as http from "http";
 import { parse as parseUrl } from "url";
 
 export default function finalhandler(req: http.IncomingMessage, res: http.ServerResponse) {
-  return function(err: any) {
+  return function (err: any) {
     if (err) {
       writeHead(res, getErrorStatusCode(err) || 500, getErrorHeaders(err));
       if (err instanceof Error) {
@@ -65,9 +65,7 @@ function escapeHtml(str: string): string {
 }
 
 function createHtmlDocument(message: string): string {
-  const body = escapeHtml(message)
-    .replace(NEWLINE_REGEXP, "<br>")
-    .replace(DOUBLE_SPACE_REGEXP, " &nbsp;");
+  const body = escapeHtml(message).replace(NEWLINE_REGEXP, "<br>").replace(DOUBLE_SPACE_REGEXP, " &nbsp;");
   return (
     "<!DOCTYPE html>\n" +
     '<html lang="en">\n' +

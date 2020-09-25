@@ -184,24 +184,24 @@ export class SimpleRedisClient extends EventEmitter implements RedisCompatibleCl
       this._isConnecting = false;
       this.emit("connect");
       if (this.options.password) {
-        this.preCommand(["AUTH", this.options.password], err => {
+        this.preCommand(["AUTH", this.options.password], (err) => {
           if (err) {
             this.emit("error", new Error(`auth failed: ${err.message}`));
           }
         });
       }
       if (this.options.db > 0) {
-        this.preCommand(["SELECT", this.options.db], err => {
+        this.preCommand(["SELECT", this.options.db], (err) => {
           if (err) {
             this.emit("error", new Error(`select database failed: ${err.message}`));
           }
         });
       }
-      this._sendBuffers.forEach(data => this.socket!.write(data));
+      this._sendBuffers.forEach((data) => this.socket!.write(data));
       this._sendBuffers = [];
     });
     this._isConnecting = true;
-    this.socket.on("error", err => {
+    this.socket.on("error", (err) => {
       this._isConnecting = false;
       this.emit("error", err);
     });
@@ -214,13 +214,13 @@ export class SimpleRedisClient extends EventEmitter implements RedisCompatibleCl
       this._callbacks = [];
       this._sendBuffers = [];
       this._parser = new RedisParser();
-      callbacks.forEach(callback => callback(new Error(`connection has been closed`), null));
+      callbacks.forEach((callback) => callback(new Error(`connection has been closed`), null));
       this.emit("close");
     });
     this.socket.on("end", () => {
       this.emit("end");
     });
-    this.socket.on("data", data => {
+    this.socket.on("data", (data) => {
       this._pushData(data);
     });
   }

@@ -158,9 +158,9 @@ function requireProjectModule(id: string): any {
     new Set(
       (new Error().stack || "")
         .split(/\n/)
-        .map(v => v.match(/\((.*)\:\d+\:\d+\)/))
-        .filter(v => v)
-        .map(v => path.dirname(v![1])),
+        .map((v) => v.match(/\((.*)\:\d+\:\d+\)/))
+        .filter((v) => v)
+        .map((v) => path.dirname(v![1])),
     ),
   );
   const entry = require.resolve(id, { paths: [process.cwd(), ...paths] });

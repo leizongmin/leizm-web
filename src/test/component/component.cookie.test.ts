@@ -3,11 +3,11 @@ import { Application, component } from "../../lib";
 import * as request from "supertest";
 import { sign as signCookie } from "cookie-signature";
 
-describe("component.cookie", function() {
-  it("解析一般的Cookie", function(done) {
+describe("component.cookie", function () {
+  it("解析一般的Cookie", function (done) {
     const app = new Application();
     app.use("/", component.cookieParser("test"));
-    app.use("/", function(ctx) {
+    app.use("/", function (ctx) {
       expect(ctx.request.cookies).to.deep.equal({
         a: "123",
         b: "今天的天气真好",
@@ -24,10 +24,10 @@ describe("component.cookie", function() {
       .expect("ok", done);
   });
 
-  it("解析签名的Cookie", function(done) {
+  it("解析签名的Cookie", function (done) {
     const app = new Application();
     app.use("/", component.cookieParser("test"));
-    app.use("/", function(ctx) {
+    app.use("/", function (ctx) {
       // console.log(ctx.request.cookies, ctx.request.signedCookies);
       expect(ctx.request.cookies).to.deep.equal({});
       expect(ctx.request.signedCookies).to.deep.equal({

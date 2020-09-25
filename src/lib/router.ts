@@ -31,7 +31,7 @@ export class Router<C extends Context = Context<Request, Response>> extends Core
     this.addToEnd(
       { method: "GET", path: route.toString() },
       this.parseRoutePath(false, route),
-      ...handles.map(item => wrapMiddlewareHandleWithMethod("GET", item)),
+      ...handles.map((item) => wrapMiddlewareHandleWithMethod("GET", item)),
     );
   }
 
@@ -45,7 +45,7 @@ export class Router<C extends Context = Context<Request, Response>> extends Core
     this.addToEnd(
       { method: "HEAD", path: route.toString() },
       this.parseRoutePath(false, route),
-      ...handles.map(item => wrapMiddlewareHandleWithMethod("HEAD", item)),
+      ...handles.map((item) => wrapMiddlewareHandleWithMethod("HEAD", item)),
     );
   }
 
@@ -59,7 +59,7 @@ export class Router<C extends Context = Context<Request, Response>> extends Core
     this.addToEnd(
       { method: "POST", path: route.toString() },
       this.parseRoutePath(false, route),
-      ...handles.map(item => wrapMiddlewareHandleWithMethod("POST", item)),
+      ...handles.map((item) => wrapMiddlewareHandleWithMethod("POST", item)),
     );
   }
 
@@ -73,7 +73,7 @@ export class Router<C extends Context = Context<Request, Response>> extends Core
     this.addToEnd(
       { method: "PUT", path: route.toString() },
       this.parseRoutePath(false, route),
-      ...handles.map(item => wrapMiddlewareHandleWithMethod("PUT", item)),
+      ...handles.map((item) => wrapMiddlewareHandleWithMethod("PUT", item)),
     );
   }
 
@@ -87,7 +87,7 @@ export class Router<C extends Context = Context<Request, Response>> extends Core
     this.addToEnd(
       { method: "DELETE", path: route.toString() },
       this.parseRoutePath(false, route),
-      ...handles.map(item => wrapMiddlewareHandleWithMethod("DELETE", item)),
+      ...handles.map((item) => wrapMiddlewareHandleWithMethod("DELETE", item)),
     );
   }
 
@@ -101,7 +101,7 @@ export class Router<C extends Context = Context<Request, Response>> extends Core
     this.addToEnd(
       { method: "CONNECT", path: route.toString() },
       this.parseRoutePath(false, route),
-      ...handles.map(item => wrapMiddlewareHandleWithMethod("CONNECT", item)),
+      ...handles.map((item) => wrapMiddlewareHandleWithMethod("CONNECT", item)),
     );
   }
 
@@ -115,7 +115,7 @@ export class Router<C extends Context = Context<Request, Response>> extends Core
     this.addToEnd(
       { method: "OPTIONS", path: route.toString() },
       this.parseRoutePath(false, route),
-      ...handles.map(item => wrapMiddlewareHandleWithMethod("OPTIONS", item)),
+      ...handles.map((item) => wrapMiddlewareHandleWithMethod("OPTIONS", item)),
     );
   }
 
@@ -129,7 +129,7 @@ export class Router<C extends Context = Context<Request, Response>> extends Core
     this.addToEnd(
       { method: "TRACE", path: route.toString() },
       this.parseRoutePath(false, route),
-      ...handles.map(item => wrapMiddlewareHandleWithMethod("TRACE", item)),
+      ...handles.map((item) => wrapMiddlewareHandleWithMethod("TRACE", item)),
     );
   }
 
@@ -143,7 +143,7 @@ export class Router<C extends Context = Context<Request, Response>> extends Core
     this.addToEnd(
       { method: "PATCH", path: route.toString() },
       this.parseRoutePath(false, route),
-      ...handles.map(item => wrapMiddlewareHandleWithMethod("PATCH", item)),
+      ...handles.map((item) => wrapMiddlewareHandleWithMethod("PATCH", item)),
     );
   }
 }

@@ -23,10 +23,10 @@ function readFile(file: string): Promise<Buffer> {
 
 const ROOT_DIR = path.resolve(__dirname, "../../..");
 
-describe("Request", function() {
-  it("正确解析 query, url, path, search, httpVersion 等基本信息", function(done) {
+describe("Request", function () {
+  it("正确解析 query, url, path, search, httpVersion 等基本信息", function (done) {
     const app = new Application();
-    app.use("/", function(ctx) {
+    app.use("/", function (ctx) {
       expect(ctx.request.query).to.deep.equal({
         a: "123",
         b: "456",
@@ -38,15 +38,12 @@ describe("Request", function() {
       expect(ctx.request.httpVersion).to.be.oneOf(["1.0", "1.1", "2.0"]);
       ctx.response.end("ok");
     });
-    request(app.server)
-      .get("/hello?a=123&b=456")
-      .expect(200)
-      .expect("ok", done);
+    request(app.server).get("/hello?a=123&b=456").expect(200).expect("ok", done);
   });
 
-  it("正确获取 params 信息", function(done) {
+  it("正确获取 params 信息", function (done) {
     const app = new Application();
-    app.use("/:a/:b/ccc", function(ctx) {
+    app.use("/:a/:b/ccc", function (ctx) {
       expect(ctx.request.hasParams()).to.equal(true);
       expect(ctx.request.params).to.deep.equal({
         a: "aaa",
@@ -54,30 +51,22 @@ describe("Request", function() {
       });
       ctx.response.end("ok");
     });
-    request(app.server)
-      .get("/aaa/bbb/ccc")
-      .expect(200)
-      .expect("ok", done);
+    request(app.server).get("/aaa/bbb/ccc").expect(200).expect("ok", done);
   });
 
-  it("正确获取 headers, getHeader", function(done) {
+  it("正确获取 headers, getHeader", function (done) {
     const app = new Application();
-    app.use("/", function(ctx) {
-      expect(ctx.request.headers)
-        .property("user-agent")
-        .includes("superagent");
+    app.use("/", function (ctx) {
+      expect(ctx.request.headers).property("user-agent").includes("superagent");
       expect(ctx.request.getHeader("USER-agent")).includes("superagent");
       ctx.response.end("ok");
     });
-    request(app.server)
-      .get("/hello")
-      .expect(200)
-      .expect("ok", done);
+    request(app.server).get("/hello").set("user-agent", "superagent").expect("ok").expect(200, done);
   });
 
-  it("可以设置、获取、判断 body, files, cookies, session 等可选数据", function(done) {
+  it("可以设置、获取、判断 body, files, cookies, session 等可选数据", function (done) {
     const app = new Application();
-    app.use("/", function(ctx) {
+    app.use("/", function (ctx) {
       {
         expect(ctx.request.body).to.deep.equal({});
         expect(ctx.request.hasBody()).to.equal(false);
@@ -108,17 +97,14 @@ describe("Request", function() {
       }
       ctx.response.end("ok");
     });
-    request(app.server)
-      .get("/hello")
-      .expect(200)
-      .expect("ok", done);
+    request(app.server).get("/hello").expect(200).expect("ok", done);
   });
 });
 
-describe("Response", function() {
-  it("正确响应 setStatus, setHeader, setHeaders, writeHead, write, end", function(done) {
+describe("Response", function () {
+  it("正确响应 setStatus, setHeader, setHeaders, writeHead, write, end", function (done) {
     const app = new Application();
-    app.use("/", function(ctx) {
+    app.use("/", function (ctx) {
       {
         ctx.response.status(100);
         expect(ctx.response.res.statusCode).to.equal(100);
@@ -128,10 +114,7 @@ describe("Response", function() {
         ccc: "hello ccc",
       });
       {
-        ctx.response
-          .appendHeader("t111", 1)
-          .appendHeader("t111", "hello")
-          .appendHeader("t111", ["a", "123"]);
+        ctx.response.appendHeader("t111", 1).appendHeader("t111", "hello").appendHeader("t111", ["a", "123"]);
         expect(ctx.response.getHeader("t111")).to.deep.equal([1, "hello", "a", "123"]);
         ctx.response.setHeader("t222", ["a", "b"]).appendHeader("t222", "c");
         expect(ctx.response.getHeader("t222")).to.deep.equal(["a", "b", "c"]);
@@ -168,52 +151,42 @@ describe("Response", function() {
       .end(done);
   });
 
-  it("json() 和 html()", async function() {
+  it("json() 和 html()", async function () {
     const app = new Application();
-    app.use("/json", function(ctx) {
+    app.use("/json", function (ctx) {
       ctx.response.json({ a: 123, b: 456 });
     });
-    app.use("/html", function(ctx) {
+    app.use("/html", function (ctx) {
       ctx.response.html("hello, world");
     });
 
-    await request(app.server)
-      .get("/json")
-      .expect(200, { a: 123, b: 456 });
-    await request(app.server)
-      .get("/html")
-      .expect(200, "hello, world");
+    await request(app.server).get("/json").expect(200, { a: 123, b: 456 });
+    await request(app.server).get("/html").expect(200, "hello, world");
   });
 
-  it("type()", async function() {
+  it("type()", async function () {
     const app = new Application();
-    app.use("/jpg", function(ctx) {
+    app.use("/jpg", function (ctx) {
       ctx.response.type("jpg").end();
     });
-    app.use("/png", function(ctx) {
+    app.use("/png", function (ctx) {
       ctx.response.type("png").end();
     });
 
-    await request(app.server)
-      .get("/jpg")
-      .expect(200)
-      .expect("content-type", "image/jpeg");
-    await request(app.server)
-      .get("/png")
-      .expect(200)
-      .expect("content-type", "image/png");
+    await request(app.server).get("/jpg").expect(200).expect("content-type", "image/jpeg");
+    await request(app.server).get("/png").expect(200).expect("content-type", "image/png");
   });
 
-  it("file()", async function() {
+  it("file()", async function () {
     const file1 = path.resolve(ROOT_DIR, "package.json");
     const file1data = (await readFile(file1)).toString();
     const file2 = path.resolve(ROOT_DIR, "README.md");
     const file2data = (await readFile(file2)).toString();
     const app = new Application();
-    app.use("/file1", function(ctx) {
+    app.use("/file1", function (ctx) {
       ctx.response.file(file1);
     });
-    app.use("/file2", function(ctx) {
+    app.use("/file2", function (ctx) {
       ctx.response.file(file2);
     });
     await request(app.server)
@@ -226,11 +199,11 @@ describe("Response", function() {
       .expect(200, file2data);
   });
 
-  describe("cookie()", function() {
-    it("解析一般的Cookie", function(done) {
+  describe("cookie()", function () {
+    it("解析一般的Cookie", function (done) {
       const app = new Application();
       app.use("/", fromClassicalHandle(cookieParser("test") as any));
-      app.use("/", function(ctx) {
+      app.use("/", function (ctx) {
         expect(ctx.request.cookies).to.deep.equal({
           a: "123",
           b: "今天的天气真好",
@@ -247,10 +220,10 @@ describe("Response", function() {
         .expect("ok", done);
     });
 
-    it("解析签名的Cookie", function(done) {
+    it("解析签名的Cookie", function (done) {
       const app = new Application();
       app.use("/", fromClassicalHandle(cookieParser("test") as any));
-      app.use("/", function(ctx) {
+      app.use("/", function (ctx) {
         // console.log(ctx.request.cookies, ctx.request.signedCookies);
         expect(ctx.request.cookies).to.deep.equal({});
         expect(ctx.request.signedCookies).to.deep.equal({
@@ -277,39 +250,31 @@ describe("Response", function() {
     });
   });
 
-  describe("redirectXXX()", function() {
-    it("临时重定向", function(done) {
+  describe("redirectXXX()", function () {
+    it("临时重定向", function (done) {
       const app = new Application();
-      app.use("/", function(ctx) {
+      app.use("/", function (ctx) {
         ctx.response.redirectTemporary("/a", "ok");
       });
-      request(app.server)
-        .get("/")
-        .expect(302)
-        .expect("Location", "/a")
-        .expect("ok", done);
+      request(app.server).get("/").expect(302).expect("Location", "/a").expect("ok", done);
     });
 
-    it("永久重定向", function(done) {
+    it("永久重定向", function (done) {
       const app = new Application();
-      app.use("/", function(ctx) {
+      app.use("/", function (ctx) {
         ctx.response.redirectPermanent("/a", "ok");
       });
-      request(app.server)
-        .get("/")
-        .expect(301)
-        .expect("Location", "/a")
-        .expect("ok", done);
+      request(app.server).get("/").expect(301).expect("Location", "/a").expect("ok", done);
     });
   });
 
-  describe("gzip()", function() {
-    it("gzip", async function() {
+  describe("gzip()", function () {
+    it("gzip", async function () {
       const app = new Application();
-      app.use("/a", function(ctx) {
+      app.use("/a", function (ctx) {
         ctx.response.gzip("今天的天气真好", "text/plain");
       });
-      app.use("/b", function(ctx) {
+      app.use("/b", function (ctx) {
         ctx.response.gzip(Buffer.from("今天的天气真好"), "text/plain");
       });
       await request(app.server)
@@ -325,126 +290,114 @@ describe("Response", function() {
     });
   });
 
-  describe("render()", function() {
-    it("带后缀名", function(done) {
+  describe("render()", function () {
+    it("带后缀名", function (done) {
       const app = new Application();
       app.templateEngine
         .register(".simple", simpleTemplate.renderFile)
         .setDefault(".simple")
         .setRoot(path.resolve(ROOT_DIR, "test_data/template"));
-      app.use("/", function(ctx) {
+      app.use("/", function (ctx) {
         ctx.response.render("test1.simple", { a: 123, b: 456 });
       });
-      request(app.server)
-        .get("/")
-        .expect(200)
-        .expect("<p>a = 123</p>\n<p>b = 456</p>", done);
+      request(app.server).get("/").expect(200).expect("<p>a = 123</p>\n<p>b = 456</p>", done);
     });
   });
 
-  it("省略后缀名", function(done) {
+  it("省略后缀名", function (done) {
     const app = new Application();
     app.templateEngine
       .register(".simple", simpleTemplate.renderFile)
       .setDefault(".simple")
       .setRoot(path.resolve(ROOT_DIR, "test_data/template"));
-    app.use("/", function(ctx) {
+    app.use("/", function (ctx) {
       ctx.response.render("test1", { a: 123, b: 456 });
     });
-    request(app.server)
-      .get("/")
-      .expect(200)
-      .expect("<p>a = 123</p>\n<p>b = 456</p>", done);
+    request(app.server).get("/").expect(200).expect("<p>a = 123</p>\n<p>b = 456</p>", done);
   });
 
-  it("完整文件路径", function(done) {
+  it("完整文件路径", function (done) {
     const app = new Application();
     app.templateEngine
       .register(".simple", simpleTemplate.renderFile)
       .setDefault(".simple")
       .setRoot(path.resolve(ROOT_DIR, "test_data/template"));
-    app.use("/", function(ctx) {
+    app.use("/", function (ctx) {
       ctx.response.render(path.resolve("test_data/template/test1.simple"), { a: 123, b: 456 });
     });
-    request(app.server)
-      .get("/")
-      .expect(200)
-      .expect("<p>a = 123</p>\n<p>b = 456</p>", done);
+    request(app.server).get("/").expect(200).expect("<p>a = 123</p>\n<p>b = 456</p>", done);
   });
 });
 
-describe("Context", function() {
-  it("ctx.request.ctx 和 ctx.response.ctx", function(done) {
+describe("Context", function () {
+  it("ctx.request.ctx 和 ctx.response.ctx", function (done) {
     const app = new Application();
-    app.use("/", function(ctx) {
+    app.use("/", function (ctx) {
       expect(ctx.request.ctx).to.equal(ctx);
       expect(ctx.response.ctx).to.equal(ctx);
       ctx.response.end("ok");
     });
-    request(app.server)
-      .get("/hello")
-      .expect(200)
-      .expect("ok", done);
+    request(app.server).get("/hello").expect(200).expect("ok", done);
   });
 
-  it("支持 ctx.onFinsh()", function(done) {
+  it("支持 ctx.onFinsh()", function (done) {
     const app = new Application();
     let isFinish = false;
-    app.use("/", function(ctx) {
+    app.use("/", function (ctx) {
       ctx.onFinish(() => (isFinish = true));
       ctx.next();
     });
-    app.use("/", function(ctx) {
+    app.use("/", function (ctx) {
       ctx.response.end("ok");
     });
     request(app.server)
       .get("/hello")
       .expect(200)
-      .expect("ok", err => {
+      .expect("ok", (err) => {
         expect(isFinish).to.equal(true);
         done(err);
       });
   });
 
-  it("支持 ctx.onError() -- throw new Error", function(done) {
+  it("支持 ctx.onError() -- throw new Error", function (done) {
     const app = new Application();
     let isError = false;
-    app.use("/", function(ctx) {
-      ctx.onError(err => {
+    app.use("/", function (ctx) {
+      ctx.onError((err) => {
         isError = true;
         expect(err).to.instanceof(Error);
         expect((err as any).message).to.equal("haha");
       });
       ctx.next();
     });
-    app.use("/", async function(ctx) {
+    app.use("/", async function (ctx) {
       throw new Error("haha");
     });
     request(app.server)
       .get("/hello")
-      .expect(500, err => {
+      .expect(500, (err) => {
         expect(isError).to.equal(true);
         done(err);
       });
   });
 
-  it("支持 ctx.onError() -- ctx.next(new Error())", function(done) {
+  it("支持 ctx.onError() -- ctx.next(new Error())", function (done) {
     const app = new Application();
     let isError = false;
-    app.use("/", function(ctx) {
-      ctx.onError(err => {
+    app.use("/", function (ctx) {
+      ctx.onError((err) => {
         isError = true;
         expect(err).to.instanceof(Error);
         expect((err as any).message).to.equal("haha");
       });
       ctx.next();
     });
-    app.use("/", function(ctx) {
+    app.use("/", function (ctx) {
       ctx.next(new Error("haha"));
     });
     request(app.server)
       .get("/hello")
-      .expect(500, err => {
+      .expect(500, (err) => {
         expect(isError).to.equal(true);
         done(err);
       });

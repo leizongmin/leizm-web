@@ -10,7 +10,7 @@ import * as send from "send";
 
 export function favicon(filePath: string, options?: send.SendOptions): MiddlewareHandle<Context> {
   filePath = path.resolve(filePath);
-  return function(ctx: Context) {
+  return function (ctx: Context) {
     if (ctx.request.path === "/favicon.ico") {
       ctx.response.file(filePath, options);
       return;

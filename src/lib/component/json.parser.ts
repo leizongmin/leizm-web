@@ -25,7 +25,7 @@ export const DEFAULT_JSON_PARSER_OPTIONS: JsonParserOptions = {
 export function jsonParser(options: Partial<JsonParserOptions> = {}): MiddlewareHandle<Context> {
   const opts: JsonParserOptions = { ...DEFAULT_JSON_PARSER_OPTIONS, ...options };
 
-  return function(ctx) {
+  return function (ctx) {
     if (ctx.request.method === "GET" || ctx.request.method === "HEAD") return ctx.next();
     if (String(ctx.request.headers["content-type"]).indexOf("application/json") === -1) return ctx.next();
 

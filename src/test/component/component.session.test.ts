@@ -11,27 +11,27 @@ import * as Redis from "ioredis";
 import { createClient } from "redis";
 
 function sleep(ms: number) {
-  return new Promise(resolve => {
+  return new Promise((resolve) => {
     setTimeout(resolve, ms);
   });
 }
 
-describe("component.session", function() {
+describe("component.session", function () {
   this.timeout(10000);
   const appInstances: Application[] = [];
-  after(async function() {
+  after(async function () {
     for (const app of appInstances) {
       await app.close();
     }
   });
 
-  describe("多存储引擎", function() {
-    it("SessionMemoryStore", async function() {
+  describe("多存储引擎", function () {
+    it("SessionMemoryStore", async function () {
       const app = new Application();
       appInstances.push(app);
       app.use("/", component.cookieParser());
       app.use("/", component.session({ store: new component.SessiionMemoryStore(), maxAge: 1000 }));
-      app.use("/", function(ctx) {
+      app.use("/", function (ctx) {
         ctx.session.data.counter = ctx.session.data.counter || 0;
         ctx.session.data.counter++;
         ctx.response.json(ctx.session.data);
@@ -47,7 +47,7 @@ describe("component.session", function() {
       await agent.get("/").expect(200, { counter: 2 });
     });
 
-    it("SessionRedisStore 基于 ioredis 模块", async function() {
+    it("SessionRedisStore 基于 ioredis 模块", async function () {
       const app = new Application();
       appInstances.push(app);
       app.use("/", component.cookieParser());
@@ -60,7 +60,7 @@ describe("component.session", function() {
           maxAge: 1000,
         }),
       );
-      app.use("/", function(ctx) {
+      app.use("/", function (ctx) {
         ctx.session.data.counter = ctx.session.data.counter || 0;
         ctx.session.data.counter++;
         ctx.response.json(ctx.session.data);
@@ -76,7 +76,7 @@ describe("component.session", function() {
       await agent.get("/").expect(200, { counter: 2 });
     });
 
-    it("SessionRedisStore 基于 redis 模块", async function() {
+    it("SessionRedisStore 基于 redis 模块", async function () {
       const app = new Application();
       appInstances.push(app);
       app.use("/", component.cookieParser());
@@ -89,7 +89,7 @@ describe("component.session", function() {
           maxAge: 2000,
         }),
       );
-      app.use("/", function(ctx) {
+      app.use("/", function (ctx) {
         ctx.session.data.counter = ctx.session.data.counter || 0;
         ctx.session.data.counter++;
         ctx.response.json(ctx.session.data);
@@ -105,7 +105,7 @@ describe("component.session", function() {
       await agent.get("/").expect(200, { counter: 2 });
     });
 
-    it("SessionRedisStore 基于内置 SimpleRedisClient 模块", async function() {
+    it("SessionRedisStore 基于内置 SimpleRedisClient 模块", async function () {
       const app = new Application();
       appInstances.push(app);
       app.use("/", component.cookieParser());
@@ -118,7 +118,7 @@ describe("component.session", function() {
           maxAge: 2000,
         }),
       );
-      app.use("/", function(ctx) {
+      app.use("/", function (ctx) {
         ctx.session.data.counter = ctx.session.data.counter || 0;
         ctx.session.data.counter++;
         ctx.response.json(ctx.session.data);
@@ -134,7 +134,7 @@ describe("component.session", function() {
       await agent.get("/").expect(200, { counter: 2 });
     });
 
-    it("SessionRedisStore 不指定 Redis 客户端，使用内置 SimpleRedisClient 模块", async function() {
+    it("SessionRedisStore 不指定 Redis 客户端，使用内置 SimpleRedisClient 模块", async function () {
       const app = new Application();
       appInstances.push(app);
       app.use("/", component.cookieParser());
@@ -146,7 +146,7 @@ describe("component.session", function() {
           maxAge: 2000,
         }),
       );
-      app.use("/", function(ctx) {
+      app.use("/", function (ctx) {
         ctx.session.data.counter = ctx.session.data.counter || 0;
         ctx.session.data.counter++;
         ctx.response.json(ctx.session.data);
@@ -163,18 +163,18 @@ describe("component.session", function() {
     });
   });
 
-  describe("session操作相关方法", function() {
-    it("session.reload()", async function() {
+  describe("session操作相关方法", function () {
+    it("session.reload()", async function () {
       const app = new Application();
       appInstances.push(app);
       app.use("/", component.cookieParser());
       app.use("/", component.session({ maxAge: 2000 }));
-      app.use("/a", async function(ctx) {
+      app.use("/a", async function (ctx) {
         ctx.session.data.yes = false;
         await ctx.session.save();
         ctx.response.json(ctx.session.data);
       });
-      app.use("/b", async function(ctx) {
+      app.use("/b", async function (ctx) {
         expect(ctx.session.data).to.deep.equal({ yes: false });
         ctx.session.data.yes = true;
         expect(ctx.session.data).to.deep.equal({ yes: true });
@@ -187,17 +187,17 @@ describe("component.session", function() {
       await agent.get("/b").expect(200, { yes: false });
     });
 
-    it("session.regenerate()", async function() {
+    it("session.regenerate()", async function () {
       const app = new Application();
       appInstances.push(app);
       app.use("/", component.cookieParser());
       app.use("/", component.session({ maxAge: 2000 }));
-      app.use("/a", async function(ctx) {
+      app.use("/a", async function (ctx) {
         ctx.session.data.yes = false;
         await ctx.session.save();
         ctx.response.json(ctx.session.data);
       });
-      app.use("/b", async function(ctx) {
+      app.use("/b", async function (ctx) {
         expect(ctx.session.data).to.deep.equal({ yes: false });
         ctx.session.data.yes = true;
         expect(ctx.session.data).to.deep.equal({ yes: true });
@@ -206,7 +206,7 @@ describe("component.session", function() {
         ctx.session.data.no = true;
         ctx.response.json(ctx.session.data);
       });
-      app.use("/c", async function(ctx) {
+      app.use("/c", async function (ctx) {
         ctx.response.json(ctx.session.data);
       });
       const agent = request.agent(app.server);
@@ -215,23 +215,23 @@ describe("component.session", function() {
       await agent.get("/c").expect(200, { no: true });
     });
 
-    it("session.destroy()", async function() {
+    it("session.destroy()", async function () {
       const app = new Application();
       appInstances.push(app);
       app.use("/", component.cookieParser());
       app.use("/", component.session({ maxAge: 2000 }));
-      app.use("/a", async function(ctx) {
+      app.use("/a", async function (ctx) {
         ctx.session.data.yes = false;
         await ctx.session.save();
         ctx.response.json(ctx.session.data);
       });
-      app.use("/b", async function(ctx) {
+      app.use("/b", async function (ctx) {
         expect(ctx.session.data).to.deep.equal({ yes: false });
         await ctx.session.destroy();
         expect(ctx.session.data).to.deep.equal({});
         ctx.response.json(ctx.session.data);
       });
-      app.use("/c", async function(ctx) {
+      app.use("/c", async function (ctx) {
         expect(ctx.session.data).to.deep.equal({});
         ctx.response.json(ctx.session.data);
       });
@@ -241,17 +241,17 @@ describe("component.session", function() {
       await agent.get("/c").expect(200, {});
     });
 
-    it("session.touch()", async function() {
+    it("session.touch()", async function () {
       const app = new Application();
       appInstances.push(app);
       app.use("/", component.cookieParser());
       app.use("/", component.session({ maxAge: 2000 }));
-      app.use("/a", async function(ctx) {
+      app.use("/a", async function (ctx) {
         ctx.session.data.yes = false;
         await ctx.session.save();
         ctx.response.json(ctx.session.data);
       });
-      app.use("/b", async function(ctx) {
+      app.use("/b", async function (ctx) {
         ctx.response.json(ctx.session.data);
       });
       const agent = request.agent(app.server);
@@ -266,17 +266,17 @@ describe("component.session", function() {
     }).timeout(5000);
   });
 
-  describe("其他选项", function() {
-    it("自定义Cookie名称", async function() {
+  describe("其他选项", function () {
+    it("自定义Cookie名称", async function () {
       const app = new Application();
       appInstances.push(app);
       app.use("/", component.cookieParser());
       app.use("/", component.session({ maxAge: 2000, name: "hello" }));
-      app.use("/a", async function(ctx) {
+      app.use("/a", async function (ctx) {
         ctx.session.data.yes = false;
         ctx.response.json(ctx.session.data);
       });
-      app.use("/b", async function(ctx) {
+      app.use("/b", async function (ctx) {
         expect(ctx.session.id).to.equal(ctx.request.cookies.hello);
         ctx.response.json(ctx.session.data);
       });
@@ -285,16 +285,16 @@ describe("component.session", function() {
       await agent.get("/b").expect(200, { yes: false });
     });
 
-    it("自定义Cookie选项：{ signed: true }", async function() {
+    it("自定义Cookie选项：{ signed: true }", async function () {
       const app = new Application();
       appInstances.push(app);
       app.use("/", component.cookieParser("secret key"));
       app.use("/", component.session({ maxAge: 2000, name: "hello", cookie: { signed: true } }));
-      app.use("/a", async function(ctx) {
+      app.use("/a", async function (ctx) {
         ctx.session.data.yes = false;
         ctx.response.json(ctx.session.data);
       });
-      app.use("/b", async function(ctx) {
+      app.use("/b", async function (ctx) {
         expect(ctx.session.id).to.equal(ctx.request.signedCookies.hello);
         ctx.response.json(ctx.session.data);
       });

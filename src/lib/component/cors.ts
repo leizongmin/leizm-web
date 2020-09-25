@@ -72,7 +72,7 @@ export function cors(options: CorsOptions = {}): MiddlewareHandle<Context> {
   }
 
   if (opts.any) {
-    return function(ctx: Context) {
+    return function (ctx: Context) {
       const origin = ctx.request.headers.origin;
       if (origin) {
         ctx.response.setHeader("Access-Control-Allow-Origin", origin);
@@ -82,7 +82,7 @@ export function cors(options: CorsOptions = {}): MiddlewareHandle<Context> {
     };
   }
 
-  return function(ctx: Context) {
+  return function (ctx: Context) {
     const origin = ctx.request.headers.origin;
     const info = parseURL(String(origin));
     if (origin && opts.domain.indexOf(info.host || "") !== -1) {

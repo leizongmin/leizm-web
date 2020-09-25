@@ -20,19 +20,19 @@ function readFile(file: string): Promise<Buffer> {
 
 // const ROOT_DIR = path.resolve(__dirname, "../../..");
 
-describe("component.body", function() {
+describe("component.body", function () {
   const appInstances: Application[] = [];
-  after(async function() {
+  after(async function () {
     for (const app of appInstances) {
       await app.close();
     }
   });
 
-  it("json", async function() {
+  it("json", async function () {
     const app = new Application();
     appInstances.push(app);
     app.use("/", component.bodyParser.json());
-    app.use("/", function(ctx) {
+    app.use("/", function (ctx) {
       ctx.response.setHeader("content-type", "application/json");
       ctx.response.end(JSON.stringify(ctx.request.body));
     });
@@ -51,12 +51,12 @@ describe("component.body", function() {
       });
   });
 
-  describe("fast json parser", function() {
-    it("json", async function() {
+  describe("fast json parser", function () {
+    it("json", async function () {
       const app = new Application();
       appInstances.push(app);
       app.use("/", component.jsonParser());
-      app.use("/", function(ctx) {
+      app.use("/", function (ctx) {
         ctx.response.setHeader("content-type", "application/json");
         ctx.response.end(JSON.stringify(ctx.request.body));
       });
@@ -75,11 +75,11 @@ describe("component.body", function() {
         });
     });
 
-    it("out of limit", async function() {
+    it("out of limit", async function () {
       const app = new Application();
       appInstances.push(app);
       app.use("/", component.jsonParser({ limit: 1024 }));
-      app.use("/", function(ctx) {
+      app.use("/", function (ctx) {
         ctx.response.setHeader("content-type", "application/json");
         ctx.response.end(JSON.stringify(ctx.request.body));
       });
@@ -96,11 +96,11 @@ describe("component.body", function() {
     });
   });
 
-  it("urlencoded", async function() {
+  it("urlencoded", async function () {
     const app = new Application();
     appInstances.push(app);
     app.use("/", component.bodyParser.urlencoded({ extended: false }));
-    app.use("/", function(ctx) {
+    app.use("/", function (ctx) {
       ctx.response.setHeader("content-type", "application/json");
       ctx.response.end(JSON.stringify(ctx.request.body));
     });
@@ -120,11 +120,11 @@ describe("component.body", function() {
       });
   });
 
-  it("text", async function() {
+  it("text", async function () {
     const app = new Application();
     appInstances.push(app);
     app.use("/", component.bodyParser.text());
-    app.use("/", function(ctx) {
+    app.use("/", function (ctx) {
       ctx.response.setHeader("content-type", "application/json");
       ctx.response.end(JSON.stringify(ctx.request.body));
     });
@@ -136,11 +136,11 @@ describe("component.body", function() {
       .expect(`"hello, world"`);
   });
 
-  it("raw", async function() {
+  it("raw", async function () {
     const app = new Application();
     appInstances.push(app);
     app.use("/", component.bodyParser.raw());
-    app.use("/", function(ctx) {
+    app.use("/", function (ctx) {
       ctx.response.setHeader("content-type", "application/json");
       ctx.response.end(JSON.stringify((ctx.request.body as Buffer).toJSON()));
     });
@@ -152,12 +152,12 @@ describe("component.body", function() {
       .expect(JSON.stringify(Buffer.from("hello, world").toJSON()));
   });
 
-  describe("multipart", function() {
-    it("smallFileSize=Infinity 文件存储于内存中", async function() {
+  describe("multipart", function () {
+    it("smallFileSize=Infinity 文件存储于内存中", async function () {
       const app = new Application();
       appInstances.push(app);
       app.use("/", component.bodyParser.multipart({ smallFileSize: Infinity }));
-      app.use("/", function(ctx) {
+      app.use("/", function (ctx) {
         ctx.response.json({ ...ctx.request.body, ...ctx.request.files });
       });
       const c = await readFile(__filename);
@@ -182,11 +182,11 @@ describe("component.body", function() {
         });
     });
 
-    it("smallFileSize=100 文件存储于临时文件中", async function() {
+    it("smallFileSize=100 文件存储于临时文件中", async function () {
       const app = new Application();
       appInstances.push(app);
       app.use("/", component.bodyParser.multipart({ smallFileSize: 100 }));
-      app.use("/", function(ctx) {
+      app.use("/", function (ctx) {
         ctx.response.json({ ...ctx.request.body, ...ctx.request.files });
       });
       const c = await readFile(__filename);
@@ -212,10 +212,10 @@ describe("component.body", function() {
         });
     });
 
-    it("smallFileSize=0 通过 ctx.request.parseMultipart() 解析", async function() {
+    it("smallFileSize=0 通过 ctx.request.parseMultipart() 解析", async function () {
       const app = new Application();
       appInstances.push(app);
-      app.use("/", async function(ctx) {
+      app.use("/", async function (ctx) {
         expect(ctx.request.body).to.deep.equal({});
         expect(ctx.request.files).to.deep.equal({});
         const { body, files } = await ctx.request.parseMultipart({ smallFileSize: 0 });

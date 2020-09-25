@@ -14,8 +14,8 @@ function readFile(file: string): Promise<Buffer> {
 
 const ROOT_DIR = path.resolve(__dirname, "../../..");
 
-describe("component.static", function() {
-  it("作为根路径", async function() {
+describe("component.static", function () {
+  it("作为根路径", async function () {
     const file1 = path.resolve(ROOT_DIR, "package.json");
     const file1data = (await readFile(file1)).toString();
     const file2 = path.resolve(ROOT_DIR, "README.md");
@@ -32,7 +32,7 @@ describe("component.static", function() {
       .expect(200, file2data);
   });
 
-  it("作为二级子路径", async function() {
+  it("作为二级子路径", async function () {
     const file1 = path.resolve(ROOT_DIR, "package.json");
     const file1data = (await readFile(file1)).toString();
     const file2 = path.resolve(ROOT_DIR, "README.md");
@@ -49,7 +49,7 @@ describe("component.static", function() {
       .expect("content-type", "text/markdown; charset=UTF-8");
   });
 
-  it("作为三级子路径", async function() {
+  it("作为三级子路径", async function () {
     const file1 = path.resolve(ROOT_DIR, "package.json");
     const file1data = (await readFile(file1)).toString();
     const file2 = path.resolve(ROOT_DIR, "README.md");

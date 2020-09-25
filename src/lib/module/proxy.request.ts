@@ -46,8 +46,8 @@ export function parseProxyTarget(url: string): ProxyTarget {
  */
 export function proxyRequest(req: IncomingMessage, res: ServerResponse, target: string | ProxyTarget): Promise<void> {
   return new Promise((resolve, reject) => {
-    req.on("error", err => reject(err));
-    res.on("error", err => reject(err));
+    req.on("error", (err) => reject(err));
+    res.on("error", (err) => reject(err));
     const formattedTarget: ProxyTarget = typeof target === "string" ? parseProxyTarget(target) : target;
     const remoteReq = (formattedTarget.protocol === "https:" ? httpsRequest : httpRequest)(
       {
@@ -56,17 +56,17 @@ export function proxyRequest(req: IncomingMessage, res: ServerResponse, target: 
         headers: { ...formattedTarget.headers },
         timeout: formattedTarget.timeout,
       },
-      remoteRes => {
-        remoteRes.on("error", err => reject(err));
+      (remoteRes) => {
+        remoteRes.on("error", (err) => reject(err));
         res.writeHead(remoteRes.statusCode || 200, remoteRes.headers);
-        remoteRes.on("data", chunk => res.write(chunk));
+        remoteRes.on("data", (chunk) => res.write(chunk));
         remoteRes.on("end", () => {
           res.end();
           resolve();
         });
       },
     );
-    remoteReq.on("error", err => reject(err));
+    remoteReq.on("error", (err) => reject(err));
     if (req.method === "GET" || req.method === "HEAD") {
       remoteReq.end();
     } else {

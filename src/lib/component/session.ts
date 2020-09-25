@@ -19,7 +19,7 @@ export function session(options: SessionOptions = {}): MiddlewareHandle<Context>
   const cookieName = opts.name;
   opts.cookie.maxAge = opts.maxAge;
 
-  return async function(ctx: Context) {
+  return async function (ctx: Context) {
     const currentSid: string = (isSigned ? ctx.request.signedCookies : ctx.request.cookies)[cookieName];
     const sid = currentSid || opts.genid(ctx);
     const sess = (ctx[SYMBOL_SESSION] = new SessionInstance(ctx, sid, opts));
@@ -120,7 +120,7 @@ export class SessionInstance {
   }
 
   public reload(): Promise<void> {
-    return this.store.get(this.id).then(data => {
+    return this.store.get(this.id).then((data) => {
       this.data = data;
       this._hash = getDataHash(this.data);
     });

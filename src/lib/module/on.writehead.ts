@@ -12,7 +12,7 @@ function onWriteHead(res: ServerResponse, callback: () => void) {
   (res as any).once(ON_WRITE_HEAD, callback);
   if (WRITE_HEAD in res) return;
   (res as any)[WRITE_HEAD] = res.writeHead;
-  res.writeHead = function(...args: any[]) {
+  res.writeHead = function (...args: any[]) {
     (this as any).emit(ON_WRITE_HEAD);
     return (this as any)[WRITE_HEAD](...args);
   };

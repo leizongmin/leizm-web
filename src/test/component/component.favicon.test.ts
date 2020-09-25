@@ -15,8 +15,8 @@ function readFile(file: string): Promise<Buffer> {
 
 const ROOT_DIR = path.resolve(__dirname, "../../..");
 
-describe("component.favicon", function() {
-  it("favicon", async function() {
+describe("component.favicon", function () {
+  it("favicon", async function () {
     const file = path.resolve(ROOT_DIR, "test_data/favicon.ico");
     const filedata = await readFile(file);
     const app = new Application();
@@ -26,7 +26,7 @@ describe("component.favicon", function() {
       .get("/favicon.ico")
       .expect("content-type", "image/x-icon")
       .expect(200)
-      .expect(res => {
+      .expect((res) => {
         expect(res.body).to.deep.equal(filedata);
       });
   });

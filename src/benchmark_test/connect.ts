@@ -6,13 +6,13 @@
 import { Application } from "../lib";
 
 const app = new Application();
-app.use("/params/:a", function(ctx) {
+app.use("/params/:a", function (ctx) {
   ctx.response.end(`params: ${ctx.request.params.a}`);
 });
-app.use("/url", function(ctx) {
+app.use("/url", function (ctx) {
   ctx.response.end(`url: ${ctx.request.url}`);
 });
-app.use("/", function(ctx) {
+app.use("/", function (ctx) {
   ctx.response.end("default");
 });
 

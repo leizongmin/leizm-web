@@ -8,20 +8,20 @@ import * as request from "supertest";
 import { expect } from "chai";
 import { IncomingMessage } from "http";
 
-describe("component.cors", function() {
+describe("component.cors", function () {
   const appInstances: Application[] = [];
-  after(async function() {
+  after(async function () {
     for (const app of appInstances) {
       await app.close();
     }
   });
 
-  describe("any = true", function() {
-    it("http", async function() {
+  describe("any = true", function () {
+    it("http", async function () {
       const app = new Application();
       appInstances.push(app);
       app.use("/", component.cors({ any: true }));
-      app.use("/", function(ctx) {
+      app.use("/", function (ctx) {
         ctx.response.end("OK");
       });
       await request(app.server)
@@ -31,11 +31,11 @@ describe("component.cors", function() {
         .expect(200, "OK");
     });
 
-    it("https", async function() {
+    it("https", async function () {
       const app = new Application();
       appInstances.push(app);
       app.use("/", component.cors({ any: true }));
-      app.use("/", function(ctx) {
+      app.use("/", function (ctx) {
         ctx.response.end("OK");
       });
       await request(app.server)
@@ -46,12 +46,12 @@ describe("component.cors", function() {
     });
   });
 
-  describe("domain = list", function() {
-    it("in list", async function() {
+  describe("domain = list", function () {
+    it("in list", async function () {
       const app = new Application();
       appInstances.push(app);
       app.use("/", component.cors({ domain: ["example.com"] }));
-      app.use("/", function(ctx) {
+      app.use("/", function (ctx) {
         ctx.response.end("OK");
       });
       await request(app.server)
@@ -61,11 +61,11 @@ describe("component.cors", function() {
         .expect(200);
     });
 
-    it("not in list", async function() {
+    it("not in list", async function () {
       const app = new Application();
       appInstances.push(app);
       app.use("/", component.cors({ domain: ["example.com"] }));
-      app.use("/", function(ctx) {
+      app.use("/", function (ctx) {
         ctx.response.end("OK");
       });
       await request(app.server)
@@ -78,12 +78,12 @@ describe("component.cors", function() {
     });
   });
 
-  describe("其他选项", function() {
-    it("credentials", async function() {
+  describe("其他选项", function () {
+    it("credentials", async function () {
       const app = new Application();
       appInstances.push(app);
       app.use("/", component.cors({ any: true, credentials: true }));
-      app.use("/", function(ctx) {
+      app.use("/", function (ctx) {
         ctx.response.end("OK");
       });
       await request(app.server)
@@ -94,11 +94,11 @@ describe("component.cors", function() {
         .expect(200, "OK");
     });
 
-    it("maxAge", async function() {
+    it("maxAge", async function () {
       const app = new Application();
       appInstances.push(app);
       app.use("/", component.cors({ any: true, maxAge: 100 }));
-      app.use("/", function(ctx) {
+      app.use("/", function (ctx) {
         ctx.response.end("OK");
       });
       await request(app.server)
@@ -109,11 +109,11 @@ describe("component.cors", function() {
         .expect(200, "OK");
     });
 
-    it("allowHeaders", async function() {
+    it("allowHeaders", async function () {
       const app = new Application();
       appInstances.push(app);
       app.use("/", component.cors({ any: true, allowHeaders: ["A", "B"] }));
-      app.use("/", function(ctx) {
+      app.use("/", function (ctx) {
         ctx.response.end("OK");
       });
       await request(app.server)
@@ -124,11 +124,11 @@ describe("component.cors", function() {
         .expect(200, "OK");
     });
 
-    it("allowMethods", async function() {
+    it("allowMethods", async function () {
       const app = new Application();
       appInstances.push(app);
       app.use("/", component.cors({ any: true, allowMethods: ["A", "B"] }));
-      app.use("/", function(ctx) {
+      app.use("/", function (ctx) {
         ctx.response.end("OK");
       });
       await request(app.server)
@@ -139,11 +139,11 @@ describe("component.cors", function() {
         .expect(200, "OK");
     });
 
-    it("headers", async function() {
+    it("headers", async function () {
       const app = new Application();
       appInstances.push(app);
       app.use("/", component.cors({ any: true, headers: { A: "12345", B: "67890" } }));
-      app.use("/", function(ctx) {
+      app.use("/", function (ctx) {
         ctx.response.end("OK");
       });
       await request(app.server)
