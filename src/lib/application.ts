@@ -62,7 +62,7 @@ export class Application<C extends Context = Context<Request, Response>> extends
   /**
    * 关闭服务器
    */
-  public async close() {
+  public async close(): Promise<void> {
     return new Promise((resolve, reject) => {
       if (this[SYMBOL_SERVER]) {
         this[SYMBOL_SERVER]!.close(() => resolve());

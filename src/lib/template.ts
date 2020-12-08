@@ -71,7 +71,7 @@ export class TemplateEngineManager {
       }
       renderFile(fileName, { ...this.locals, ...data }, (err, ret) => {
         if (err) return reject(err);
-        resolve(ret);
+        resolve(ret!);
       });
     });
   }
