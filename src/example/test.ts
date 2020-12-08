@@ -5,7 +5,7 @@
 
 import { Application, fromClassicalHandle, Router } from "../lib";
 
-function sleep(ms = 1000) {
+function sleep(ms = 1000): Promise<void> {
   return new Promise((resolve, reject) => {
     setTimeout(() => resolve(), ms);
   });
