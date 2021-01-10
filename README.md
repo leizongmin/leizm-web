@@ -52,7 +52,7 @@
   * `SessiionRedisStore` Redis 存储引擎，通过传入 Redis 客户端实例实现存储，支持 [ioredis](https://www.npmjs.com/package/ioredis) 和 [redis](https://www.npmjs.com/package/redis) 模块
   * `SimpleRedisClientOptions` 简单 Redis 客户端，可以不依赖第三方模块的情况下实现 Redis 存储，直接在 `SessionRedisStore` 初始化时指定 `{ host, port, db }` 来代替 `client` 参数即可
 
-详细使用说明可阅读 [Wiki](https://github.com/leizongmin/leizm-web/wiki)
+**🌟🌟🌟🌟详细使用说明可阅读 [Wiki](https://github.com/leizongmin/leizm-web/wiki)🌟🌟🌟🌟**
 
 ## 安装
 
@@ -179,7 +179,7 @@ export class Response extends base.Response {
 
 - 8390.82 Requests/sec - restify.js
 - 6983.61 Requests/sec - micro.js
-- **6905.93 Requests/sec - @leizm/web.js**
+- **6905.93 Requests/sec - @leizm/web.js🌟🌟**
 - 6578.84 Requests/sec - http.js
 - 6415.45 Requests/sec - rawnode.js
 - **5414.55 Requests/sec - koa.js**
@@ -195,7 +195,7 @@ export class Response extends base.Response {
 
 - 12279.14 Requests/sec - restify.js
 - 11630.27 Requests/sec - micro.js
-- **11584.45 Requests/sec - @leizm/web.js**
+- **11584.45 Requests/sec - @leizm/web.js🌟🌟**
 - 11298.82 Requests/sec - http.js
 - 10730.96 Requests/sec - rawnode.js
 - **9415.69 Requests/sec - koa.js**
