@@ -180,7 +180,7 @@ export class Response extends base.Response {
 - 8370 Requests/sec - micro.js
 - 8185 Requests/sec - http.js
 - **7612 Requests/sec - koa.js**
-- **7302 Requests/sec - @leizm/web.js🌟🌟**
+- **7302 Requests/sec - @leizm/web🌟🌟**
 - 5871 Requests/sec - restify.js
 - 5800 Requests/sec - hapi.js
 - **3602 Requests/sec - express.js**
@@ -192,7 +192,7 @@ export class Response extends base.Response {
 - 22780 Requests/sec - http.js
 - 18899 Requests/sec - micro.js
 - **17704 Requests/sec - koa.js**
-- **16793 Requests/sec - @leizm/web.js🌟🌟**
+- **16793 Requests/sec - @leizm/web🌟🌟**
 - 11603 Requests/sec - restify.js
 - 11428 Requests/sec - hapi.js
 - **5012 Requests/sec - express.js**
