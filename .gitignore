@@ -58,7 +58,6 @@ typings/
 .env
 
 dist
-package-lock.json
 benchmark
 .vscode
 docs
