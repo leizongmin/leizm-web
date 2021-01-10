@@ -1,5 +1,6 @@
 [![NPM version][npm-image]][npm-url]
-[![build status][travis-image]][travis-url]
+![Node.js CI](https://github.com/leizongmin/leizm-web/workflows/Node.js%20CI/badge.svg)
+[![DeepScan grade](https://deepscan.io/api/projects/2695/branches/18968/badge/grade.svg)](https://deepscan.io/dashboard#view=project&pid=2695&bid=18968)
 [![Test coverage][coveralls-image]][coveralls-url]
 [![David deps][david-image]][david-url]
 [![node version][node-image]][node-url]
@@ -8,8 +9,6 @@
 
 [npm-image]: https://img.shields.io/npm/v/@leizm/web.svg?style=flat-square
 [npm-url]: https://npmjs.org/package/@leizm/web
-[travis-image]: https://img.shields.io/travis/leizongmin/leizm-web.svg?style=flat-square
-[travis-url]: https://travis-ci.org/leizongmin/leizm-web
 [coveralls-image]: https://img.shields.io/coveralls/leizongmin/leizm-web.svg?style=flat-square
 [coveralls-url]: https://coveralls.io/r/leizongmin/leizm-web?branch=master
 [david-image]: https://img.shields.io/david/leizongmin/leizm-web.svg?style=flat-square
@@ -21,9 +20,6 @@
 [license-image]: https://img.shields.io/npm/l/@leizm/web.svg
 
 # @leizm/web
-
-[![Greenkeeper badge](https://badges.greenkeeper.io/leizongmin/leizm-web.svg)](https://greenkeeper.io/)
-[![DeepScan grade](https://deepscan.io/api/projects/2695/branches/18968/badge/grade.svg)](https://deepscan.io/dashboard#view=project&pid=2695&bid=18968)
 
 现代的 Web 中间件基础框架，完美支持 TypeScript，构建可维护的大型 Web 项目。
 
@@ -215,7 +211,7 @@ export class Response extends base.Response {
 ```text
 MIT License
 
-Copyright (c) 2017-2020 老雷 <leizongmin@gmail.com>
+Copyright (c) 2017-2021 老雷 <leizongmin@gmail.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
