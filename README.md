@@ -171,39 +171,31 @@ export class Response extends base.Response {
 
 ## 性能
 
-[性能测试程序](https://github.com/leizongmin/leizm-web-benchmark) 结果（性能优于主流框架 **koa** 的 +13%，**express** 的 +43%）：
+[性能测试程序](https://github.com/leizongmin/leizm-web-benchmark) 结果（性能略低于主流框架 **koa** 的 -5%，高于 **express** 的 +235%）：
 
 ------------------------------------------------------------------------
 
 ### connection: close 方式请求：
 
-- 8390.82 Requests/sec - restify.js
-- 6983.61 Requests/sec - micro.js
-- **6905.93 Requests/sec - @leizm/web.js🌟🌟**
-- 6578.84 Requests/sec - http.js
-- 6415.45 Requests/sec - rawnode.js
-- **5414.55 Requests/sec - koa.js**
-- 5263.68 Requests/sec - total/total.js
-- 4926.65 Requests/sec - feathers.js
-- **4829.53 Requests/sec - express.js**
-- 4401.81 Requests/sec - hapi.js
-- 1640.84 Requests/sec - sails/sails.js
+- 8370 Requests/sec - micro.js
+- 8185 Requests/sec - http.js
+- **7612 Requests/sec - koa.js**
+- **7302 Requests/sec - @leizm/web.js🌟🌟**
+- 5871 Requests/sec - restify.js
+- 5800 Requests/sec - hapi.js
+- **3602 Requests/sec - express.js**
 
 ------------------------------------------------------------------------
 
 ### connection: keep-alive 方式请求：
 
-- 12279.14 Requests/sec - restify.js
-- 11630.27 Requests/sec - micro.js
-- **11584.45 Requests/sec - @leizm/web.js🌟🌟**
-- 11298.82 Requests/sec - http.js
-- 10730.96 Requests/sec - rawnode.js
-- **9415.69 Requests/sec - koa.js**
-- 9178.14 Requests/sec - total/total.js
-- **7024.93 Requests/sec - express.js**
-- 6038.25 Requests/sec - hapi.js
-- 4772.14 Requests/sec - feathers.js
-- 1640.60 Requests/sec - sails/sails.js
+- 22780 Requests/sec - http.js
+- 18899 Requests/sec - micro.js
+- **17704 Requests/sec - koa.js**
+- **16793 Requests/sec - @leizm/web.js🌟🌟**
+- 11603 Requests/sec - restify.js
+- 11428 Requests/sec - hapi.js
+- **5012 Requests/sec - express.js**
 
 
 ## 授权协议
