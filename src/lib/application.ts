@@ -4,7 +4,7 @@
  */
 
 import { Server, IncomingMessage, ServerResponse } from "http";
-import finalhandler from "./finalhandler";
+import finalHandler from "./final_handler";
 import { Core } from "./core";
 import { Router } from "./router";
 import { ListenOptions, ErrorReason, SYMBOL_CONNECT, SYMBOL_SERVER } from "./define";
@@ -83,7 +83,7 @@ export class Application<C extends Context = Context<Request, Response>> extends
     done =
       done ||
       function (err?: ErrorReason) {
-        return finalhandler(req, res)(err);
+        return finalHandler(req, res)(err);
       };
     const ctx = this.createContext(req, res);
     this.handleRequestByContext(ctx, done);

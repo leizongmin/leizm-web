@@ -17,7 +17,7 @@ import {
 } from "./define";
 import { Context } from "./context";
 import { IncomingMessage, ServerResponse } from "http";
-import finalhandler from "./finalhandler";
+import finalHandler from "./final_handler";
 
 /**
  * 判断是否为Promise对象
@@ -128,7 +128,7 @@ export function toClassicalHandle(
 ): ClassicalMiddlewareHandle {
   return function (req: IncomingMessage, res: ServerResponse, next: (err: ErrorReason) => void) {
     const ctx = new contextConstructor().init(req, res);
-    if (typeof next !== "function") next = finalhandler(req, res);
+    if (typeof next !== "function") next = finalHandler(req, res);
     ctx[SYMBOL_PUSH_NEXT_HANDLE](next);
     const ret = fn(ctx) as any;
     if (isPromise(ret)) {

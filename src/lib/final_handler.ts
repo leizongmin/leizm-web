@@ -6,7 +6,7 @@
 import * as http from "http";
 import { parseUrl } from "./parse_url";
 
-export default function finalhandler(req: http.IncomingMessage, res: http.ServerResponse) {
+export default function finalHandler(req: http.IncomingMessage, res: http.ServerResponse) {
   return function (err: any) {
     if (err) {
       writeHead(res, getErrorStatusCode(err) || 500, getErrorHeaders(err));
