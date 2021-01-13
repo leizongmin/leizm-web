@@ -5,7 +5,7 @@
 
 import { Context } from "../context";
 import { MiddlewareHandle, CookieOptions, SYMBOL_SESSION } from "../define";
-import { SessiionMemoryStore } from "./session.memory";
+import { SessionMemoryStore } from "./session.memory";
 import { generateSessionId } from "../module/simple.random";
 import crc32 from "../module/crc32";
 
@@ -166,7 +166,7 @@ export const DEFAULT_SESSION_OPTIONS: Required<SessionOptions> = {
   cookie: DEFAULT_SESSION_COOKIE,
   genid: DEFAULT_SESSION_GENID,
   name: DEFAULT_SESSION_NAME,
-  store: new SessiionMemoryStore(),
+  store: new SessionMemoryStore(),
   maxAge: DEFAULT_SESSION_MAX_AGE,
 };
 

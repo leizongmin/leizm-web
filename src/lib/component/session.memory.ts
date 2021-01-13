@@ -9,7 +9,7 @@ import {
   DEFAULT_SESSION_UNSERIALIZE as unserialize,
 } from "./session";
 
-export class SessiionMemoryStore implements SessionStore {
+export class SessionMemoryStore implements SessionStore {
   protected data: Map<
     string,
     {

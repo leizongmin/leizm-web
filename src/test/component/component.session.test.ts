@@ -30,7 +30,7 @@ describe("component.session", function () {
       const app = new Application();
       appInstances.push(app);
       app.use("/", component.cookieParser());
-      app.use("/", component.session({ store: new component.SessiionMemoryStore(), maxAge: 1000 }));
+      app.use("/", component.session({ store: new component.SessionMemoryStore(), maxAge: 1000 }));
       app.use("/", function (ctx) {
         ctx.session.data.counter = ctx.session.data.counter || 0;
         ctx.session.data.counter++;
