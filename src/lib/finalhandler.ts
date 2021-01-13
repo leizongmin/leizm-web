@@ -4,7 +4,7 @@
  */
 
 import * as http from "http";
-import { parse as parseUrl } from "url";
+import { parseUrl } from "./parse_url";
 
 export default function finalhandler(req: http.IncomingMessage, res: http.ServerResponse) {
   return function (err: any) {

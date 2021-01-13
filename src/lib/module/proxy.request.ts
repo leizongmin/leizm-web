@@ -5,7 +5,7 @@
 
 import { IncomingMessage, ServerResponse, OutgoingHttpHeaders, request as httpRequest } from "http";
 import { request as httpsRequest } from "https";
-import { parse as originalParseUrl } from "url";
+import { parseUrl } from "../parse_url";
 
 export interface ProxyTarget {
   /** 协议，默认 http: */
@@ -28,12 +28,12 @@ export interface ProxyTarget {
  * @param url
  */
 export function parseProxyTarget(url: string): ProxyTarget {
-  const a = originalParseUrl(url);
+  const a = parseUrl(url, { absolute: true });
   return {
     protocol: (a.protocol || "http:") as any,
     port: a.port || (a.protocol === "https:" ? 443 : 80),
-    hostname: a.hostname!,
-    path: a.path!,
+    hostname: a.hostname,
+    path: a.path,
   };
 }
 

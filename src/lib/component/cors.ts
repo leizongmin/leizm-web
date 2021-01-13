@@ -4,7 +4,7 @@
  */
 
 import * as assert from "assert";
-import { parse as parseURL } from "url";
+import { parseUrl } from "../parse_url";
 import { Context } from "../context";
 import { MiddlewareHandle } from "../define";
 
@@ -84,7 +84,7 @@ export function cors(options: CorsOptions = {}): MiddlewareHandle<Context> {
 
   return function (ctx: Context) {
     const origin = ctx.request.headers.origin;
-    const info = parseURL(String(origin));
+    const info = parseUrl(String(origin), { absolute: true });
     if (origin && opts.domain.indexOf(info.host || "") !== -1) {
       ctx.response.setHeader("Access-Control-Allow-Origin", origin);
       setAdditionalHeaders(ctx);

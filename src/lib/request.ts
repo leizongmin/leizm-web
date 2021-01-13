@@ -4,7 +4,7 @@
  */
 
 import { IncomingMessage } from "http";
-import { parse as parseUrl, Url } from "url";
+import { parseUrl, ParsedUrl } from "./parse_url";
 import { Headers, ServerRequestEx } from "./define";
 import { Context } from "./context";
 import { Socket } from "net";
@@ -17,12 +17,12 @@ import { parseMultipart, MultipartParserOptions, FileField } from "./component/b
 
 export class Request {
   /** 已解析的URL信息 */
-  protected parsedUrlInfo: Url;
+  protected parsedUrlInfo: ParsedUrl;
 
   constructor(public readonly req: IncomingMessage, public readonly ctx: Context) {
     const req2 = req as ServerRequestEx;
     req2.originalUrl = req2.originalUrl || req.url;
-    this.parsedUrlInfo = parseUrl(req.url || "", true);
+    this.parsedUrlInfo = parseUrl(req.url || "", { query: true });
     req2.query = this.parsedUrlInfo.query as any;
   }
 
