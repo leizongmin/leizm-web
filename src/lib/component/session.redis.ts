@@ -6,16 +6,16 @@
 import {
   SessionStore,
   SessionDataSerializeFunction,
-  SessionDataUnSerializeFunction,
+  SessionDataDeserializeFunction,
   DEFAULT_SESSION_SERIALIZE,
-  DEFAULT_SESSION_UNSERIALIZE,
+  DEFAULT_SESSION_DESERIALIZE,
 } from "./session";
 import { SimpleRedisClientOptions, SimpleRedisClient } from "../module/simple.redis";
 
 /** 默认Redis Key前缀 */
 export const DEFAULT_REDIS_PREFIX = "sess:";
 
-export interface SessiionRedisStoreOptions extends SimpleRedisClientOptions {
+export interface SessionRedisStoreOptions extends SimpleRedisClientOptions {
   /** key前缀 */
   prefix?: string;
   /** 客户端实例 */
@@ -23,7 +23,7 @@ export interface SessiionRedisStoreOptions extends SimpleRedisClientOptions {
   /** 数据序列化函数 */
   serialize?: SessionDataSerializeFunction;
   /** 数据反序列化函数 */
-  unserialize?: SessionDataUnSerializeFunction;
+  deserialize?: SessionDataDeserializeFunction;
 }
 
 /**
@@ -41,17 +41,17 @@ function msToS(ms: number): number {
   return Math.ceil(ms / 1000);
 }
 
-export class SessiionRedisStore implements SessionStore {
+export class SessionRedisStore implements SessionStore {
   protected keyPrefix: string;
   protected client: RedisCompatibleClient;
   protected serialize: SessionDataSerializeFunction;
-  protected unserialize: SessionDataUnSerializeFunction;
+  protected deserialize: SessionDataDeserializeFunction;
 
-  constructor(protected readonly options: SessiionRedisStoreOptions) {
+  constructor(protected readonly options: SessionRedisStoreOptions) {
     this.keyPrefix = options.prefix || DEFAULT_REDIS_PREFIX;
     this.client = options.client || new SimpleRedisClient(options);
     this.serialize = options.serialize || DEFAULT_SESSION_SERIALIZE;
-    this.unserialize = options.unserialize || DEFAULT_SESSION_UNSERIALIZE;
+    this.deserialize = options.deserialize || DEFAULT_SESSION_DESERIALIZE;
   }
 
   protected getKey(key: string): string {
@@ -63,7 +63,7 @@ export class SessiionRedisStore implements SessionStore {
       this.client.get(this.getKey(sid), (err, ret) => {
         if (err) return reject(err);
         try {
-          resolve(this.unserialize(ret));
+          resolve(this.deserialize(ret));
         } catch (err) {
           return reject(err);
         }

@@ -17,21 +17,21 @@ app.use("/", component.cookieParser(""));
 app.use(
   "/a",
   component.session({
-    store: new component.SessiionRedisStore({ client: redis1 as any }),
+    store: new component.SessionRedisStore({ client: redis1 as any }),
     maxAge: 60000,
   }),
 );
 app.use(
   "/b",
   component.session({
-    store: new component.SessiionRedisStore({ client: redis2 }),
+    store: new component.SessionRedisStore({ client: redis2 }),
     maxAge: 60000,
   }),
 );
 app.use(
   "/c",
   component.session({
-    store: new component.SessiionRedisStore({ client: redis3 }),
+    store: new component.SessionRedisStore({ client: redis3 }),
     maxAge: 60000,
   }),
 );

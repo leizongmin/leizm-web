@@ -56,7 +56,7 @@ describe("component.session", function () {
       app.use(
         "/",
         component.session({
-          store: new component.SessiionRedisStore({ client: client as any, prefix }),
+          store: new component.SessionRedisStore({ client: client as any, prefix }),
           maxAge: 1000,
         }),
       );
@@ -85,7 +85,7 @@ describe("component.session", function () {
       app.use(
         "/",
         component.session({
-          store: new component.SessiionRedisStore({ client, prefix }),
+          store: new component.SessionRedisStore({ client, prefix }),
           maxAge: 2000,
         }),
       );
@@ -114,7 +114,7 @@ describe("component.session", function () {
       app.use(
         "/",
         component.session({
-          store: new component.SessiionRedisStore({ client, prefix }),
+          store: new component.SessionRedisStore({ client, prefix }),
           maxAge: 2000,
         }),
       );
@@ -142,7 +142,7 @@ describe("component.session", function () {
       app.use(
         "/",
         component.session({
-          store: new component.SessiionRedisStore({ prefix }),
+          store: new component.SessionRedisStore({ prefix }),
           maxAge: 2000,
         }),
       );

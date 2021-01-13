@@ -174,10 +174,10 @@ export const DEFAULT_SESSION_OPTIONS: Required<SessionOptions> = {
 export type SessionDataSerializeFunction = (data: any) => string;
 
 /** Session数据反序列化函数 */
-export type SessionDataUnSerializeFunction = (data: string) => any;
+export type SessionDataDeserializeFunction = (data: string) => any;
 
 /** 默认Session数据序列化函数 */
 export const DEFAULT_SESSION_SERIALIZE = (data: any) => JSON.stringify(data || {});
 
 /** 默认Session数据反序列化函数 */
-export const DEFAULT_SESSION_UNSERIALIZE = (data: string) => JSON.parse(data) || {};
+export const DEFAULT_SESSION_DESERIALIZE = (data: string) => JSON.parse(data) || {};

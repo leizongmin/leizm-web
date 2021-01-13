@@ -6,7 +6,7 @@
 import {
   SessionStore,
   DEFAULT_SESSION_SERIALIZE as serialize,
-  DEFAULT_SESSION_UNSERIALIZE as unserialize,
+  DEFAULT_SESSION_DESERIALIZE as deserialize,
 } from "./session";
 
 export class SessionMemoryStore implements SessionStore {
@@ -30,7 +30,7 @@ export class SessionMemoryStore implements SessionStore {
         this.data.delete(sid);
         return resolve({});
       }
-      resolve(unserialize(data.value));
+      resolve(deserialize(data.value));
     });
   }
 
