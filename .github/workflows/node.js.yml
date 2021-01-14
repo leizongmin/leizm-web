@@ -29,6 +29,6 @@ jobs:
       uses: supercharge/redis-github-action@1.2.0
       with:
         redis-version: ${{ matrix.redis-version }}
-    - run: npm ci
+    - run: npm install
     - run: npm run build --if-present
     - run: npm test
