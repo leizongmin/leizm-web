@@ -14,7 +14,7 @@ import {
   ErrorReason,
   RequestConstructor,
   ResponseConstructor,
-  SYMBOL_CONNECT,
+  SYMBOL_APPLICATION,
   SYMBOL_SESSION,
   SYMBOL_PUSH_NEXT_HANDLE,
   SYMBOL_POP_NEXT_HANDLE,
@@ -36,8 +36,8 @@ export class Context<Q extends Request = Request, S extends Response = Response>
   /** Response对象的构造函数 */
   protected responseConstructor: ResponseConstructor = Response;
 
-  /** 父 connect 实例 */
-  public [SYMBOL_CONNECT]: Application | undefined;
+  /** 父 Application 实例 */
+  public [SYMBOL_APPLICATION]: Application | undefined;
 
   /** 原始 Session对象 */
   public [SYMBOL_SESSION]: SessionInstance;

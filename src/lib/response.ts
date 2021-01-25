@@ -10,7 +10,7 @@ import { sign as signCookie } from "cookie-signature";
 import * as cookie from "cookie";
 import * as send from "send";
 import * as mime from "mime";
-import { CookieOptions, TemplateRenderData, SYMBOL_CONNECT } from "./define";
+import { CookieOptions, TemplateRenderData, SYMBOL_APPLICATION } from "./define";
 import { notifyDeprecated } from "./utils";
 import { Readable } from "stream";
 import { responseGzip } from "./module/response.gzip";
@@ -305,7 +305,7 @@ export class Response {
    */
   public async render(name: string, data: TemplateRenderData = {}): Promise<void> {
     try {
-      const html = await this.ctx[SYMBOL_CONNECT]!.templateEngine.render(name, data);
+      const html = await this.ctx[SYMBOL_APPLICATION]!.templateEngine.render(name, data);
       if (!this.getHeader("Content-Type")) {
         this.setHeader("Content-Type", "text/html; charset=utf-8");
       }

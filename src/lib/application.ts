@@ -7,7 +7,7 @@ import { Server, IncomingMessage, ServerResponse } from "http";
 import finalHandler from "./final_handler";
 import { Core } from "./core";
 import { Router } from "./router";
-import { ListenOptions, ErrorReason, SYMBOL_CONNECT, SYMBOL_SERVER } from "./define";
+import { ListenOptions, ErrorReason, SYMBOL_APPLICATION, SYMBOL_SERVER } from "./define";
 import { Context } from "./context";
 import { Request } from "./request";
 import { Response } from "./response";
@@ -97,7 +97,7 @@ export class Application<C extends Context = Context<Request, Response>> extends
    */
   protected createContext(req: IncomingMessage, res: ServerResponse): C {
     const ctx = super.createContext(req, res);
-    ctx[SYMBOL_CONNECT] = this as any;
+    ctx[SYMBOL_APPLICATION] = this as any;
     return ctx;
   }
 }
