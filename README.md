@@ -6,6 +6,7 @@
 [![node version][node-image]][node-url]
 [![npm download][download-image]][download-url]
 [![npm license][license-image]][download-url]
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fleizongmin%2Fleizm-web.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fleizongmin%2Fleizm-web?ref=badge_shield)
 
 [npm-image]: https://img.shields.io/npm/v/@leizm/web.svg?style=flat-square
 [npm-url]: https://npmjs.org/package/@leizm/web
@@ -223,3 +224,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ```
+
+
+## License
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fleizongmin%2Fleizm-web.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Fleizongmin%2Fleizm-web?ref=badge_large)
