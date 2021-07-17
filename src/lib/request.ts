@@ -187,9 +187,7 @@ export class Request {
   }
 
   /** 解析multipart内容 */
-  public async parseMultipart(
-    options: MultipartParserOptions = {},
-  ): Promise<{
+  public async parseMultipart(options: MultipartParserOptions = {}): Promise<{
     body: Record<string, any>;
     files: Record<string, FileField>;
   }> {
